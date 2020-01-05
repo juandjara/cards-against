@@ -35,18 +35,18 @@ io.on('connection', socket => {
   const {name, room} = socket.handshake.query
   if (room) {
     socket.join(room)
-    io.to(room).emit('joined', { id: socket.id, name, room })
+    io.to(room).emit('user:joined', { id: socket.id, name, room })
   }
 
   socket.on('disconnect', () => {
     console.log('client disconnected')
-    socket.broadcast.emit('leaved', socket.id)
+    socket.broadcast.emit('user:left', socket.id)
   })
-  socket.on('user-list-request', room => {
-    socket.to(room).emit('user-list-request', socket.id)
+  socket.on('user:list-request', room => {
+    socket.to(room).emit('user:list-request', socket.id)
   })
-  socket.on('user-list-response', ({ receiver, sender }) => {
-    socket.to(receiver).emit('user-list-response', ({ ...sender, id: socket.id }))
+  socket.on('user:list-response', ({ receiver, sender }) => {
+    socket.to(receiver).emit('user:list-response', ({ ...sender, id: socket.id }))
   })
 })
 

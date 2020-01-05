@@ -36,20 +36,20 @@ function App() {
     }
     socket.off() // removes all '.on' events
     socket.on('connect', () => {
-      socket.emit('user-list-request', room)
+      socket.emit('user:list-request', room)
     })
-    socket.on('user-list-request', receiver => {
-      socket.emit('user-list-response', { receiver, sender: { name, room } })
+    socket.on('user:list-request', receiver => {
+      socket.emit('user:list-response', { receiver, sender: { name, room } })
     })
-    socket.on('user-list-response', user => {
+    socket.on('user:list-response', user => {
       dispatchUserAction({ type: 'add', payload: user })
     })
-    socket.on('joined', user => {
+    socket.on('user:joined', user => {
       console.log('user joined', user)
       dispatchUserAction({ type: 'add', payload: user })
     })
-    socket.on('leaved', id => {
-      console.log('user leaved', id)
+    socket.on('user:left', id => {
+      console.log('user left', id)
       dispatchUserAction({ type: 'remove', payload: id })
     })
   }, [socket, name, room])
