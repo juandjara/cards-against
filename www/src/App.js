@@ -1,6 +1,7 @@
 import React, { useState, useReducer, useEffect } from 'react';
 import io from 'socket.io-client';
 import LoginForm from './components/LoginForm'
+import UserList from './components/UserList'
 
 function userReducer (state = [], action) {
   switch (action.type) {
@@ -16,15 +17,17 @@ function userReducer (state = [], action) {
   }
 }
 
+function getCurrentUser (id, users) {
+  return users.find(u => u.id === id)
+}
+
 function App() {
-  const [name, setName] = useState("")
-  const [room, setRoom] = useState("")
+  const [id, setId] = useState(null)
   const [socket, setSocket] = useState(null)
   const [users, dispatchUserAction] = useReducer(userReducer, [])
+  const currentUser = getCurrentUser(id, users)
 
   const handleSubmit = ({ name, room }) => {
-    setName(name)
-    setRoom(room)
     const socket = io(`localhost:5000?room=${room}&name=${name}`)
     window.socket = socket
     setSocket(socket)
@@ -34,12 +37,21 @@ function App() {
     if (!socket) {
       return
     }
+
     socket.off() // removes all '.on' events
     socket.on('connect', () => {
-      socket.emit('user:list-request', room)
+      socket.emit('user:id-request')
+      socket.once('user:id-response', id => {
+        setId(id)
+      })
     })
+
+    if (currentUser) {
+      socket.emit('user:list-request', currentUser.room)
+    }
+
     socket.on('user:list-request', receiver => {
-      socket.emit('user:list-response', { receiver, sender: { name, room } })
+      socket.emit('user:list-response', { receiver, sender: currentUser })
     })
     socket.on('user:list-response', user => {
       dispatchUserAction({ type: 'add', payload: user })
@@ -52,27 +64,18 @@ function App() {
       console.log('user left', id)
       dispatchUserAction({ type: 'remove', payload: id })
     })
-  }, [socket, name, room])
+  }, [socket, currentUser])
 
-  if (name && room) {
-    return (
-      <div style={{padding: '1rem'}}>
-        <p>Welcome <strong>{name}</strong> to room <strong>{room}</strong></p>
-        <p>People in this room</p>
-        <ul>
-          {users.map(u => (
-            <li key={u.id}>
-              {u.name}
-            </li>
-          ))}
-        </ul>
-      </div>
-    )
+  if (!currentUser) {
+    return <LoginForm onSubmit={handleSubmit} />
   }
 
   return (
-    <LoginForm onSubmit={handleSubmit} />
-  );
+    <div style={{padding: '1rem'}}>
+      <p>Welcome <strong>{currentUser.name}</strong> to room <strong>{currentUser.room}</strong></p>
+      <UserList users={users} />
+    </div>
+  )  
 }
 
 export default App;

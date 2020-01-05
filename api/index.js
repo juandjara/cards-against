@@ -48,6 +48,7 @@ io.on('connection', socket => {
   socket.on('user:list-response', ({ receiver, sender }) => {
     socket.to(receiver).emit('user:list-response', ({ ...sender, id: socket.id }))
   })
+  socket.on('user:id-request', () => socket.emit('user:id-response', socket.id))
 })
 
 httpServer.listen(port, () => {
