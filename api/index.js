@@ -16,10 +16,37 @@ app.get('/', (req, res) => {
   })
 })
 
+app.get('/rooms', (req, res) => {
+  res.json(io.sockets.adapter.rooms)
+})
+
+app.get('/rooms/:room/', (req, res) => {
+  const roomname = req.params.room
+  const room = io.sockets.adapter.rooms[roomname]
+  if (!room) {
+    res.status(404).json({ error: `room '${roomname}' not found` })
+  } else {
+    res.json(room)
+  }
+})
+
 io.on('connection', socket => {
   console.log('new client connected')
+  const {name, room} = socket.handshake.query
+  if (room) {
+    socket.join(room)
+    io.to(room).emit('joined', { id: socket.id, name, room })
+  }
+
   socket.on('disconnect', () => {
     console.log('client disconnected')
+    socket.broadcast.emit('leaved', socket.id)
+  })
+  socket.on('user-list-request', room => {
+    socket.to(room).emit('user-list-request', socket.id)
+  })
+  socket.on('user-list-response', ({ receiver, sender }) => {
+    socket.to(receiver).emit('user-list-response', ({ ...sender, id: socket.id }))
   })
 })
 
