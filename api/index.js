@@ -31,7 +31,6 @@ app.get('/rooms/:room/', (req, res) => {
 })
 
 io.on('connection', socket => {
-  console.log('new client connected')
   const {name, room} = socket.handshake.query
   if (room) {
     socket.join(room)
@@ -39,7 +38,6 @@ io.on('connection', socket => {
   }
 
   socket.on('disconnect', () => {
-    console.log('client disconnected')
     socket.broadcast.emit('user:left', socket.id)
   })
   socket.on('user:list-request', room => {
