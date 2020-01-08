@@ -1,0 +1,11 @@
+/**
+ *  {{pascalCase name}} actions module file
+**/
+
+import { ACTIONS, MUTATIONS } from './constants'
+
+export const actions = {
+  [ACTIONS.ACTION_DEFAULT]: ({ state, commit, rootState }) => {
+    commit(MUTATIONS.MUTATION_DEFAULT)
+  }
+}

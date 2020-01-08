@@ -8,6 +8,8 @@ const app = express()
 const httpServer = http.createServer(app)
 const io = socketIo(httpServer)
 
+const userSocketHandler = require('./socketHandlers/users.socket')
+
 app.get('/', (req, res) => {
   res.json({
     name: pkg.name,
@@ -31,22 +33,7 @@ app.get('/rooms/:room/', (req, res) => {
 })
 
 io.on('connection', socket => {
-  const {name, room} = socket.handshake.query
-  if (room) {
-    socket.join(room)
-    io.to(room).emit('user:joined', { id: socket.id, name, room })
-  }
-
-  socket.on('disconnect', () => {
-    socket.broadcast.emit('user:left', socket.id)
-  })
-  socket.on('user:list-request', room => {
-    socket.to(room).emit('user:list-request', socket.id)
-  })
-  socket.on('user:list-response', ({ receiver, sender }) => {
-    socket.to(receiver).emit('user:list-response', ({ ...sender, id: socket.id }))
-  })
-  socket.on('user:id-request', () => socket.emit('user:id-response', socket.id))
+  userSocketHandler(socket)
 })
 
 httpServer.listen(port, () => {
