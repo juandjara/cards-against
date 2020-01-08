@@ -22,4 +22,13 @@ const router = new Router({
   ]
 })
 
+router.beforeEach((to, from, next) => {
+  const isConnected = false
+  if (!to.meta.skipAuth && !isConnected) {
+    next({ name: 'login', query: { next: to.fullPath } })
+  } else {
+    next()
+  }
+})
+
 export default router
