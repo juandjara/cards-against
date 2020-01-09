@@ -33,7 +33,8 @@ const NAME_KEY = 'cards-against-username'
 
 export default function NameSelect () {
   const { setSocket, setCurrentUser } = useGlobalState()
-  const [name, setName] = useState(localStorage.getItem(NAME_KEY) || '')
+  const nameFromLS = localStorage.getItem(NAME_KEY) || ''
+  const [name, setName] = useState(nameFromLS)
   const inputRef = useRef()
 
   function handleSubmit (ev) {
@@ -55,8 +56,8 @@ export default function NameSelect () {
 
   // this runs only on mount
   useEffect(() => {
-    if (name) {
-      connect(name)
+    if (nameFromLS) {
+      connect(nameFromLS)
     }
   }, [])
 
@@ -66,7 +67,7 @@ export default function NameSelect () {
     }
   }, [])
 
-  return (
+  return nameFromLS ? null : (
     <NameSelectStyle className="name-select">
       <Header />
       <form onSubmit={handleSubmit}>

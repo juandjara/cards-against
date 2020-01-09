@@ -12,7 +12,7 @@ const HeaderStyles = styled.header`
 export default function Header () {
   return (
     <HeaderStyles>
-      <h1>CAW</h1>
+      <h1>Cards Against Web</h1>
     </HeaderStyles>
   )
 }
