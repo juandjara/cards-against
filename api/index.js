@@ -1,14 +1,19 @@
 const http = require("http")
 const express = require("express")
 const socketIo = require("socket.io")
+const helmet = require('helmet')
+const cors = require('cors')
 const pkg = require('./package.json')
 
 const port = process.env.PORT || 5000
 const app = express()
 const httpServer = http.createServer(app)
-const io = socketIo(httpServer)
+const io = socketIo(httpServer, { origins: '*:*' })
 
 const userSocketHandler = require('./socketHandlers/users.socket')
+
+app.use(helmet())
+app.use(cors())
 
 app.get('/', (req, res) => {
   res.json({
