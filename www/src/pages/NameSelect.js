@@ -59,6 +59,7 @@ export default function NameSelect () {
     if (nameFromLS) {
       connect(nameFromLS)
     }
+    // eslint-disable-next-line
   }, [])
 
   useEffect(() => {
@@ -77,7 +78,7 @@ export default function NameSelect () {
           type="text"
           name="name"
           value={name}
-          onChange={ev => setName(ev.target.value)}
+          onChange={ev => setName(ev.target.value.trim())}
           placeholder="Hola, ¿Como te llamas?" />
         <button type="submit">Entrar</button>
       </form>

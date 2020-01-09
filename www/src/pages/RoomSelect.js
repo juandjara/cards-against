@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import useSWR from 'swr'
+import Button from '../components/ButtonOutline'
 
 const RoomSelectStyles = styled.div`
   padding: 1rem;
@@ -10,15 +11,6 @@ const RoomSelectStyles = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-  }
-  button {
-    font-size: 14px;
-    font-weight: bold;
-    background: transparent;
-    border: 2px solid #222;
-    border-radius: 4px;
-    padding: 8px 16px;
-    cursor: pointer;
   }
 `
 
@@ -39,7 +31,7 @@ export default function RoomSelect () {
     <RoomSelectStyles className="room-select">
       <header>
         <h2>Salas disponibles</h2>
-        <button>Crear sala</button>
+        <Button>Crear sala</Button>
       </header>
       {data ? (
         hasRooms ? (
