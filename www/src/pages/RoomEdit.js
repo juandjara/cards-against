@@ -2,27 +2,14 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import Button from '../components/Button'
 import RadioButton from '../components/RadioButton'
+import Input from '../components/Input'
 
 const RoomEditStyles = styled.div`
   padding: 1rem;
   margin: 0 auto;
   max-width: 1200px;
   .name-input {
-    display: block;
-    padding: 8px 12px;
-    font-size: 16px;
-    border-radius: 4px;
-    border: 1px solid rgba(0,0,0, 0.25);
-    /* box-shadow: 0 2px 8px rgba(0,0,0, 0.1); */
-    margin-bottom: 24px;
-
-    &:hover, &:focus {
-      border-color: #228BEC;
-    }
-    &:focus {
-      box-shadow: 0 0 0 3px rgba(19, 133, 229, 0.1);
-      outline: 0;
-    }
+    margin-bottom: 24px;    
   }
   label {
     display: block;
@@ -49,7 +36,7 @@ export default function RoomEdit () {
     <RoomEditStyles className="room-edit">
       <h2>Crear sala</h2>
       <form onSubmit={handleSubmit}>
-        <input
+        <Input
           autoFocus
           required
           type="text"
