@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import Button from '../components/ButtonOutline'
+import RadioButton from '../components/RadioButton'
 
 const RoomEditStyles = styled.div`
   padding: 1rem;
@@ -11,24 +12,28 @@ const RoomEditStyles = styled.div`
     padding: 8px 12px;
     font-size: 16px;
     border-radius: 4px;
-    border: 1px solid rgba(0,0,0, 0.2);
+    border: 1px solid rgba(0,0,0, 0.25);
     /* box-shadow: 0 2px 8px rgba(0,0,0, 0.1); */
     margin-bottom: 24px;
+
+    &:hover, &:focus {
+      border-color: #228BEC;
+    }
+    &:focus {
+      box-shadow: 
+        /* inset 0 1px 1px rgba(0, 0, 0, 0.075),  */
+        0 0 0 3px rgba(19, 133, 229, 0.1);
+      outline: 0;
+    }
   }
   label {
     display: block;
   }
   .radio-group {
-    margin-bottom: 24px;
+    margin: 24px 0;
     > p {
-      margin-bottom: 8px;
+      margin: 8px 0;
     }
-  }
-  .radio-option + .radio-option {
-    margin-top: 8px;
-  }
-  .radio-input {
-    margin-right: 8px;
   }
 `
 
@@ -56,28 +61,20 @@ export default function RoomEdit () {
           placeholder="Nombre de la sala" />
         <div className="radio-group">
           <p>¿Quién lee la carta negra?</p>
-          <label className="radio-option">
-            <input
-              type="radio"
-              name="czar-rotation"
-              value="winner"
-              onChange={ev => setRotation(ev.target.value)}
-              checked={rotation === 'winner'}
-              className="radio-input"
-            />
-            El que gana la última ronda
-          </label>
-          <label className="radio-option">
-            <input
-              type="radio"
-              name="czar-rotation"
-              value="clockwise"
-              onChange={ev => setRotation(ev.target.value)}
-              checked={rotation === 'clockwise'}
-              className="radio-input"
-            />
-            Rotando en el sentido de las agujas del reloj
-          </label>
+          <RadioButton
+            label="El que gana la última ronda"
+            name="czar-rotation"
+            value="winner"
+            onChange={ev => setRotation(ev.target.value)}
+            checked={rotation === 'winner'}
+          />
+          <RadioButton
+            label="Rotando en sentido horario"
+            name="czar-rotation"
+            value="clockwise"
+            onChange={ev => setRotation(ev.target.value)}
+            checked={rotation === 'clockwise'}
+          />
         </div>
         <Button>Enviar</Button>
       </form>
