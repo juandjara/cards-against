@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import useSWR from 'swr'
-import Button from '../components/ButtonOutline'
+import Button from '../components/Button'
 
 const RoomSelectStyles = styled.div`
   padding: 1rem;

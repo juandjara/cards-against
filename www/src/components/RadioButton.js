@@ -11,6 +11,8 @@ input {
 	background: none;
 	opacity: .00001;
 	z-index: 2;
+	font: inherit;
+	margin: 0;
 }
 
 label {
