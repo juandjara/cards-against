@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import useSWR from 'swr'
 import Button from '../components/Button'
+import { Link } from '@reach/router'
 
 const RoomSelectStyles = styled.div`
   padding: 1rem;
@@ -31,7 +32,9 @@ export default function RoomSelect () {
     <RoomSelectStyles className="room-select">
       <header>
         <h2>Salas disponibles</h2>
-        <Button>Crear sala</Button>
+        <Link to="/roomedit">
+          <Button>Crear sala</Button>
+        </Link>
       </header>
       {data ? (
         hasRooms ? (

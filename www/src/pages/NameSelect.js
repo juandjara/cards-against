@@ -3,10 +3,9 @@ import { useGlobalState } from '../GlobalState'
 import io from 'socket.io-client'
 import styled from 'styled-components'
 import Header from '../components/Header'
+import Button from '../components/Button'
 
 const NameSelectStyle = styled.div`
-  background-color: #222;
-  color: white;
   height: 100vh;
   form {
     display: flex;
@@ -18,14 +17,23 @@ const NameSelectStyle = styled.div`
       font-size: 24px;
       background-color: inherit;
       color: inherit;
-      border: 1px solid white;
+      border: 1px solid #bfbfbf;
+      border-right-color: transparent;
+      &::placeholder {
+        color: #aaa;
+      }
     }
     button {
+      border-radius: 0;
+    }
+    /* button {
+      border: 1px solid #222;
+      border-left-color: transparent;
       font-size: 12px;
       border: none;
       padding: 6px 12px;
       cursor: pointer;
-    }
+    } */
   }
 `
 
@@ -80,7 +88,7 @@ export default function NameSelect () {
           value={name}
           onChange={ev => setName(ev.target.value.trim())}
           placeholder="Hola, ¿Como te llamas?" />
-        <button type="submit">Entrar</button>
+        <Button type="submit">Entrar</Button>
       </form>
     </NameSelectStyle>
   )
