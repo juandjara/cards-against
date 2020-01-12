@@ -23,13 +23,26 @@ app.get('/', (req, res) => {
   })
 })
 
+function getRooms () {
+  const rooms = io.sockets.adapter.rooms
+  return Object.keys(rooms)
+    .filter(key => key.startsWith('public-'))
+    .map(key => {
+      const r = rooms[key]
+      return {
+        name: key.replace('public-', ''),
+        sockets: Object.keys(r.sockets)
+      }
+    })
+}
+
 app.get('/rooms', (req, res) => {
-  res.json(io.sockets.adapter.rooms)
+  res.json(getRooms())
 })
 
 app.get('/rooms/:room/', (req, res) => {
   const roomname = req.params.room
-  const room = io.sockets.adapter.rooms[roomname]
+  const room = getRooms().find(r => r.name === roomname)
   if (!room) {
     res.status(404).json({ error: `room '${roomname}' not found` })
   } else {
@@ -38,7 +51,7 @@ app.get('/rooms/:room/', (req, res) => {
 })
 
 io.on('connection', socket => {
-  userSocketHandler(socket)
+  userSocketHandler(socket, io)
 })
 
 httpServer.listen(port, () => {

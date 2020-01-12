@@ -16,10 +16,15 @@ const RoomSelectStyles = styled.div`
 `
 
 export default function RoomSelect () {
-  const { data, error } = useSWR('http://localhost:5000/rooms', fetch)
+  const { data, error } = useSWR(
+    'http://localhost:5000/rooms',
+    (...args) => fetch(...args).then(res => res.json())
+  )
 
   useEffect(() => {
-    console.log('fetch error', error)
+    if (error) {
+      console.log('fetch error', error)
+    }
   }, [error])
 
   if (error) {
@@ -39,8 +44,8 @@ export default function RoomSelect () {
       {data ? (
         hasRooms ? (
           <ul>
-            {Object.keys(data).map(room => (
-              <li key={room}>{room}</li>
+            {data.map(room => (
+              <li key={room.name}>{room.name}</li>
             ))}
           </ul>
         ) : ( <p>No hay ninguna sala creada</p> )

@@ -1,12 +1,13 @@
-module.exports = function (socket) {
+module.exports = function (socket, io) {
   const { name } = socket.handshake.query
   socket.on('disconnect', () => {
     socket.broadcast.emit('user:left', socket.id)
   })
   socket.on('user:join', ({ name, room }) => {
-    socket.join(room)
-    io.to(room).emit('user:joined', { id: socket.id, name, room })
-    io.rooms[room].public = true
+    const roomId = `public-${room}`
+    socket.join(roomId, () => {
+      io.to(roomId).emit('user:joined', { id: socket.id, name, roomId })
+    })
   })
   socket.on('user:id-request', () => socket.emit('user:id-response', { id: socket.id, name }))
   socket.on('user:list-request', room => {
