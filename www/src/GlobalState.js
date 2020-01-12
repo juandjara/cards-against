@@ -5,7 +5,12 @@ const Context = createContext()
 export function GlobalStateProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null)
   const [socket, setSocket] = useState(null)
-  const context = { currentUser, setCurrentUser, socket, setSocket }
+  const [room, setRoom] = useState(null)
+  const context = { 
+    currentUser, setCurrentUser,
+    socket, setSocket,
+    room, setRoom
+  }
   return (
     <Context.Provider value={context}>{children}</Context.Provider>
   )

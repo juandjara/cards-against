@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import Button from '../components/Button'
 import RadioButton from '../components/RadioButton'
 import Input from '../components/Input'
+import { useGlobalState } from '../GlobalState'
+import { navigate } from "@reach/router"
 
 const RoomEditStyles = styled.div`
   padding: 1rem;
@@ -26,10 +28,13 @@ export default function RoomEdit () {
   const [name, setName] = useState("")
   const [rotation, setRotation] = useState("winner")
 
+  const { setRoom, currentUser, socket } = useGlobalState()
+
   function handleSubmit (ev) {
     ev.preventDefault()
-    // set global state for room
-    // redirect to room page
+    setRoom({ name, rotation, createdBy: currentUser.id })
+    socket.emit('user:join', { name: currentUser.name, room: name })
+    navigate('/')
   }
 
   return (
@@ -42,7 +47,7 @@ export default function RoomEdit () {
           type="text"
           name="name"
           value={name}
-          onChange={ev => setName(ev.target.value.trim())}
+          onChange={ev => setName(ev.target.value)}
           className="name-input"
           placeholder="Nombre de la sala" />
         <div className="radio-group">
