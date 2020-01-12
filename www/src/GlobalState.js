@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react'
+import React, { createContext, useState, useContext, useEffect } from 'react'
 
 const Context = createContext()
 
@@ -18,5 +18,15 @@ export function GlobalStateProvider({ children }) {
 
 export function useGlobalState () {
   return useContext(Context)
+}
+
+export function useSocketEvent(key, handler) {
+  const { socket } = useGlobalState()
+  useEffect(() => {
+    socket.on(key, handler)
+    return () => {
+      socket.off(key, handler)
+    }
+  }, [])
 }
 
