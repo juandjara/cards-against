@@ -13,6 +13,21 @@ const RoomSelectStyles = styled.div`
     align-items: center;
     justify-content: space-between;
   }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  li {
+    padding: 8px 12px;
+    & + li {
+      border-top: 1px solid #ccc;
+    }
+    &:hover {
+      background-color: #f4f4f4;
+      cursor: pointer;
+    }
+  }
 `
 
 export default function RoomSelect () {
@@ -45,7 +60,7 @@ export default function RoomSelect () {
         hasRooms ? (
           <ul>
             {data.map(room => (
-              <li key={room.name}>{room.name}</li>
+              <li key={room.name}>{room.name} ({room.sockets.length} jugador)</li>
             ))}
           </ul>
         ) : ( <p>No hay ninguna sala creada</p> )

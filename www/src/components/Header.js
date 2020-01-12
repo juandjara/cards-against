@@ -11,15 +11,24 @@ const HeaderStyles = styled.header`
   a {
     color: inherit;
     text-decoration: none;
+    outline: 0;
+    &::-moz-focus-inner {
+      outline: 0;
+      border: none;
+    }
+    &:focus {
+      text-decoration: underline;
+      text-decoration-color: blue;
+    }
   }
 `
 
 export default function Header () {
   return (
     <HeaderStyles>
-      <Link to="/">
-        <h1>Cards Against Web</h1>
-      </Link>
+      <h1>
+        <Link to="/">Cards Against Web</Link>
+      </h1>
     </HeaderStyles>
   )
 }
