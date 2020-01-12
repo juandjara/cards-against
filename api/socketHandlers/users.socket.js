@@ -9,7 +9,7 @@ module.exports = function (socket, io) {
       io.to(roomId).emit('user:joined', { id: socket.id, name, roomId })
     })
   })
-  socket.on('user:id-request', () => socket.emit('user:id-response', { id: socket.id, name }))
+  socket.on('user:id-request', (callback) => callback({ id: socket.id, name }))
   socket.on('user:list-request', room => {
     socket.to(room).emit('user:list-request', socket.id)
   })

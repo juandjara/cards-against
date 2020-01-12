@@ -53,8 +53,7 @@ export default function NameSelect () {
   function connect(name) {
     const socket = io(`localhost:5000?name=${name}`)
     socket.on('connect', () => {
-      socket.emit('user:id-request')
-      socket.on('user:id-response', user => {
+      socket.emit('user:id-request', (user) => {
         localStorage.setItem(NAME_KEY, name)
         setCurrentUser(user)
         setSocket(socket)
