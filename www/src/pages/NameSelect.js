@@ -30,11 +30,9 @@ const NameSelectStyle = styled.div`
   }
 `
 
-const NAME_KEY = 'cards-against-username'
-
 export default function NameSelect () {
   const { setCurrentUser, setSocket } = useGlobalState()
-  const nameFromLS = localStorage.getItem(NAME_KEY) || ''
+  const nameFromLS = localStorage.getItem(config.NAME_KEY) || ''
   const [name, setName] = useState(nameFromLS)
   const inputRef = useRef()
 
@@ -47,7 +45,7 @@ export default function NameSelect () {
     const socket = io(`${config.api}?name=${name}`)
     socket.on('connect', () => {
       socket.emit('user:id-request', (user) => {
-        localStorage.setItem(NAME_KEY, name)
+        localStorage.setItem(config.NAME_KEY, name)
         setCurrentUser(user)
         setSocket(socket)
       })
