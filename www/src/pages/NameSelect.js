@@ -4,6 +4,7 @@ import io from 'socket.io-client'
 import styled from 'styled-components'
 import Header from '../components/Header'
 import Button from '../components/Button'
+import config from '../config'
 
 const NameSelectStyle = styled.div`
   height: 100vh;
@@ -32,7 +33,7 @@ const NameSelectStyle = styled.div`
 const NAME_KEY = 'cards-against-username'
 
 export default function NameSelect () {
-  const actions = useGlobalState()
+  const { setCurrentUser, setSocket } = useGlobalState()
   const nameFromLS = localStorage.getItem(NAME_KEY) || ''
   const [name, setName] = useState(nameFromLS)
   const inputRef = useRef()
@@ -43,17 +44,16 @@ export default function NameSelect () {
   }
 
   function connect(name) {
-    const socket = io(`localhost:5000?name=${name}`)
+    const socket = io(`${config.api}?name=${name}`)
     socket.on('connect', () => {
       socket.emit('user:id-request', (user) => {
         localStorage.setItem(NAME_KEY, name)
-        actions.setCurrentUser(user)
-        actions.setSocket(socket)
+        setCurrentUser(user)
+        setSocket(socket)
       })
     })
   }
 
-  // this runs only on mount
   useEffect(() => {
     if (nameFromLS) {
       connect(nameFromLS)

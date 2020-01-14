@@ -12,6 +12,10 @@ const io = socketIo(httpServer, { origins: '*:*' })
 
 const userSocketHandler = require('./socketHandlers/users.socket')
 
+io.on('connection', socket => {
+  userSocketHandler(socket, io)
+})
+
 app.use(helmet())
 app.use(cors())
 
@@ -48,10 +52,6 @@ app.get('/rooms/:room/', (req, res) => {
   } else {
     res.json(room)
   }
-})
-
-io.on('connection', socket => {
-  userSocketHandler(socket, io)
 })
 
 httpServer.listen(port, () => {

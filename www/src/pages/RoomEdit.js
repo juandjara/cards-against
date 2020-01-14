@@ -27,15 +27,13 @@ const RoomEditStyles = styled.div`
 export default function RoomEdit () {
   const [name, setName] = useState("")
   const [rotation, setRotation] = useState("winner")
-
-  const actions = useGlobalState()
-  const { socket, currentUser } = actions
+  
+  const { socket, setCurrentRoom } = useGlobalState()
 
   function handleSubmit (ev) {
     ev.preventDefault()
-    actions.addRoom({ name, rotation, createdBy: currentUser.id })
-    actions.setCurrentRoom(name)
     socket.emit('user:join', { name: currentUser.name, room: name })
+    setCurrentRoom(name)
     navigate('/')
   }
 

@@ -1,39 +1,36 @@
 import { useReducer, useEffect } from "react"
-import { useGlobalState } from "../GlobalState"
 import useSocketMessage from './useSocketMessage'
 
-function userReducer (state = {}, action) {
-  switch (action.type) {
-    case 'set':
-      return action.payload
+function userReducer (state = [], { type, payload }) {
+  switch (type) {
     case 'add':
-      return { ...state, ...action.payload }
+      return state.concat(payload)
     case 'remove':
-      const key = action.payload
-      delete state[key]
-      return state
+      return state.filter(u => u.id !== payload.id)
     default:
       return state
   }
 }
 
-export default function useUserList () {
-  const { socket, currentUser } = useGlobalState()
-  const initial = { [currentUser.id]: currentUser }
-  const [users, dispatch] = useReducer(userReducer, initial)
+export default function useUserList (socket) {
+  const [users, dispatch] = useReducer(userReducer, [])
+
   useEffect(() => {
     if (socket) {
       socket.emit('user:list-request')
     }
   }, [socket])
-  useSocketMessage('user:list-response', user => {
+  useSocketMessage(socket, 'user:list-response', user => {
+    console.log('[useUserList] user:list-response', user)
     dispatch({ type: 'add', payload: user })
   })
-  useSocketMessage('user:joined', user => {
+  useSocketMessage(socket, 'user:joined', user => {
+    console.log('[useUserList] user:joined', user)
     dispatch({ type: 'add', payload: user })
   })
-  useSocketMessage('user:left', id => {
-    dispatch({ type: 'remove', payload: id })
+  useSocketMessage(socket, 'user:left', id => {
+    console.log('[useUserList] user:left', id)
+    dispatch({ type: 'remove', payload: { id }})
   })
 
   return users

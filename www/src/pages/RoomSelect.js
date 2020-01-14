@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import Button from '../components/Button'
 import Input from '../components/Input'
-import config from '../config'
-import useRoomList from '../services/useRoomList'
 import { useGlobalState } from '../GlobalState'
 
 const RoomSelectStyles = styled.div`
@@ -65,46 +63,26 @@ function RoomForm ({ onSubmit }) {
 }
 
 export default function RoomSelect () {
-  const [rooms, setRooms] = useRoomList()
-  const [error, setError] = useState(null)
-  const { socket, currentUser } = useGlobalState()
-  
-  async function fetchRooms () {
-    try {
-      const res = await window.fetch(`${config.api}/rooms`)
-      const data = await res.json()
-      setRooms(data)
-    } catch (err) {
-      console.error(err)
-      setError(err)
-    }
-  }
-
-  useEffect(() => { fetchRooms() }, [])
-
-  console.log('rooms', rooms)
+  const { socket, currentUser, setCurrentUser, rooms } = useGlobalState()
 
   function handleNewRoom (room) {
+    setCurrentUser({ ...currentUser, room })
     socket.emit('user:join', { ...currentUser, room })
   }
-  
+
   return (
     <RoomSelectStyles className="room-select">
       <h2>Salas disponibles</h2>
-      {error ? (
-        <h3 style={{ color: 'red', padding: '1rem' }}>Error fetching rooms</h3>
-      ) : (
-        <ul>
-          {rooms.length === 0 ? (
-            <p>No hay ninguna sala creada</p>
-          ) : rooms.map(room => (
-            <li key={room.name}>
-              <span>{room.name}</span>{' '}
-              ({room.users.map(u => String(u.name)).join(', ')})
-            </li>
-          ))}
-        </ul>
-      )}
+      <ul>
+        {rooms.length === 0 ? (
+          <p>No hay ninguna sala creada</p>
+        ) : rooms.map(([room, users]) => (
+          <li key={room}>
+            <span>{room}</span>{' '}
+            ({users.map(u => String(u.name)).join(', ')})
+          </li>
+        ))}
+      </ul>
       <RoomForm onSubmit={handleNewRoom} />
     </RoomSelectStyles>
   )
