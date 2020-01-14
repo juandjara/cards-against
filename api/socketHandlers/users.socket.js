@@ -9,7 +9,7 @@ module.exports = function (socket, io) {
   socket.on('user:join', ({ name, room }) => {
     const roomId = `public-${room}`
     socket.join(roomId, () => {
-      socket.broadcast.emit('user:joined', { id: socket.id, name, room })
+      io.emit('user:joined', { id: socket.id, name, room })
     })
   })
   socket.on('user:id-request', (callback) => callback({ id: socket.id, name }))

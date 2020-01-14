@@ -31,7 +31,7 @@ function getRooms () {
       const r = rooms[key]
       return {
         name: key.replace('public-', ''),
-        sockets: Object.keys(r.sockets)
+        users: Object.keys(r.sockets)
       }
     })
 }

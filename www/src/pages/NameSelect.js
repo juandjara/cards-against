@@ -26,21 +26,13 @@ const NameSelectStyle = styled.div`
     button {
       border-radius: 0;
     }
-    /* button {
-      border: 1px solid #222;
-      border-left-color: transparent;
-      font-size: 12px;
-      border: none;
-      padding: 6px 12px;
-      cursor: pointer;
-    } */
   }
 `
 
 const NAME_KEY = 'cards-against-username'
 
 export default function NameSelect () {
-  const { setSocket, setCurrentUser } = useGlobalState()
+  const actions = useGlobalState()
   const nameFromLS = localStorage.getItem(NAME_KEY) || ''
   const [name, setName] = useState(nameFromLS)
   const inputRef = useRef()
@@ -55,8 +47,8 @@ export default function NameSelect () {
     socket.on('connect', () => {
       socket.emit('user:id-request', (user) => {
         localStorage.setItem(NAME_KEY, name)
-        setCurrentUser(user)
-        setSocket(socket)
+        actions.setCurrentUser(user)
+        actions.setSocket(socket)
       })
     })
   }
