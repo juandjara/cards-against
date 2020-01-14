@@ -7,8 +7,10 @@ const Context = createContext()
 function getRooms (users) {
   const rooms = {}
   for (const user of users) {
-    rooms[user.room] = rooms[user.room] || []
-    rooms[user.room].push(user)
+    if (user.room) {
+      rooms[user.room] = rooms[user.room] || []
+      rooms[user.room].push(user)
+    }
   }
   return Object.entries(rooms)
 }
