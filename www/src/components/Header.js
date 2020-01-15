@@ -3,7 +3,10 @@ import styled from 'styled-components'
 import { Link } from '@reach/router'
 import { useGlobalState } from '../GlobalState'
 import config from '../config'
-import menuIcon from '../assets/person_outline.svg'
+import MenuIcon from './icons/PersonIcon'
+import CardsIcon from './icons/CardsIcons'
+import LogoutIcon from './icons/CloseIcons'
+import Button from './Button'
 import {
   Menu,
   MenuList,
@@ -36,19 +39,36 @@ const HeaderStyles = styled.header`
     position: absolute;
     top: 0;
     right: 0;
-    display: flex;
     margin: 4px;
     padding: 4px;
     font-weight: bold;
+  }
+  .menu-toggle {
+    display: flex;
     align-items: center;
+    font-size: 14px;
+    padding-left: 8px;
+    padding-right: 12px;
     span {
-      margin-right: 8px;
-    }
-    img {
-      cursor: pointer;
+      margin-left: 8px;
     }
   }
 `
+
+const MenuListStlyes = styled(MenuList)`
+  padding: 12px 0;
+  border-radius: 2px;
+  .menu-item {
+    display: flex;
+    align-items: center;
+    padding: 6px 16px;
+    span {
+      margin-left: 8px;
+    }
+  }
+`
+
+const MenuButtonStyles = Button.withComponent(MenuButton)
 
 export default function Header () {
   const { currentUser, setCurrentUser } = useGlobalState()
@@ -65,16 +85,20 @@ export default function Header () {
       </h1>
       {currentUser && (
         <Menu>
-          <MenuButton>
+          <MenuButtonStyles className="menu-toggle">
+            <MenuIcon />
             <span>{currentUser.name}</span>
-            <img
-              title="Cerrar sesión"
-              src={menuIcon} alt="logout" />
-          </MenuButton>
-          <MenuList>
-            <MenuLink as={Link} to="/cards">Mis cartas</MenuLink>
-            <MenuItem onSelect={() => logout()}>Cerrar sesión</MenuItem>
-          </MenuList>
+          </MenuButtonStyles>
+          <MenuListStlyes>
+            <MenuLink className="menu-item" as={Link} to="/cards">
+              <CardsIcon />
+              <span>Mis cartas</span>
+            </MenuLink>
+            <MenuItem className="menu-item" onSelect={() => logout()}>
+              <LogoutIcon />
+              <span>Cerrar sesión</span>
+            </MenuItem>
+          </MenuListStlyes>
         </Menu>
       )}
     </HeaderStyles>

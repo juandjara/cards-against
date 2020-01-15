@@ -14,14 +14,13 @@ const Button = styled.button`
     background: linear-gradient(to bottom, #fff 0%, #eee 100%);
   }
 
-  
   &::-moz-focus-inner {
     outline: 0;
     border: none;
   }
 
   &:focus {
-    box-shadow: 0 0 0 3px rgba(19, 133, 229, 0.1);
+    box-shadow: 0 0 0 3px rgba(19, 133, 229, 0.25);
     outline: 0;
   }
 
