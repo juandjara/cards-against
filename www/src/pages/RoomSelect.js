@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
 import Button from '../components/Button'
 import Input from '../components/Input'
@@ -37,17 +37,24 @@ const RoomSelectStyles = styled.div`
   }
   form {
     display: flex;
+    margin-bottom: 12px;
     button {
       flex-shrink: 0;
+      margin-left: 12px;
     }
   }
 `
 
 function RoomForm ({ onSubmit }) {
   const [newRoom, setNewRoom] = useState("")
+  const inputRef = useRef()
 
   function handleNewRoomSubmit (ev) {
     ev.preventDefault()
+    if (inputRef.current) {
+      inputRef.current.blur()
+    }
+    setNewRoom("")
     onSubmit(newRoom)
   }
 
@@ -57,6 +64,7 @@ function RoomForm ({ onSubmit }) {
         required
         type="text"
         name="newRoom"
+        ref={inputRef}
         value={newRoom}
         onChange={ev => setNewRoom(ev.target.value)}
         placeholder="Nombre de la sala" />
