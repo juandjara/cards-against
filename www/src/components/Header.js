@@ -90,7 +90,7 @@ export default function Header () {
             <span>{currentUser.name}</span>
           </MenuButtonStyles>
           <MenuListStlyes>
-            <MenuLink className="menu-item" as={Link} to="/cards">
+            <MenuLink className="menu-item" as={Link} to="/decks">
               <CardsIcon />
               <span>Mis cartas</span>
             </MenuLink>

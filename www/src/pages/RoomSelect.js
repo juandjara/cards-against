@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Button from '../components/Button'
 import Input from '../components/Input'
 import { useGlobalState } from '../GlobalState'
+import { Link, navigate } from '@reach/router'
 
 const RoomSelectStyles = styled.div`
   padding: 1rem;
@@ -80,6 +81,7 @@ export default function RoomSelect () {
   function handleNewRoom (room) {
     setCurrentUser({ ...currentUser, room })
     socket.emit('user:join', { ...currentUser, room })
+    navigate(`/room/${room}`)
   }
 
   return (
@@ -94,8 +96,10 @@ export default function RoomSelect () {
           <p>No hay ninguna sala creada</p>
         ) : rooms.map(([room, users]) => (
           <li key={room}>
-            <span>{room}</span>{' '}
-            ({users.map(u => String(u.name)).join(', ')})
+            <Link to={`/room/${room}`}>
+              <span>{room}</span>{' '}
+              ({users.map(u => String(u.name)).join(', ')})
+            </Link>
           </li>
         ))}
       </ul>

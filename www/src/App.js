@@ -3,13 +3,16 @@ import { Router } from '@reach/router'
 import PrivateRoute from './components/PrivateRoute'
 import Main from './pages/Main'
 import RoomSelect from './pages/RoomSelect'
+import DeckList from './pages/DeckList'
+import Room from './pages/Room'
 
 function App() {
   return (
     <Router>
       <PrivateRoute as={Main} path="/">
         <RoomSelect default />
-        {/* <RoomEdit path="roomedit" /> */}
+        <DeckList path="decks" />
+        <Room path="room/:roomid" />
       </PrivateRoute>
     </Router>
   );
