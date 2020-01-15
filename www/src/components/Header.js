@@ -3,7 +3,15 @@ import styled from 'styled-components'
 import { Link } from '@reach/router'
 import { useGlobalState } from '../GlobalState'
 import config from '../config'
-  import icon_off from '../assets/highlight_off.svg'
+import menuIcon from '../assets/person_outline.svg'
+import {
+  Menu,
+  MenuList,
+  MenuButton,
+  MenuItem,
+  MenuLink
+} from "@reach/menu-button";
+import "@reach/menu-button/styles.css";
 
 const HeaderStyles = styled.header`
   text-align: center;
@@ -24,12 +32,14 @@ const HeaderStyles = styled.header`
       text-decoration-color: blue;
     }
   }
-  .user {
+  [data-reach-menu-button] {
     position: absolute;
     top: 0;
     right: 0;
-    padding: 1rem;
     display: flex;
+    margin: 4px;
+    padding: 4px;
+    font-weight: bold;
     align-items: center;
     span {
       margin-right: 8px;
@@ -54,15 +64,18 @@ export default function Header () {
         <Link to="/">Cartas contra la web</Link>
       </h1>
       {currentUser && (
-        <div className="user">
-          <span>{currentUser.name}</span>
-          <img
-            title="Cerrar sesión"
-            onClick={() => logout()}
-            src={icon_off} alt="logout" />
-          {/* <Button onClick={() => logout()}>
-          </Button> */}
-        </div>
+        <Menu>
+          <MenuButton>
+            <span>{currentUser.name}</span>
+            <img
+              title="Cerrar sesión"
+              src={menuIcon} alt="logout" />
+          </MenuButton>
+          <MenuList>
+            <MenuLink as={Link} to="/cards">Mis cartas</MenuLink>
+            <MenuItem onSelect={() => logout()}>Cerrar sesión</MenuItem>
+          </MenuList>
+        </Menu>
       )}
     </HeaderStyles>
   )

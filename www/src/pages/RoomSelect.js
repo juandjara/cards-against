@@ -12,6 +12,9 @@ const RoomSelectStyles = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    h2 {
+      margin: 12px 0;
+    }
   }
   ul {
     list-style: none;
@@ -64,6 +67,7 @@ function RoomForm ({ onSubmit }) {
 
 export default function RoomSelect () {
   const { socket, currentUser, setCurrentUser, rooms } = useGlobalState()
+  const [showRoomForm, setShowRoomForm] = useState(false)
 
   function handleNewRoom (room) {
     setCurrentUser({ ...currentUser, room })
@@ -72,7 +76,11 @@ export default function RoomSelect () {
 
   return (
     <RoomSelectStyles className="room-select">
-      <h2>Salas disponibles</h2>
+      <header>
+        <h2>Salas disponibles</h2>
+        {!showRoomForm && (<Button onClick={() => setShowRoomForm(true)}>Nueva sala</Button>)}
+      </header>
+      {showRoomForm && (<RoomForm onSubmit={handleNewRoom} />)}
       <ul>
         {rooms.length === 0 ? (
           <p>No hay ninguna sala creada</p>
@@ -83,7 +91,6 @@ export default function RoomSelect () {
           </li>
         ))}
       </ul>
-      <RoomForm onSubmit={handleNewRoom} />
     </RoomSelectStyles>
   )
 }
