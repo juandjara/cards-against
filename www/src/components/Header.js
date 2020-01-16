@@ -3,9 +3,9 @@ import styled from 'styled-components'
 import { Link } from '@reach/router'
 import { useGlobalState } from '../GlobalState'
 import config from '../config'
-import MenuIcon from './icons/PersonIcon'
-import CardsIcon from './icons/CardsIcons'
-import LogoutIcon from './icons/CloseIcons'
+import PersonIcon from './icons/PersonIcon'
+import DeckIcon from './icons/DeckIcon'
+import CloseIcon from './icons/CloseIcon'
 import Button from './Button'
 import {
   Menu,
@@ -86,16 +86,16 @@ export default function Header () {
       {currentUser && (
         <Menu>
           <MenuButtonStyles className="menu-toggle">
-            <MenuIcon />
+            <PersonIcon />
             <span>{currentUser.name}</span>
           </MenuButtonStyles>
           <MenuListStlyes>
             <MenuLink className="menu-item" as={Link} to="/decks">
-              <CardsIcon />
+              <DeckIcon />
               <span>Mis cartas</span>
             </MenuLink>
             <MenuItem className="menu-item" onSelect={() => logout()}>
-              <LogoutIcon />
+              <CloseIcon />
               <span>Cerrar sesión</span>
             </MenuItem>
           </MenuListStlyes>
