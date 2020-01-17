@@ -3,6 +3,8 @@ import Input from '../components/Input'
 import styled from 'styled-components'
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
 import "@reach/tabs/styles.css";
+import WhiteCardsIcon from '../components/icons/CardsOutlineIcon'
+import BlackCardsIcon from '../components/icons/CardsIcon'
 
 const DeckEditStyles = styled.form`
   input {
@@ -18,6 +20,11 @@ const DeckEditStyles = styled.form`
       border-top-right-radius: 4px;
       padding: 8px 16px;
       color: #007bff;
+      display: flex;
+      align-items: center;
+      span {
+        margin-left: 6px;
+      }
       &:hover:not([data-selected]) {
         color: #0056b3;
       }
@@ -49,8 +56,14 @@ export default function DeckEdit ({ deckid }) {
         placeholder="Nombre del mazo" />
       <Tabs>
         <TabList>
-          <Tab>Cartas blancas</Tab>
-          <Tab>Cartas negras</Tab>
+          <Tab>
+            <WhiteCardsIcon />
+            <span>Cartas blancas</span>
+          </Tab>
+          <Tab>
+            <BlackCardsIcon />
+            <span>Cartas negras</span>
+          </Tab>
         </TabList>
 
         <TabPanels>
