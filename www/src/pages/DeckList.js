@@ -1,10 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import Button from '../components/Button'
+import { Link } from '@reach/router'
 
 const DeckListStyles = styled.div`
-  margin: 0 auto;
-  max-width: 1200px;
   header {
     display: flex;
     align-items: center;
@@ -20,7 +19,9 @@ export default function DeckList () {
     <DeckListStyles>
       <header>
         <h2>Mis cartas</h2>
-        <Button>Crear mazo</Button>
+        <Link to="/decks/new">
+          <Button>Crear mazo</Button>
+        </Link>
       </header>
       <p>No tienes ningún mazo aún</p>
     </DeckListStyles>
