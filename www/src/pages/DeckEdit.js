@@ -5,11 +5,12 @@ import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
 import "@reach/tabs/styles.css";
 import WhiteCardsIcon from '../components/icons/CardsOutlineIcon'
 import BlackCardsIcon from '../components/icons/CardsIcon'
+import AddIcon from '../components/icons/AddIcon'
 
 const DeckEditStyles = styled.form`
   input {
     max-width: 280px;
-    margin: 1.5rem 0;
+    margin-bottom: 1.5rem;
   }
   [data-reach-tab-list] {
     background: transparent;
@@ -41,12 +42,79 @@ const DeckEditStyles = styled.form`
       color: inherit;
     }
   }
+  [data-reach-tab-panel] {
+    padding-top: 1rem;
+  }
+
+  textarea {
+    margin-bottom: 1.5rem;
+    font: inherit;
+    padding-top: 4px;
+    height: auto;
+  }
 `
+
+const CardListStyles = styled.ul`
+  list-style: none;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 4px;
+  margin: 0;
+  margin-left: -24px;
+  li {
+    padding: 8px 12px;
+    width: 250px;
+    height: 250px;
+    border-radius: 8px;
+    border: 3px solid #000;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+    transition: transform 250ms ease-in-out 0ms;
+    line-height: 1.8;
+    margin-left: 24px;
+    margin-bottom: 24px;
+    font-weight: bold;
+    ${props => props.black ? `
+      background-color: #222;
+      border-color: #fff;
+      color: white;
+    ` : ''}
+
+    &:hover {
+      transform: scale(1.05);
+    }
+
+    &.add-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      svg {
+        width: 96px;
+        height: 96px;
+      }
+    }
+  }
+`
+
+function CardList ({ black }) {
+  const cards = ['Aqui hay una carta', 'Aqui hay otra']
+  return (
+    <CardListStyles black={black}>
+      {cards.map(c => (<li key={c}>{c}</li>))}
+      <li className="add-card">
+        <AddIcon />
+      </li>
+    </CardListStyles>
+  )
+}
 
 export default function DeckEdit ({ deckid }) {
   const [name, setName] = useState("")
+  const [desc, setDesc] = useState("")
+
   return (
     <DeckEditStyles>
+      <h2>Crear mazo</h2>
       <Input 
         required
         type="text"
@@ -54,24 +122,31 @@ export default function DeckEdit ({ deckid }) {
         value={name}
         onChange={ev => setName(ev.target.value)}
         placeholder="Nombre del mazo" />
+      <Input 
+        as="textarea"
+        name="deckDescription"
+        value={desc}
+        rows={3}
+        onChange={ev => setDesc(ev.target.value)}
+        placeholder="Descripcion del mazo" />
       <Tabs>
         <TabList>
           <Tab>
-            <WhiteCardsIcon />
-            <span>Cartas blancas</span>
+            <BlackCardsIcon />
+            <span>Preguntas</span>
           </Tab>
           <Tab>
-            <BlackCardsIcon />
-            <span>Cartas negras</span>
+            <WhiteCardsIcon />
+            <span>Respuestas</span>
           </Tab>
         </TabList>
 
         <TabPanels>
           <TabPanel>
-            <p>Lista de cartas blancas</p>
+            <CardList black />
           </TabPanel>
           <TabPanel>
-            <p>Lista de cartas negras</p>
+            <CardList />
           </TabPanel>
         </TabPanels>
       </Tabs>
