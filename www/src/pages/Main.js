@@ -5,7 +5,7 @@ export default function Main ({ children }) {
   return (
     <Fragment>
       <Header></Header>
-      <main style={{ margin: '0 auto', maxWidth: 1200 }}>{children}</main>
+      <main style={{ padding: '12px', margin: '0 auto', maxWidth: 1200 }}>{children}</main>
     </Fragment>
   )
 }

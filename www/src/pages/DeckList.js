@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Button from '../components/Button'
 import { Link } from '@reach/router'
+import useDecks from '../services/useCards'
 
 const DeckListStyles = styled.div`
   header {
@@ -15,6 +16,8 @@ const DeckListStyles = styled.div`
 `
 
 export default function DeckList () {
+  const [_decks] = useDecks()
+  const decks = Object.values(_decks)
   return (
     <DeckListStyles>
       <header>
@@ -23,7 +26,17 @@ export default function DeckList () {
           <Button>Crear mazo</Button>
         </Link>
       </header>
-      <p>No tienes ningún mazo aún</p>
+      {decks.length === 0 ? (
+        <p>No tienes ningún mazo aún</p>
+      ) : (
+        <ul>
+          {decks.map(d => (
+            <li key={d.id}>
+              <Link to={`/decks/${d.id}`}>{d.name}</Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </DeckListStyles>
   )
 }

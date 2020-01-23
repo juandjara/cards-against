@@ -1,17 +1,36 @@
-import React, { useState } from 'react'
-import Input from '../components/Input'
+import React, { useRef } from 'react'
 import styled from 'styled-components'
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
 import "@reach/tabs/styles.css";
 import WhiteCardsIcon from '../components/icons/CardsOutlineIcon'
 import BlackCardsIcon from '../components/icons/CardsIcon'
-import AddIcon from '../components/icons/AddIcon'
+import useDecks from '../services/useCards'
+import uuid from 'uuid/v4'
+import { navigate } from '@reach/router'
+import CardList from '../components/deck-edit/CardList'
+import NewDeckForm from '../components/deck-edit/NewDeckForm'
 
-const DeckEditStyles = styled.form`
-  input {
-    max-width: 280px;
-    margin-bottom: 1.5rem;
+const DeckEditStyles = styled.div`
+  h2 {
+    margin: 1rem 0;
   }
+  > form {  
+    input {
+      max-width: 280px;
+      margin-bottom: 1.5rem;
+    }
+    textarea {
+      margin-bottom: 1.5rem;
+      font: inherit;
+      padding-top: 4px;
+      height: 132px;
+      resize: none;
+    }
+  }
+`
+
+const CardTabsStyle = styled(Tabs)`
+  margin-top: 2rem;
   [data-reach-tab-list] {
     background: transparent;
     border-bottom: 1px solid;
@@ -45,111 +64,78 @@ const DeckEditStyles = styled.form`
   [data-reach-tab-panel] {
     padding-top: 1rem;
   }
-
-  textarea {
-    margin-bottom: 1.5rem;
-    font: inherit;
-    padding-top: 4px;
-    height: auto;
-  }
 `
 
-const CardListStyles = styled.ul`
-  list-style: none;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 4px;
-  margin: 0;
-  margin-left: -24px;
-  li {
-    padding: 8px 12px;
-    width: 250px;
-    height: 250px;
-    border-radius: 8px;
-    border: 3px solid #000;
-    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
-    transition: transform 250ms ease-in-out 0ms;
-    line-height: 1.8;
-    margin-left: 24px;
-    margin-bottom: 24px;
-    font-weight: bold;
-    ${props => props.black ? `
-      background-color: #222;
-      border-color: #fff;
-      color: white;
-    ` : ''}
-
-    &:hover {
-      transform: scale(1.05);
-    }
-
-    &.add-card {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      svg {
-        width: 96px;
-        height: 96px;
-      }
-    }
-  }
-`
-
-function CardList ({ black }) {
-  const cards = ['Aqui hay una carta', 'Aqui hay otra']
+function CardTabs ({ cards, addCard, removeCard, editCard }) {
+  const whiteCards = cards.filter(c => c.type === 'white')
+  const blackCards = cards.filter(c => c.type === 'black')
   return (
-    <CardListStyles black={black}>
-      {cards.map(c => (<li key={c}>{c}</li>))}
-      <li className="add-card">
-        <AddIcon />
-      </li>
-    </CardListStyles>
+    <CardTabsStyle>
+      <TabList>
+        <Tab>
+          <BlackCardsIcon />
+          <span>Preguntas</span>
+        </Tab>
+        <Tab>
+          <WhiteCardsIcon />
+          <span>Respuestas</span>
+        </Tab>
+      </TabList>
+      <TabPanels>
+        <TabPanel>
+          <CardList type="black" cards={blackCards}
+            addCard={addCard}
+            editCard={editCard}
+            removeCard={removeCard} />
+        </TabPanel>
+        <TabPanel>
+          <CardList type="white" cards={whiteCards}
+            addCard={addCard}
+            editCard={editCard}
+            removeCard={removeCard} />
+        </TabPanel>
+      </TabPanels>
+    </CardTabsStyle>
   )
 }
 
 export default function DeckEdit ({ deckid }) {
-  const [name, setName] = useState("")
-  const [desc, setDesc] = useState("")
+  const editMode = deckid === 'new'
+  const [decks, setDecks] = useDecks()
+  const deck = decks[deckid] || {}
+  const idRef = useRef(deck.id || uuid())
+  const id = idRef.current
 
+  function createNewDeck ({ name, description }) {
+    setDecks({ ...decks, [id]: { id, name, description, cards: [] } })
+    navigate(`/decks/${id}`)
+  }
+  function addCard (newCard) {
+    setDecks({ ...decks, [id]: { ...deck, cards: deck.cards.concat(newCard) } })
+  }
+  function editCard (card) {
+    setDecks({ ...decks, [id]: { ...deck, cards: deck.cards.map(c => c.id === card.id ? card : c) } })
+  }
+  function removeCard (cardid) {
+    setDecks({ ...decks, [id]: { ...deck, cards: deck.cards.filter(c => c.id !== cardid) } })
+  }
+  
   return (
     <DeckEditStyles>
-      <h2>Crear mazo</h2>
-      <Input 
-        required
-        type="text"
-        name="deckName"
-        value={name}
-        onChange={ev => setName(ev.target.value)}
-        placeholder="Nombre del mazo" />
-      <Input 
-        as="textarea"
-        name="deckDescription"
-        value={desc}
-        rows={3}
-        onChange={ev => setDesc(ev.target.value)}
-        placeholder="Descripcion del mazo" />
-      <Tabs>
-        <TabList>
-          <Tab>
-            <BlackCardsIcon />
-            <span>Preguntas</span>
-          </Tab>
-          <Tab>
-            <WhiteCardsIcon />
-            <span>Respuestas</span>
-          </Tab>
-        </TabList>
-
-        <TabPanels>
-          <TabPanel>
-            <CardList black />
-          </TabPanel>
-          <TabPanel>
-            <CardList />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
+      {editMode ? (
+        <NewDeckForm onSubmit={createNewDeck} />
+      ) : (
+        <div>
+          <h2>{deck.name}</h2>
+          <p>{deck.description}</p>
+        </div>
+      )}
+      {editMode ? null : (
+        <CardTabs cards={deck.cards}
+          addCard={addCard}
+          removeCard={removeCard}
+          editCard={editCard} />
+      )}
     </DeckEditStyles>
   )
 }
