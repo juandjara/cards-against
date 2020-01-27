@@ -13,6 +13,16 @@ const DeckListStyles = styled.div`
       margin: 12px 0;
     }
   }
+  ul {
+    list-style: none;
+    padding: 0;
+    li {
+      padding: 12px 8px;
+      & + li {
+        border-top: 1px solid #ccc;
+      }
+    }
+  }
 `
 
 export default function DeckList () {
@@ -30,9 +40,16 @@ export default function DeckList () {
         <p>No tienes ningún mazo aún</p>
       ) : (
         <ul>
-          {decks.map(d => (
+          {decks.map(d => ({
+            ...d,
+            no_white: d.cards.filter(c => c.type === 'white').length,
+            no_black: d.cards.filter(c => c.type === 'black').length
+          })).map(d => (
             <li key={d.id}>
-              <Link to={`/decks/${d.id}`}>{d.name}</Link>
+              <Link to={`/decks/${d.id}`}>
+                {d.name}
+              </Link>{' '}
+              <span>({d.no_white} cartas blancas, {d.no_black} cartas negras)</span>
             </li>
           ))}
         </ul>
