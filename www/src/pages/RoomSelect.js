@@ -18,6 +18,7 @@ const RoomSelectStyles = styled.div`
     }
   }
   ul {
+    box-shadow: -4px 4px 4px 0 rgba(0,0,0,0.2);
     list-style: none;
     padding: .5rem 1rem;
     margin: 0;

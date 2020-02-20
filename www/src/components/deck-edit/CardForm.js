@@ -10,8 +10,8 @@ const CardFormStyles = styled.form`
   margin-left: 20px;
 
   > textarea {
-    width: 250px;
-    height: 250px;
+    width: 240px;
+    height: 240px;
     margin-bottom: 1.5rem;
     font: inherit;
     padding-top: 4px;

@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import Button from '../components/Button'
 import { Link } from '@reach/router'
 import useDecks from '../services/useCards'
+import WhiteCardsIcon from '../components/icons/CardsOutlineIcon'
+import BlackCardsIcon from '../components/icons/CardsIcon'
 
 const DeckListStyles = styled.div`
   header {
@@ -17,9 +19,20 @@ const DeckListStyles = styled.div`
     list-style: none;
     padding: 0;
     li {
-      padding: 12px 8px;
+      display: flex;
+      align-items: center;
+      padding: 12px 4px;
       & + li {
         border-top: 1px solid #ccc;
+      }
+      svg {
+        margin: 0 8px;
+      }
+      > span {
+        min-width: 30px;
+      }
+      a {
+        margin-left: 8px;
       }
     }
   }
@@ -31,7 +44,7 @@ export default function DeckList () {
   return (
     <DeckListStyles>
       <header>
-        <h2>Mis cartas</h2>
+        <h2>Mis mazos</h2>
         <Link to="/decks/new">
           <Button>Crear mazo</Button>
         </Link>
@@ -46,10 +59,11 @@ export default function DeckList () {
             no_black: d.cards.filter(c => c.type === 'black').length
           })).map(d => (
             <li key={d.id}>
+              <BlackCardsIcon /><span>{d.no_black}</span>
+              <WhiteCardsIcon /><span>{d.no_white}</span>
               <Link to={`/decks/${d.id}`}>
                 {d.name}
               </Link>{' '}
-              <span>({d.no_white} cartas blancas, {d.no_black} cartas negras)</span>
             </li>
           ))}
         </ul>

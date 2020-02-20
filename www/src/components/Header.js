@@ -18,9 +18,12 @@ import "@reach/menu-button/styles.css";
 
 const HeaderStyles = styled.header`
   text-align: center;
+  background-color: hsl(211, 81%, 36%);
+  color: white;
   h1 {
     margin: 0;
-    padding: 1rem;
+    padding: .5rem 1rem;
+    font-family: Avenir, sans-serif;
   }
   a {
     color: inherit;
@@ -37,8 +40,8 @@ const HeaderStyles = styled.header`
   }
   [data-reach-menu-button] {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 10px;
+    right: 10px;
     margin: 4px;
     padding: 4px;
     font-weight: bold;

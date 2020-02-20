@@ -21,15 +21,13 @@ const CardListStyles = styled.ul`
     position: relative;
   }
   .card {
-    width: 250px;
-    height: 250px;
-    border-radius: 8px;
-    border: 3px solid #000;
-    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+    width: 240px;
+    height: 240px;
+    border-radius: 4px;
+    border: 2px solid #000;
+    box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
     transition: transform 250ms ease-in-out 0ms;
-    line-height: 1.8;
-    margin-left: 24px;
-    font-weight: bold;
+    margin-left: 16px;
     ${props => props.black ? `
       background-color: #222;
       border-color: #fff;
@@ -38,13 +36,19 @@ const CardListStyles = styled.ul`
 
     p {
       margin: 0;
-      padding: 4px 12px;
+      padding: 12px 14px;
+      font-size: 20px;
+      line-height: 1.4;
+      font-weight: bold;
+      word-break: break-word;
+      hyphens: auto;
     }
   }
   .add-card-btn {
-    margin-top: 32px;
-    padding: 12px;
-    height: 50px;
+    margin-top: 36px;
+    margin-left: 16px;
+    padding: 4px 12px;
+    height: 40px;
     display: flex;
     align-items: center;
     > p {
@@ -103,7 +107,6 @@ export default function CardList ({ type, cards, removeCard, addCard, editCard }
         <Button
           className="add-card-btn"
           onClick={() => setCardInEdit("new")} 
-          style={{ marginLeft: 24 }}
           aria-label="añadir carta">
           <CardAddIcon />
           <p>Añadir carta</p>
