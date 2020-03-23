@@ -4,6 +4,7 @@ const socketIo = require("socket.io")
 const helmet = require('helmet')
 const cors = require('cors')
 const pkg = require('./package.json')
+const { db, ERRORS } = require('./db')
 
 const port = process.env.PORT || 5000
 const app = express()
@@ -13,7 +14,7 @@ const io = socketIo(httpServer, { origins: '*:*' })
 const userSocketHandler = require('./socketHandlers/users.socket')
 
 io.on('connection', socket => {
-  userSocketHandler(socket, io)
+  userSocketHandler(socket, io, db)
 })
 
 app.use(helmet())
@@ -27,32 +28,32 @@ app.get('/', (req, res) => {
   })
 })
 
-function getRooms () {
+function getGames () {
   const rooms = io.sockets.adapter.rooms
   return Object.keys(rooms)
-    .filter(key => key.startsWith('public-'))
-    .map(key => {
-      const r = rooms[key]
-      return {
-        name: key.replace('public-', ''),
-        users: Object.keys(r.sockets)
-      }
-    })
+    .filter(key => key.startsWith('game-'))
+    .map(key => db.games[key])
 }
 
-app.get('/rooms', (req, res) => {
-  res.json(getRooms())
+app.get('/games', (req, res) => {
+  res.json(getGames())
 })
 
-app.get('/rooms/:room/', (req, res) => {
-  const roomname = req.params.room
-  const room = getRooms().find(r => r.name === roomname)
-  if (!room) {
-    res.status(404).json({ error: `room '${roomname}' not found` })
-  } else {
-    res.json(room)
+app.get('/games/:id/', (req, res) => {
+  const id = req.params.id
+  try {
+    const game = db.getGame(id)
+    res.json(game)
+  } catch (err) {
+    if (err.code === ERRORS.GAME_404) {
+      res.status(404).json({ message: err.message, code: err.code })
+    } else {
+      res.status(500).json({ message: err.message })
+    }
   }
 })
+
+// TODO: add global error handler
 
 httpServer.listen(port, () => {
   console.log(`Server listening on port ${port}`)
