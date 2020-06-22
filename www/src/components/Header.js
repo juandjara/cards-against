@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Link } from '@reach/router'
-import { useGlobalState } from '../GlobalState'
+import useGlobalSlice from '../services/useGlobalSlice'
 import config from '../config'
 import PersonIcon from './icons/PersonIcon'
 import DeckIcon from './icons/DeckIcon'
@@ -74,7 +74,7 @@ const MenuListStlyes = styled(MenuList)`
 const MenuButtonStyles = Button.withComponent(MenuButton)
 
 export default function Header () {
-  const { currentUser, setCurrentUser } = useGlobalState()
+  const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
 
   function logout () {
     localStorage.removeItem(config.NAME_KEY)
@@ -90,7 +90,7 @@ export default function Header () {
         <Menu>
           <MenuButtonStyles className="menu-toggle">
             <PersonIcon />
-            <span>{currentUser.name}</span>
+            {/* <span>{currentUser.name}</span> */}
           </MenuButtonStyles>
           <MenuListStlyes>
             <MenuLink className="menu-item" as={Link} to="/decks">

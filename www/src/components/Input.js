@@ -31,7 +31,7 @@ const Input = styled.input`
   }
 
   &::placeholder {
-    color: #999;
+    color: var(--colorMedium);
   }
 
   &:hover, &:focus {
@@ -43,7 +43,7 @@ const Input = styled.input`
   }
 
   &:focus {
-    border-color: #1385e5;;
+    border-color: #1385e5;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px rgba(19, 133, 229, 0.1);
   }
 `

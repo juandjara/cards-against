@@ -1,19 +1,21 @@
 module.exports = function (socket, io, db) {
-  const { name } = socket.handshake.query
-  socket.on('user:id-request', (callback) => callback({ id: socket.id, name }))
+  socket.on('user:id-request', (callback) => callback({
+    id: socket.id,
+    name: socket.handshake.query.name
+  }))
   socket.on('game:create', gamedata => {
     const game = db.createGame({ ...gamedata, owner: socket.id })
-    socket.emit('game:created', game)
+    socket.broadcast.emit('game:created', game)
   })
   socket.on('user:join', ({game, user}) => {
     const room = `game-${game}`
     socket.join(room, () => {
       try {
         db.addPlayer(game, user)
-        socket.to(room).emit('user:joined', user)
+        socket.broadcast.emit('user:joined', {game, user})
       } catch (err) {
         console.error(`[users.socket.js] error joining ${game}: `, err)
-        socket.to(socket.id).emit('error', err)
+        socket.emit('error', err)
       }
     })
   })

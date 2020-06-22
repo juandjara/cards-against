@@ -1,9 +1,9 @@
-import React, { useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Button from '../components/Button'
-import Input from '../components/Input'
-import { useGlobalState } from '../GlobalState'
 import { Link, navigate } from '@reach/router'
+import config from '../config'
+import useGlobalSlice from '../services/useGlobalSlice'
 
 const RoomSelectStyles = styled.div`
   padding: 1rem;
@@ -22,7 +22,7 @@ const RoomSelectStyles = styled.div`
     list-style: none;
     padding: .5rem 1rem;
     margin: 0;
-    border: 1px solid #ccc;
+    border: 1px solid var(--colorLow);
     min-height: 60vh;
     border-radius: 2px;
     overflow: auto;
@@ -47,59 +47,48 @@ const RoomSelectStyles = styled.div`
   }
 `
 
-function RoomForm ({ onSubmit }) {
-  const [newRoom, setNewRoom] = useState("")
-  const inputRef = useRef()
-
-  function handleNewRoomSubmit (ev) {
-    ev.preventDefault()
-    if (inputRef.current) {
-      inputRef.current.blur()
-    }
-    setNewRoom("")
-    onSubmit(newRoom)
-  }
-
-  return (
-    <form onSubmit={handleNewRoomSubmit}>
-      <Input 
-        required
-        type="text"
-        name="newRoom"
-        ref={inputRef}
-        value={newRoom}
-        onChange={ev => setNewRoom(ev.target.value)}
-        placeholder="Nombre de la sala" />
-      <Button type="submit">Crear sala</Button>
-    </form>
-  )
-}
-
 export default function RoomSelect () {
-  const { socket, currentUser, setCurrentUser, rooms } = useGlobalState()
-  const [showRoomForm, setShowRoomForm] = useState(false)
+  const [games, setGames] = useState([])
+  const [socket] = useGlobalSlice('socket')
 
-  function handleNewRoom (room) {
-    setCurrentUser({ ...currentUser, room })
-    socket.emit('user:join', { ...currentUser, room })
-    navigate(`/room/${room}`)
+  function fetchGames () {
+    return fetch(`${config.api}/games`)
+      .then(res => res.json())
+      .then(data => {
+        setGames(data)
+      })
   }
+
+  useEffect(() => {
+    fetchGames()
+  }, [])
+
+  useEffect(() => {
+    socket.on('game:created', () => fetchGames())
+    socket.on('user:joined', () => fetchGames())
+    socket.on('user:left', () => fetchGames())
+
+    return () => {
+      socket.off('game:created')
+      socket.off('user:joined')
+      socket.off('user:left')
+    }
+  }, [socket, games])
 
   return (
     <RoomSelectStyles className="room-select">
       <header>
-        <h2>Salas disponibles</h2>
-        {!showRoomForm && (<Button onClick={() => setShowRoomForm(true)}>Nueva sala</Button>)}
+        <h2>Partidas disponibles</h2>
+        <Button onClick={() => navigate('/room/new')}>Nueva partida</Button>
       </header>
-      {showRoomForm && (<RoomForm onSubmit={handleNewRoom} />)}
       <ul>
-        {rooms.length === 0 ? (
-          <p>No hay ninguna sala creada</p>
-        ) : rooms.map(([room, users]) => (
-          <li key={room}>
-            <Link to={`/room/${room}`}>
-              <span>{room}</span>{' '}
-              ({users.map(u => String(u.name)).join(', ')})
+        {games.length === 0 ? (
+          <p>No hay ninguna partida creada</p>
+        ) : games.map(game => (
+          <li key={game.id}>
+            <Link to={`/room/${game.id}`}>
+              <span>{game.name}</span>{' '}
+              <span>({game.players.length} jugador{game.players.length === 1 ? '' : 'es'})</span>
             </Link>
           </li>
         ))}

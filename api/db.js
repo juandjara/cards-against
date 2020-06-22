@@ -14,9 +14,9 @@ const db = {
   hasGame (id) {
     return !!this.games[id]
   },
-  createGame ({ id, name, rotation, deckid, owner }) {
+  createGame ({ id, name, rotation, deck, owner }) {
     this.games[id] = {
-      id, name, rotation, deckid, owner, players: []
+      id, name, rotation, deck, owner, players: []
     }
     return this.games[id]
   },

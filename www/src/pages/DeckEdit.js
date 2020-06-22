@@ -128,13 +128,11 @@ export default function DeckEdit ({ deckid }) {
         <div>
           <h2>{deck.name}</h2>
           <p>{deck.description}</p>
+          <CardTabs cards={deck.cards}
+            addCard={addCard}
+            removeCard={removeCard}
+            editCard={editCard} />
         </div>
-      )}
-      {editMode ? null : (
-        <CardTabs cards={deck.cards}
-          addCard={addCard}
-          removeCard={removeCard}
-          editCard={editCard} />
       )}
     </DeckEditStyles>
   )

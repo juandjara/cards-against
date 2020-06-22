@@ -19,7 +19,7 @@ const CardFormStyles = styled.form`
   }
 `
 
-export default function CardForm ({ initialValue = "", onSubmit, onCancel }) {
+export default function CardForm ({ className, initialValue = "", onSubmit, onCancel }) {
   const [text, setText] = useState(initialValue)
   function handleSubmit (ev) {
     ev.preventDefault()
@@ -31,8 +31,8 @@ export default function CardForm ({ initialValue = "", onSubmit, onCancel }) {
     onCancel()
   }
   return (
-    <CardFormStyles onSubmit={handleSubmit}>
-      <CardActionsStyle>
+    <CardFormStyles className={className} onSubmit={handleSubmit}>
+      <CardActionsStyle className="card-actions">
         <button title="Guardar" disabled={!text} type="submit">
           <CheckIcon />
         </button>

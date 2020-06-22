@@ -32,8 +32,12 @@ function getGames () {
   const rooms = io.sockets.adapter.rooms
   return Object.keys(rooms)
     .filter(key => key.startsWith('game-'))
-    .map(key => db.games[key])
+    .map(key => db.games[key.replace('game-', '')])
 }
+
+app.get('/rooms', (req, res) => {
+  res.json(io.sockets.adapter.rooms)
+})
 
 app.get('/games', (req, res) => {
   res.json(getGames())

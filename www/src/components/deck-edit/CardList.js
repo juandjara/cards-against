@@ -8,15 +8,17 @@ import CloseIcon from '../icons/CloseIcon'
 import EditIcon from '../icons/EditIcon'
 import CardActionsStyle from './CardActionsStyle'
 
-const CardListStyles = styled.ul`
-  list-style: none;
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  padding: 4px;
-  margin: 0;
-  margin-left: -24px;
+const CardListStyles = styled.div`
+  ul {
+    list-style: none;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    padding: 4px;
+    margin: 0;
+    margin-left: -24px;
+  }
   li {
     position: relative;
   }
@@ -28,6 +30,7 @@ const CardListStyles = styled.ul`
     box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
     transition: transform 250ms ease-in-out 0ms;
     margin-left: 16px;
+    margin-bottom: 18px;
     ${props => props.black ? `
       background-color: #222;
       border-color: #fff;
@@ -45,14 +48,19 @@ const CardListStyles = styled.ul`
     }
   }
   .add-card-btn {
-    margin-top: 36px;
-    margin-left: 16px;
+    margin: 16px 0;
     padding: 4px 12px;
     height: 40px;
     display: flex;
     align-items: center;
     > p {
       margin-left: 4px;
+    }
+  }
+  .new-card-form {
+    margin-left: 0;
+    .card-actions {
+      justify-content: flex-start;
     }
   }
 `
@@ -79,6 +87,21 @@ export default function CardList ({ type, cards, removeCard, addCard, editCard }
 
   return (
     <CardListStyles black={blackStyle}>
+      {cardInEdit === 'new' ? (
+        <CardForm
+          className="new-card-form"
+          onSubmit={text => handleAdd({ text, type, id: uuid() })}
+          onCancel={() => setCardInEdit(null)} />
+      ) : (
+        <Button
+          className="add-card-btn"
+          onClick={() => setCardInEdit("new")} 
+          aria-label="añadir carta">
+          <CardAddIcon />
+          <p>Añadir carta</p>
+        </Button>
+      )}
+      <ul>
       {cards.map(card => (
         <li key={card.id}>
           {cardInEdit === card.id ? (
@@ -99,19 +122,7 @@ export default function CardList ({ type, cards, removeCard, addCard, editCard }
           )}  
         </li>
       ))}
-      {cardInEdit === 'new' ? (
-        <CardForm 
-          onSubmit={text => handleAdd({ text, type, id: uuid() })}
-          onCancel={() => setCardInEdit(null)} />
-      ) : (
-        <Button
-          className="add-card-btn"
-          onClick={() => setCardInEdit("new")} 
-          aria-label="añadir carta">
-          <CardAddIcon />
-          <p>Añadir carta</p>
-        </Button>
-      )}
+      </ul>
     </CardListStyles>
   )
 }

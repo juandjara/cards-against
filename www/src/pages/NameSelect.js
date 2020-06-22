@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useGlobalState } from '../GlobalState'
 import io from 'socket.io-client'
 import styled from 'styled-components'
+import useGlobalSlice from '../services/useGlobalSlice'
 import Header from '../components/Header'
 import Button from '../components/Button'
 import config from '../config'
@@ -31,7 +31,8 @@ const NameSelectStyle = styled.div`
 `
 
 export default function NameSelect () {
-  const { setCurrentUser, setSocket } = useGlobalState()
+  const [socket, setSocket] = useGlobalSlice('socket')
+  const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
   const nameFromLS = localStorage.getItem(config.NAME_KEY) || ''
   const [name, setName] = useState(nameFromLS)
   const inputRef = useRef()
@@ -45,9 +46,9 @@ export default function NameSelect () {
     const socket = io(`${config.api}?name=${name}`)
     socket.on('connect', () => {
       socket.emit('user:id-request', (user) => {
-        localStorage.setItem(config.NAME_KEY, name)
-        setCurrentUser(user)
         setSocket(socket)
+        setCurrentUser(user)
+        localStorage.setItem(config.NAME_KEY, name)
       })
     })
   }

@@ -8,7 +8,7 @@ import { GlobalStateProvider } from './GlobalState'
 function AppWithContext () {
   return (
     <GlobalStateProvider>
-      <App></App>
+      <App />
     </GlobalStateProvider>
   )
 }
