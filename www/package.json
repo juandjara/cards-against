@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@reach/menu-button": "^0.7.2",
+    "@reach/portal": "^0.10.5",
     "@reach/router": "^1.2.1",
     "@reach/tabs": "^0.7.2",
     "@testing-library/jest-dom": "^4.2.4",

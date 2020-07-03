@@ -4,7 +4,6 @@ const CardActionsStyle = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  margin-bottom: 4px;
   button {
     border: none;
     background-color: none;

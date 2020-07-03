@@ -1,20 +1,311 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
-import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
-import "@reach/tabs/styles.css";
 import WhiteCardsIcon from '../components/icons/CardsOutlineIcon'
 import BlackCardsIcon from '../components/icons/CardsIcon'
 import useDecks from '../services/useCards'
 import uuid from 'uuid/v4'
 import { navigate } from '@reach/router'
-import CardList from '../components/deck-edit/CardList'
 import NewDeckForm from '../components/deck-edit/NewDeckForm'
+import CloseIcon from '../components/icons/CloseIcon'
+import EditIcon from '../components/icons/EditIcon'
+import CheckIcon from '../components/icons/CheckIcon'
+import Input from '../components/Input'
+import Button from '../components/Button'
+import Portal from '@reach/portal'
+
+const CardListsStyle = styled.main`
+  margin: 24px 0;
+
+  section {
+    padding: 12px 0;
+  }
+
+  header {
+    color: #007bff;
+    padding: 12px 4px;
+
+    svg {
+      vertical-align: bottom;
+    }
+
+    span {
+      margin-left: 8px;
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding: 4px;
+    margin: 0;
+
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-start;
+    overflow: auto;
+  }
+`
+
+const PortalStyles = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 2;
+
+  .portal-content {
+    border: solid 1px hsla(0, 0%, 0%, 0.25);
+    border-radius: 8px;
+    box-shadow: 0px 2px 10px hsla(0, 0%, 0%, 0.25);
+    background: white;
+    width: calc(100vmin - 32px);
+    /* height: calc(100vmin - 32px); */
+    max-width: 400px;
+    /* max-height: 400px; */
+  }
+`
+
+function CardLists ({ cards, addCard, removeCard, editCard }) {
+  const whiteCards = cards.filter(c => c.type === 'white')
+  const blackCards = cards.filter(c => c.type === 'black')
+  const [selectedCard, setSelectedCard] = useState(null)
+
+  function handleSave (card) {
+    if (card.id) {
+      editCard(card)
+    } else {
+      addCard(card)
+    }
+    closePortal()
+  }
+
+  function closePortal () {
+    setSelectedCard(null)
+  }
+
+  function handleRemove () {
+    const confirmation = window.confirm('¿Seguro que quieres borrar esta carta?')
+    if (!confirmation) {
+      return
+    }
+    removeCard(selectedCard.id)
+    closePortal()
+  }
+
+  function handlePortalClick (ev) {
+    const el = document.querySelector('.portal-content')
+    if (!el.contains(ev.target)) {
+      closePortal()
+    }
+  }
+
+  return (
+    <CardListsStyle>
+      {selectedCard && (
+        <Portal>
+          <PortalStyles onClick={handlePortalClick} className="portal-backdrop">
+            <CardForm
+              className="portal-content"
+              card={selectedCard}
+              onSave={handleSave}
+              onRemove={handleRemove}
+              onCancel={closePortal} />
+          </PortalStyles>
+        </Portal>
+      )}
+      <section>
+        <header>
+          <BlackCardsIcon />
+          <span>Preguntas</span>
+        </header>
+        <Button onClick={() => setSelectedCard({ type: 'black', text: '' })}>Nueva carta</Button>
+        <ul>
+          {blackCards.map(card => (
+            <CardStyles 
+              key={card.id}
+              className="black"
+              onClick={() => setSelectedCard(card)}>
+              <p>{card.text}</p>
+            </CardStyles>
+          ))}
+        </ul>
+      </section>
+      <section>
+        <header>
+          <WhiteCardsIcon />
+          <span>Respuestas</span>
+        </header>
+        <Button onClick={() => setSelectedCard({ type: 'white', text: '' })}>Nueva carta</Button>
+        <ul>
+          {whiteCards.map(card => (
+            <CardStyles 
+              key={card.id}
+              className="white"
+              onClick={() => setSelectedCard(card)}>
+              <p>{card.text}</p>
+            </CardStyles>
+          ))}
+        </ul>
+      </section>
+    </CardListsStyle>
+  )
+}
+
+const CardStyles = styled.li`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-shrink: 0;
+  width: 180px;
+  height: 180px;
+  margin-top: 16px;
+  padding: 12px 16px;
+  padding-bottom: 24px;
+  background-color: white;
+  border: 2px solid #333;
+  border-radius: 16px;
+  box-shadow: 0px 0px 8px 0px rgba(0,0,0, 0.25);
+  transition: transform 0.25s ease;
+  font-weight: bold;
+  z-index: 1;
+  transform-style: preserve-3d;
+
+  &.white {
+    border-color: #333;
+    background-color: white;
+    color: #333;
+  }
+
+  &.black {
+    border-color: white;
+    background-color: #333;
+    color: white;
+  }
+
+  &:hover {
+    transform: translateY(-12px);
+  }
+
+  & + li {
+    margin-left: -12px;
+  }
+
+  p {
+    margin: 0;
+  }
+`
+
+const CardFormStyle = styled.form`
+  padding: 16px 12px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  position: relative;
+
+  ${CardStyles} {
+    padding: 0;
+    margin: 0;
+    &:hover {
+      transform: none;
+    }
+  }
+
+  textarea {
+    font: inherit;
+    margin: 0;
+    padding: 12px 16px 24px 16px;
+    height: 100%;
+    resize: none;
+    background-color: inherit;
+    color: inherit;
+    border-radius: inherit;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: none;
+    border: none;
+    padding: 8px;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 0 8px 0 8px;
+
+    &:hover, &:focus {
+      background-color: #f2f2f2;
+    }
+  }
+
+  .actions {
+    margin-top: 12px;
+  }
+
+  .delete-btn {
+    background: none;
+    border: none;
+    &:hover, &:focus {
+      text-decoration: underline;
+    }
+  }
+`
+
+function CardForm ({ 
+  card, className,
+  onSave, onCancel, onRemove,
+  placeholder = 'Texto de la carta'
+}) {
+  const [text, setText] = useState(card.text)
+
+  function handleSubmit (ev) {
+    ev.preventDefault()
+    onSave({ ...card, text })
+  }
+
+  return (
+    <CardFormStyle className={className}>
+      <CardStyles as="div" className={card.type}>
+        <Input
+          required
+          as="textarea"
+          name={`card-input-${card.id}`}
+          value={text}
+          onChange={ev => setText(ev.target.value)}
+          placeholder={placeholder} />
+      </CardStyles>
+      <button className="close-btn" type="button" onClick={onCancel}>
+        <CloseIcon />
+      </button>
+      <div className="actions">
+        {card.id && (<Button className="delete-btn"type="button" onClick={onRemove}>
+          <span>Eliminar</span>
+        </Button>)}
+        <Button className="save-btn" type="submit" disabled={!text} onClick={handleSubmit}>
+          <span>Guardar</span>
+        </Button>
+      </div>
+    </CardFormStyle>
+  )
+}
 
 const DeckEditStyles = styled.div`
-  h2 {
-    margin: 1rem 0;
+  margin-top: 2rem;
+
+  .title {
+    margin: 0;
+    margin-top: 1.5rem;
   }
-  > form {  
+  .description {
+    margin: 0;
+  }
+  .new-deck-form {  
     input {
       max-width: 280px;
       margin-bottom: 1.5rem;
@@ -29,78 +320,8 @@ const DeckEditStyles = styled.div`
   }
 `
 
-const CardTabsStyle = styled(Tabs)`
-  margin-top: 2rem;
-  [data-reach-tab-list] {
-    background: transparent;
-    border-bottom: 1px solid;
-    border-color: #dee2e6;
-    [data-reach-tab] {
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
-      padding: 8px 16px;
-      color: #007bff;
-      display: flex;
-      align-items: center;
-      span {
-        margin-left: 6px;
-      }
-      &:hover:not([data-selected]) {
-        color: #0056b3;
-      }
-      &::-moz-focus-inner {
-        outline: 0;
-        border: none;
-      }
-    }
-    [data-selected] {
-      border: 1px solid #dee2e6;
-      border-bottom-color: transparent;
-      margin-bottom: -1px;
-      background-color: white;
-      color: inherit;
-    }
-  }
-  [data-reach-tab-panel] {
-    padding-top: 1rem;
-  }
-`
-
-function CardTabs ({ cards, addCard, removeCard, editCard }) {
-  const whiteCards = cards.filter(c => c.type === 'white')
-  const blackCards = cards.filter(c => c.type === 'black')
-  return (
-    <CardTabsStyle>
-      <TabList>
-        <Tab>
-          <BlackCardsIcon />
-          <span>Preguntas</span>
-        </Tab>
-        <Tab>
-          <WhiteCardsIcon />
-          <span>Respuestas</span>
-        </Tab>
-      </TabList>
-      <TabPanels>
-        <TabPanel>
-          <CardList type="black" cards={blackCards}
-            addCard={addCard}
-            editCard={editCard}
-            removeCard={removeCard} />
-        </TabPanel>
-        <TabPanel>
-          <CardList type="white" cards={whiteCards}
-            addCard={addCard}
-            editCard={editCard}
-            removeCard={removeCard} />
-        </TabPanel>
-      </TabPanels>
-    </CardTabsStyle>
-  )
-}
-
 export default function DeckEdit ({ deckid }) {
-  const editMode = deckid === 'new'
+  const deckIsNew = deckid === 'new'
   const [decks, setDecks] = useDecks()
   const deck = decks[deckid] || {}
   const idRef = useRef(deck.id || uuid())
@@ -111,6 +332,7 @@ export default function DeckEdit ({ deckid }) {
     navigate(`/decks/${id}`)
   }
   function addCard (newCard) {
+    newCard = { ...newCard, id: uuid(), created_at: Date.now() }
     setDecks({ ...decks, [id]: { ...deck, cards: deck.cards.concat(newCard) } })
   }
   function editCard (card) {
@@ -119,21 +341,24 @@ export default function DeckEdit ({ deckid }) {
   function removeCard (cardid) {
     setDecks({ ...decks, [id]: { ...deck, cards: deck.cards.filter(c => c.id !== cardid) } })
   }
-  
+
+  if (deckIsNew) {
+    return (
+      <DeckEditStyles>
+        <NewDeckForm onSubmit={createNewDeck} />
+      </DeckEditStyles>
+    )
+  }
+
   return (
     <DeckEditStyles>
-      {editMode ? (
-        <NewDeckForm onSubmit={createNewDeck} />
-      ) : (
-        <div>
-          <h2>{deck.name}</h2>
-          <p>{deck.description}</p>
-          <CardTabs cards={deck.cards}
-            addCard={addCard}
-            removeCard={removeCard}
-            editCard={editCard} />
-        </div>
-      )}
+      <h2 className="title">{deck.name}</h2>
+      <p className="description">{deck.description}</p>
+      <CardLists
+        cards={deck.cards.sort((a, b) => (b.created_at || 0) - (a.created_at || 0))}
+        addCard={addCard}
+        removeCard={removeCard}
+        editCard={editCard} />
     </DeckEditStyles>
   )
 }

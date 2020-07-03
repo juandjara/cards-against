@@ -30,3 +30,11 @@ code {
 *::after {
   box-sizing: border-box;
 }
+
+@font-face {
+  font-family: "Warownia";
+  src: local("Helvetica Neue Bold"),
+    local("HelveticaNeue-Bold"),
+    url('assets/fonts/Warownia.otf');
+  font-weight: bold;
+}
