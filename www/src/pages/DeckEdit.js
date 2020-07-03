@@ -7,11 +7,10 @@ import uuid from 'uuid/v4'
 import { navigate } from '@reach/router'
 import NewDeckForm from '../components/deck-edit/NewDeckForm'
 import CloseIcon from '../components/icons/CloseIcon'
-import EditIcon from '../components/icons/EditIcon'
-import CheckIcon from '../components/icons/CheckIcon'
 import Input from '../components/Input'
 import Button from '../components/Button'
 import Portal from '@reach/portal'
+import IconArrowLeft from '../components/icons/IconArrowLeft'
 
 const CardListsStyle = styled.main`
   margin: 24px 0;
@@ -63,11 +62,9 @@ const PortalStyles = styled.div`
     border: solid 1px hsla(0, 0%, 0%, 0.25);
     border-radius: 8px;
     box-shadow: 0px 2px 10px hsla(0, 0%, 0%, 0.25);
-    background: white;
+    background: linear-gradient(to left, #fafafa 0%, #eaeaea 100%);
     width: calc(100vmin - 32px);
-    /* height: calc(100vmin - 32px); */
     max-width: 400px;
-    /* max-height: 400px; */
   }
 `
 
@@ -165,6 +162,7 @@ const CardStyles = styled.li`
   width: 180px;
   height: 180px;
   margin-top: 16px;
+  margin-bottom: 8px; 
   padding: 12px 16px;
   padding-bottom: 24px;
   background-color: white;
@@ -297,6 +295,7 @@ function CardForm ({
 
 const DeckEditStyles = styled.div`
   margin-top: 2rem;
+  position: relative;
 
   .title {
     margin: 0;
@@ -305,6 +304,39 @@ const DeckEditStyles = styled.div`
   .description {
     margin: 0;
   }
+
+  > header {
+    padding-left: 48px;
+  }
+
+  .back-btn {
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    position: absolute;
+    top: 12px;
+    left: 0;
+    color: #868686;
+
+    svg {
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  @media (max-width: 45rem) {
+    .title {
+      font-size: 18px;
+    }
+    .description {
+      font-size: 14px;
+    }
+    .back-btn {
+      top: 8px;
+    }
+  }
+
   .new-deck-form {  
     input {
       max-width: 280px;
@@ -352,8 +384,13 @@ export default function DeckEdit ({ deckid }) {
 
   return (
     <DeckEditStyles>
-      <h2 className="title">{deck.name}</h2>
-      <p className="description">{deck.description}</p>
+      <button className="back-btn" onClick={() => window.history.back()}>
+        <IconArrowLeft />
+      </button>
+      <header>
+        <h2 className="title">{deck.name}</h2>
+        <p className="description">{deck.description}</p>
+      </header>
       <CardLists
         cards={deck.cards.sort((a, b) => (b.created_at || 0) - (a.created_at || 0))}
         addCard={addCard}

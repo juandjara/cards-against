@@ -7,23 +7,24 @@ import WhiteCardsIcon from '../components/icons/CardsOutlineIcon'
 import BlackCardsIcon from '../components/icons/CardsIcon'
 
 const DeckListStyles = styled.div`
+  margin-top: 2rem;
+
   header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     h2 {
-      margin: 12px 0;
+      margin-top: 0;
+      margin-bottom: 8px;
     }
   }
   ul {
     list-style: none;
     padding: 0;
+    margin: 24px 0;
     li {
       display: flex;
       align-items: center;
       padding: 12px 4px;
       & + li {
-        border-top: 1px solid #ccc;
+        border-top: 2px solid #e8e8e8;
       }
       svg {
         margin: 0 8px;
@@ -42,7 +43,7 @@ export default function DeckList () {
   const [_decks] = useDecks()
   const decks = Object.values(_decks)
   return (
-    <DeckListStyles>
+    <DeckListStyles className="deck-list">
       <header>
         <h2>Mis mazos</h2>
         <Link to="/decks/new">

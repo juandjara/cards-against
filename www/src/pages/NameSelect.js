@@ -8,7 +8,10 @@ import config from '../config'
 
 const NameSelectStyle = styled.div`
   height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr; 
   form {
+    align-self: center;
     display: flex;
     align-items: stretch;
     justify-content: center;
@@ -20,12 +23,15 @@ const NameSelectStyle = styled.div`
       color: inherit;
       border: 1px solid #bfbfbf;
       border-right-color: transparent;
+      border-radius: 4px 0 0 4px;
       &::placeholder {
         color: #aaa;
       }
     }
     button {
-      border-radius: 0;
+      border-radius: 0 4px 4px 0;
+      font-size: 16px;
+      font-weight: 600;
     }
   }
 `
