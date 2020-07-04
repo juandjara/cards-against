@@ -1,50 +1,100 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import InputStyles from '../Input'
-import CheckIcon from '../icons/CheckIcon'
+import Button from '../Button'
+import Input from '../Input'
 import CloseIcon from '../icons/CloseIcon'
-import CardActionsStyle from './CardActionsStyle'
+import CardStyles from './CardStyles'
 
-const CardFormStyles = styled.form`
+const CardFormStyle = styled.form`
+  padding: 16px 12px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
   position: relative;
-  margin-left: 20px;
 
-  > textarea {
-    width: 240px;
-    height: 240px;
-    margin-bottom: 1.5rem;
+  ${CardStyles} {
+    padding: 0;
+    margin: 0;
+    &:hover {
+      transform: none;
+    }
+  }
+
+  textarea {
     font: inherit;
-    padding-top: 4px;
+    margin: 0;
+    padding: 12px 16px 24px 16px;
+    height: 100%;
     resize: none;
+    background-color: inherit;
+    color: inherit;
+    border-radius: inherit;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: none;
+    border: none;
+    padding: 8px;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 0 8px 0 8px;
+
+    &:hover, &:focus {
+      background-color: #f2f2f2;
+    }
+  }
+
+  .actions {
+    margin-top: 12px;
+  }
+
+  .delete-btn {
+    background: none;
+    border: none;
+    &:hover, &:focus {
+      text-decoration: underline;
+    }
   }
 `
 
-export default function CardForm ({ className, initialValue = "", onSubmit, onCancel }) {
-  const [text, setText] = useState(initialValue)
+export default function CardForm ({ 
+  card, className,
+  onSave, onCancel, onRemove,
+  placeholder = 'Texto de la carta'
+}) {
+  const [text, setText] = useState(card.text)
+
   function handleSubmit (ev) {
     ev.preventDefault()
-    setText("")
-    onSubmit(text)
+    onSave({ ...card, text })
   }
-  function handleCancel () {
-    setText("")
-    onCancel()
-  }
+
   return (
-    <CardFormStyles className={className} onSubmit={handleSubmit}>
-      <CardActionsStyle className="card-actions">
-        <button title="Guardar" disabled={!text} type="submit">
-          <CheckIcon />
-        </button>
-        <button title="Cancelar" type="button" onClick={handleCancel}>
-          <CloseIcon />
-        </button>
-      </CardActionsStyle>
-      <InputStyles 
-        as="textarea"
-        value={text}
-        onChange={ev => setText(ev.target.value)}
-        placeholder="Escribe el contenido de la nueva carta..." />
-    </CardFormStyles>
+    <CardFormStyle className={className}>
+      <CardStyles as="div" className={card.type}>
+        <Input
+          required
+          as="textarea"
+          name={`card-input-${card.id}`}
+          value={text}
+          onChange={ev => setText(ev.target.value)}
+          placeholder={placeholder} />
+      </CardStyles>
+      <button className="close-btn" type="button" onClick={onCancel}>
+        <CloseIcon />
+      </button>
+      <div className="actions">
+        {card.id && (<Button className="delete-btn" type="button" onClick={onRemove}>
+          <span>Eliminar</span>
+        </Button>)}
+        <Button className="save-btn" type="submit" disabled={!text} onClick={handleSubmit}>
+          <span>Guardar</span>
+        </Button>
+      </div>
+    </CardFormStyle>
   )
 }
