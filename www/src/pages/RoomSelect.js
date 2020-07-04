@@ -4,11 +4,32 @@ import Button from '../components/Button'
 import { Link, navigate } from '@reach/router'
 import config from '../config'
 import useGlobalSlice from '../services/useGlobalSlice'
+import IconInterface from '../components/icons/IconInterface'
 
 const RoomSelectStyles = styled.div`
-  padding: 1rem;
-  margin: 0 auto;
-  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 64px);
+
+  .main-btn {
+    min-width: 250px;
+    background: transparent;
+    color: var(--colorPrimary);
+    border: 2px solid currentColor;
+    margin-bottom: 32px;
+    padding: 15px 30px;
+    font-size: 20px;
+    font-weight: 600;
+    box-shadow: 0 4px 6px hsla(0, 0%, 0%, 0.2);
+    transition: box-shadow 0.25s ease;
+
+    &:active {
+      box-shadow: 0 1px 3px hsla(0, 0%, 0%, 0.2);
+    }
+  }
+
   header {
     display: flex;
     align-items: center;
@@ -45,6 +66,27 @@ const RoomSelectStyles = styled.div`
       margin-left: 12px;
     }
   }
+
+  footer {
+    position: fixed;
+    bottom: 8px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    color: var(--colorMidHigh);
+    font-size: 14px;
+
+    a {
+      color: inherit;
+    }
+
+    svg {
+      margin-right: 4px;
+      width: 20px;
+      height: 20px;
+      color: var(--colorMedium);
+    }
+  }
 `
 
 export default function RoomSelect () {
@@ -77,11 +119,20 @@ export default function RoomSelect () {
 
   return (
     <RoomSelectStyles className="room-select">
-      <header>
+      {/* <header>
         <h2>Partidas disponibles</h2>
         <Button onClick={() => navigate('/room/new')}>Nueva partida</Button>
-      </header>
-      <ul>
+      </header> */}
+      <section>
+        <Button className="main-btn">Unirse a una partida</Button>
+      </section>
+      <Button onClick={() => navigate('/room/new')} className="main-btn">Nueva partida</Button>
+      <Button onClick={() => navigate('/decks')} className="main-btn">Mis mazos</Button>
+      <footer>
+        <IconInterface />
+        <span> by <a href="https://juandjara.com" target="_blank">juandjara</a></span>
+      </footer>
+      {/* <ul>
         {games.length === 0 ? (
           <p>No hay ninguna partida creada</p>
         ) : games.map(game => (
@@ -92,7 +143,7 @@ export default function RoomSelect () {
             </Link>
           </li>
         ))}
-      </ul>
+      </ul> */}
     </RoomSelectStyles>
   )
 }

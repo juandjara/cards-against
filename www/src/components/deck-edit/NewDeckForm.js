@@ -27,6 +27,9 @@ export default function NewDeckForm ({ onSubmit }) {
         onChange={ev => setDescription(ev.target.value)}
         placeholder="Descripcion del mazo" />
       <Button>Guardar</Button>
+      <Button className="cancel-btn" 
+        onClick={() => window.history.back()} 
+        type="button">Cancelar</Button>
     </form>
   )
 }

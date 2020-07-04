@@ -16,7 +16,7 @@ import {
 import "@reach/menu-button/styles.css";
 
 const HeaderStyles = styled.header`
-  background-color: hsl(211, 81%, 36%);
+  background-color: var(--colorPrimary);
   color: white;
   h1 {
     margin: 0;

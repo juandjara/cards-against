@@ -7,6 +7,8 @@
   --colorLow: #e4e5e8;
   --colorVeryLow: #f2f2f4;
   --colorNegative: #ffffff;
+
+  --colorPrimary: hsl(211, 81%, 36%);
 }
 
 body {
@@ -23,6 +25,14 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover, a:focus {
+  text-decoration: underline;
 }
 
 *,

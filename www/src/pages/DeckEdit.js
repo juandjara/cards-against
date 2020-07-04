@@ -61,7 +61,7 @@ const PortalStyles = styled.div`
   .portal-content {
     border: solid 1px hsla(0, 0%, 0%, 0.25);
     border-radius: 8px;
-    box-shadow: 0px 2px 10px hsla(0, 0%, 0%, 0.25);
+    box-shadow: 0px 15px 35px hsla(0, 0%, 0%, 0.25);
     background: linear-gradient(to left, #fafafa 0%, #eaeaea 100%);
     width: calc(100vmin - 32px);
     max-width: 400px;
@@ -282,7 +282,7 @@ function CardForm ({
         <CloseIcon />
       </button>
       <div className="actions">
-        {card.id && (<Button className="delete-btn"type="button" onClick={onRemove}>
+        {card.id && (<Button className="delete-btn" type="button" onClick={onRemove}>
           <span>Eliminar</span>
         </Button>)}
         <Button className="save-btn" type="submit" disabled={!text} onClick={handleSubmit}>
@@ -348,6 +348,14 @@ const DeckEditStyles = styled.div`
       padding-top: 4px;
       height: 132px;
       resize: none;
+    }
+
+    .cancel-btn {
+      background: none;
+      border: none;
+      &:hover, &:focus {
+        text-decoration: underline;
+      }
     }
   }
 `
