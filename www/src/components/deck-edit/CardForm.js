@@ -16,9 +16,6 @@ const CardFormStyle = styled.form`
   ${CardStyles} {
     padding: 0;
     margin: 0;
-    &:hover {
-      transform: none;
-    }
   }
 
   textarea {
@@ -75,7 +72,7 @@ export default function CardForm ({
 
   return (
     <CardFormStyle className={className}>
-      <CardStyles as="div" className={card.type}>
+      <CardStyles className={card.type}>
         <Input
           required
           as="textarea"

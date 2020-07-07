@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-const CardStyles = styled.li`
+const CardStyles = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -15,10 +15,10 @@ const CardStyles = styled.li`
   border: 2px solid #333;
   border-radius: 16px;
   box-shadow: 0px 0px 8px 0px rgba(0,0,0, 0.25);
-  transition: transform 0.25s ease;
   font-weight: bold;
   z-index: 1;
   transform-style: preserve-3d;
+  transition: transform 0.25s ease;
 
   &.white {
     border-color: #333;
@@ -32,16 +32,16 @@ const CardStyles = styled.li`
     color: white;
   }
 
-  &:hover {
-    transform: translateY(-12px);
+  &.translate-y {
+    &:hover {
+      transform: translateY(-12px);
+    }
   }
 
-  & + li {
-    margin-left: -12px;
-  }
-
-  p {
-    margin: 0;
+  &.scale {
+    &:hover {
+      transform: scale(1.05);
+    }
   }
 `
 

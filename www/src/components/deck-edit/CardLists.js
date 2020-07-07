@@ -7,6 +7,30 @@ import Button from '../Button'
 import CardForm from './CardForm'
 import CardStyles from './CardStyles'
 
+const PortalStyles = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 2;
+
+  .portal-content {
+    border: solid 1px hsla(0, 0%, 0%, 0.25);
+    border-radius: 8px;
+    box-shadow: 0px 15px 35px hsla(0, 0%, 0%, 0.25);
+    background: linear-gradient(to left, #fafafa 0%, #eaeaea 100%);
+    width: calc(100vmin - 32px);
+    max-width: 400px;
+  }
+`
+
 const CardListsStyle = styled.main`
   margin: 24px 0;
 
@@ -36,30 +60,10 @@ const CardListsStyle = styled.main`
     align-items: stretch;
     justify-content: flex-start;
     overflow: auto;
-  }
-`
 
-const PortalStyles = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0, 0.25);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  z-index: 2;
-
-  .portal-content {
-    border: solid 1px hsla(0, 0%, 0%, 0.25);
-    border-radius: 8px;
-    box-shadow: 0px 15px 35px hsla(0, 0%, 0%, 0.25);
-    background: linear-gradient(to left, #fafafa 0%, #eaeaea 100%);
-    width: calc(100vmin - 32px);
-    max-width: 400px;
+    li + li {
+      margin-left: -12px;
+    }
   }
 `
 
@@ -119,11 +123,12 @@ export default function CardLists ({ cards, addCard, removeCard, editCard }) {
         <Button onClick={() => setSelectedCard({ type: 'black', text: '' })}>Nueva carta</Button>
         <ul>
           {blackCards.map(card => (
-            <CardStyles 
+            <CardStyles
               key={card.id}
-              className="black"
+              as="li"
+              className="black translate-y"
               onClick={() => setSelectedCard(card)}>
-              <p>{card.text}</p>
+              {card.text}
             </CardStyles>
           ))}
         </ul>
@@ -138,9 +143,10 @@ export default function CardLists ({ cards, addCard, removeCard, editCard }) {
           {whiteCards.map(card => (
             <CardStyles 
               key={card.id}
-              className="white"
+              as="li"
+              className="white translate-y"
               onClick={() => setSelectedCard(card)}>
-              <p>{card.text}</p>
+              {card.text}
             </CardStyles>
           ))}
         </ul>

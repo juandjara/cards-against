@@ -21,7 +21,7 @@ const HeaderStyles = styled.header`
   h1 {
     margin: 0;
     padding: .5rem 1rem;
-    font-family: Avenir, sans-serif;
+    font-family: var(--fontDisplay), sans-serif;
   }
 
   a {
@@ -34,7 +34,6 @@ const HeaderStyles = styled.header`
     }
     &:focus {
       text-decoration: underline;
-      text-decoration-color: blue;
     }
   }
 
@@ -76,8 +75,10 @@ const HeaderStyles = styled.header`
     .menu-toggle {
       right: 4px;
       top: 6px;
-      padding-left: 8px;
-      padding-right: 4px;
+      padding: 4px;
+      span {
+        display: none;
+      }
     }
   }
 `
@@ -85,6 +86,12 @@ const HeaderStyles = styled.header`
 const MenuListStlyes = styled(MenuList)`
   padding: 12px 0;
   border-radius: 2px;
+  .username {
+    margin: 0 16px 12px 0;
+    text-align: right;
+    font-size: 16px;
+    font-weight: 600;
+  }
   .menu-item {
     display: flex;
     align-items: center;
@@ -115,6 +122,7 @@ export default function Header () {
             <IconUser />
           </MenuButton>
           <MenuListStlyes>
+            <p className="username">{currentUser.name}</p>
             <MenuLink className="menu-item" as={Link} to="/decks">
               <DeckIcon />
               <span>Mis cartas</span>

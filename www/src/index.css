@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+
 :root {
   --colorTop: #1a1e29;
   --colorHigh: #383d4c;
@@ -5,21 +7,23 @@
   --colorMedium: #9397a2;
   --colorModerate: #c9cbd1;
   --colorLow: #e4e5e8;
-  --colorVeryLow: #f2f2f4;
-  --colorNegative: #ffffff;
+  --colorVeryLow: #f2f2f8;
 
   --colorPrimary: hsl(211, 81%, 36%);
+
+  --fontDisplay: 'Rubik';
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
     sans-serif;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--colorHigh);
+  background-color: var(--colorVeryLow);
 }
 
 code {
