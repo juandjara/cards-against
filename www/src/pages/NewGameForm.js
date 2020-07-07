@@ -78,7 +78,7 @@ const RoomStyle = styled.div`
   }
 `
 
-export default function Room ({ navigate, roomid }) {
+export default function NewGameForm ({ navigate, roomid }) {
   const [socket] = useGlobalSlice('socket')
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
   const [form, setForm] = useState({

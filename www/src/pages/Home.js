@@ -9,7 +9,7 @@ import CheckIcon from '../components/icons/CheckIcon'
 import CardStyles from '../components/deck-edit/CardStyles'
 import InputStyles from '../components/Input'
 
-const RoomSelectStyles = styled.div`
+const HomeStyles = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -173,7 +173,7 @@ const RoomSelectStyles = styled.div`
   }
 `
 
-export default function RoomSelect () {
+export default function Home () {
   const [games, setGames] = useState([])
   const [socket] = useGlobalSlice('socket')
   const [isRotated, setIsRotated] = useState(false)
@@ -203,11 +203,17 @@ export default function RoomSelect () {
   }, [socket, games])
 
   return (
-    <RoomSelectStyles className="room-select">
+    <HomeStyles className="home">
       <div className="btn-group">
         <div className={`card-flip ${isRotated ? 'rotated' : ''}`}>
-          <CardStyles as="button" onClick={() => setIsRotated(true)} className="card-flip-elem card-flip-front white scale">Unirse a una partida</CardStyles>
-          <CardStyles as="form" className="card-flip-elem card-flip-back" onSubmit={ev => ev.preventDefault()}>
+          <CardStyles as="button"
+            onClick={() => setIsRotated(true)} 
+            className="card-flip-elem card-flip-front white scale">
+            Unirse a una partida
+          </CardStyles>
+          <CardStyles as="form"
+            onSubmit={ev => ev.preventDefault()}
+            className="card-flip-elem card-flip-back white">
             <label>Introduce el código</label>
             <div className="input-group">
               <InputStyles type="text" placeholder="xxxx" />
@@ -215,12 +221,16 @@ export default function RoomSelect () {
             </div>
           </CardStyles>
         </div>
-        <CardStyles as="button" className="black scale">Nueva partida</CardStyles>
+        <CardStyles as="button"
+          onClick={() => navigate('/room/new')}
+          className="black scale">
+          Nueva partida
+        </CardStyles>
       </div>
       <footer>
         <IconInterface />
         <span> by <a href="https://juandjara.com" target="_blank">juandjara</a></span>
       </footer>
-    </RoomSelectStyles>
+    </HomeStyles>
   )
 }
