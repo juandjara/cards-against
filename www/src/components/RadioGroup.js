@@ -1,25 +1,35 @@
 import React from 'react'
-import RadioButton from './RadioButton'
 import styled from 'styled-components'
 
 const RadioGroupStyles = styled.div`
-  margin: 24px 0;
-  > p {
-    margin: 8px 0;
+  font-size: 14px;
+  line-height: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: flex-start;
+  label {
+    display: block;
+    margin-right: 8px;
+    padding: 2px 0;
+    cursor: pointer;
+  }
+  span {
+    margin-left: 4px;
   }
 `
 
-export default function RadioGroup ({ options, label, name, value, onChange }) {
+export default function RadioGroup ({ name, options, value, onChange }) {
   return (
     <RadioGroupStyles className="radio-group">
-      <p>{label}</p>
       {options.map(opt => (
-        <RadioButton
-          name={name}
-          label={opt.label}
-          value={opt.value}
-          checked={opt.value === value}
-          onChange={ev => onChange(ev.target.value)} />
+        <label key={opt.value}>
+          <input type="radio"
+            checked={value === opt.value}
+            onChange={() => onChange(opt.value)}
+            value={opt.value} name={name} />
+          <span>{opt.label}</span>
+        </label>
       ))}
     </RadioGroupStyles>
   )

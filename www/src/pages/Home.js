@@ -51,46 +51,6 @@ const HomeStyles = styled.div`
     }
   }
 
-  /* header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    h2 {
-      margin: 12px 0;
-    }
-  }
-
-  ul {
-    box-shadow: -4px 4px 4px 0 rgba(0,0,0,0.2);
-    list-style: none;
-    padding: .5rem 1rem;
-    margin: 0;
-    border: 1px solid var(--colorLow);
-    min-height: 60vh;
-    border-radius: 2px;
-    overflow: auto;
-  }
-
-  li {
-    padding: 8px 12px;
-    & + li {
-      border-top: 1px solid #ccc;
-    }
-    &:hover {
-      background-color: #f4f4f4;
-      cursor: pointer;
-    }
-  }
-  
-  form {
-    display: flex;
-    margin-bottom: 12px;
-    button {
-      flex-shrink: 0;
-      margin-left: 12px;
-    }
-  } */
-
   footer {
     position: fixed;
     bottom: 8px;

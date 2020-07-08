@@ -31,6 +31,16 @@ code {
     monospace;
 }
 
+p {
+  margin: 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
 a {
   text-decoration: none;
 }
@@ -43,12 +53,4 @@ a:hover, a:focus {
 *::before,
 *::after {
   box-sizing: border-box;
-}
-
-@font-face {
-  font-family: "Warownia";
-  src: local("Helvetica Neue Bold"),
-    local("HelveticaNeue-Bold"),
-    url('assets/fonts/Warownia.otf');
-  font-weight: bold;
 }
