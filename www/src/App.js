@@ -28,7 +28,7 @@ function App() {
         <Home default />
         <DeckList path="decks" />
         <DeckEdit path="decks/:deckid" />
-        <NewGameForm path="room/:roomid" />
+        <NewGameForm path="config/:gameId" />
       </PrivateRoute>
     </StyledRoot>
   );

@@ -10,6 +10,12 @@ const Button = styled.button`
   cursor: pointer;
   background: linear-gradient(to bottom, #fafafa 0%, #eaeaea 100%);
 
+  &.big {
+    padding: 16px 32px;
+    font-size: 18px;
+    font-weight: 500;
+  }
+
   &:hover {
     background: linear-gradient(to bottom, #fff 0%, #eee 100%);
   }

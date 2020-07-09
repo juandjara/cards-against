@@ -134,33 +134,26 @@ const HomeStyles = styled.div`
 `
 
 export default function Home () {
-  const [games, setGames] = useState([])
   const [socket] = useGlobalSlice('socket')
   const [isRotated, setIsRotated] = useState(false)
+  const [code, setCode] = useState('')
 
-  function fetchGames () {
-    return fetch(`${config.api}/games`)
-      .then(res => res.json())
-      .then(data => {
-        setGames(data)
-      })
+  function newGame () {
+    socket.emit('game:new')
+    socket.once('game:new', game => {
+      console.log('game:new response', game)
+      goTo(game.id)
+    })
   }
 
-  useEffect(() => {
-    fetchGames()
-  }, [])
+  function goTo (id) {
+    navigate(`/config/${id}`)
+  }
 
-  useEffect(() => {
-    socket.on('game:created', () => fetchGames())
-    socket.on('user:joined', () => fetchGames())
-    socket.on('user:left', () => fetchGames())
-
-    return () => {
-      socket.off('game:created')
-      socket.off('user:joined')
-      socket.off('user:left')
-    }
-  }, [socket, games])
+  function enterGame (ev) {
+    ev.preventDefault()
+    goTo(code)
+  }
 
   return (
     <HomeStyles className="home">
@@ -172,24 +165,28 @@ export default function Home () {
             Unirse a una partida
           </CardStyles>
           <CardStyles as="form"
-            onSubmit={ev => ev.preventDefault()}
+            onSubmit={enterGame}
             className="card-flip-elem card-flip-back white">
             <label>Introduce el código</label>
             <div className="input-group">
-              <InputStyles type="text" placeholder="xxxx" />
+              <InputStyles 
+                type="text"
+                value={code}
+                onChange={ev => setCode(ev.target.value)}
+                placeholder="xxxx" />
               <Button type="submit"><CheckIcon /></Button>
             </div>
           </CardStyles>
         </div>
         <CardStyles as="button"
-          onClick={() => navigate('/room/new')}
+          onClick={() => newGame()}
           className="black scale">
           Nueva partida
         </CardStyles>
       </div>
       <footer>
         <IconInterface />
-        <span> by <a href="https://juandjara.com" target="_blank">juandjara</a></span>
+        <span> by <a href="https://juandjara.com" target="_blank" rel="noopener noreferrer">juandjara</a></span>
       </footer>
     </HomeStyles>
   )

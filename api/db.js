@@ -14,9 +14,13 @@ const db = {
   hasGame (id) {
     return !!this.games[id]
   },
-  createGame ({ id, name, rotation, deck, owner }) {
+  createGame ({ id, owner }) {
     this.games[id] = {
-      id, name, rotation, deck, owner, players: []
+      id,
+      rotation: 'winner',
+      deck: null,
+      players: [],
+      owner
     }
     return this.games[id]
   },
@@ -26,15 +30,28 @@ const db = {
     }
     return this.games[id]
   },
-  addPlayer (game, player) {
-    this.getGame(game).players.push(player)
+  editGame ({ id, ...data }) {
+    console.log('editGame ', id, data)
+    const game = this.getGame(id)
+    this.games[id] = { ...game, ...data }
+    return this.games[id]
   },
-  removePlayer (id) {
+  addPlayer (gameId, player) {
+    const game = this.getGame(gameId)
+    game.players.push(player)
+    return game
+  },
+  removePlayer (gameId, userId) {
+    const game = this.getGame(gameId)
+    game.players = game.players.filter(p => p.id !== userId)
+    if (game.players.length == 0) {
+      delete this.games[gameId]
+    }
+    return this.games[gameId]
+  },
+  removePlayerAll (userId) {
     for (const key in this.games) {
-      this.games[key].players = this.games[key].players.filter(p => p.id !== id)
-      if (this.games[key].players.length === 0) {
-        delete this.games[key]
-      }
+      this.removePlayer(key, userId)
     }
   }
 }

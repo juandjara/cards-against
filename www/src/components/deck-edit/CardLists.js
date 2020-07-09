@@ -67,7 +67,12 @@ const CardListsStyle = styled.main`
   }
 `
 
-export default function CardLists ({ cards, addCard, removeCard, editCard }) {
+export default function CardLists ({
+  cards = [],
+  addCard = () => {},
+  editCard = () => {},
+  removeCard = () => {}
+}) {
   const whiteCards = cards.filter(c => c.type === 'white')
   const blackCards = cards.filter(c => c.type === 'black')
   const [selectedCard, setSelectedCard] = useState(null)
@@ -102,7 +107,7 @@ export default function CardLists ({ cards, addCard, removeCard, editCard }) {
   }
 
   return (
-    <CardListsStyle>
+    <CardListsStyle className="card-lists">
       {selectedCard && (
         <Portal>
           <PortalStyles onClick={handlePortalClick} className="portal-backdrop">
@@ -120,7 +125,7 @@ export default function CardLists ({ cards, addCard, removeCard, editCard }) {
           <BlackCardsIcon />
           <span>Preguntas</span>
         </header>
-        <Button onClick={() => setSelectedCard({ type: 'black', text: '' })}>Nueva carta</Button>
+        <Button type="button" onClick={() => setSelectedCard({ type: 'black', text: '' })}>Nueva carta</Button>
         <ul>
           {blackCards.map(card => (
             <CardStyles
@@ -138,7 +143,7 @@ export default function CardLists ({ cards, addCard, removeCard, editCard }) {
           <WhiteCardsIcon />
           <span>Respuestas</span>
         </header>
-        <Button onClick={() => setSelectedCard({ type: 'white', text: '' })}>Nueva carta</Button>
+        <Button type="button" onClick={() => setSelectedCard({ type: 'white', text: '' })}>Nueva carta</Button>
         <ul>
           {whiteCards.map(card => (
             <CardStyles 

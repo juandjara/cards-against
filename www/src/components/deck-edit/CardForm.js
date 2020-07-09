@@ -67,6 +67,7 @@ export default function CardForm ({
 
   function handleSubmit (ev) {
     ev.preventDefault()
+    ev.stopPropagation()
     onSave({ ...card, text })
   }
 
@@ -81,11 +82,11 @@ export default function CardForm ({
           onChange={ev => setText(ev.target.value)}
           placeholder={placeholder} />
       </CardStyles>
-      <button className="close-btn" type="button" onClick={onCancel}>
+      <button type="button" className="close-btn" onClick={onCancel}>
         <CloseIcon />
       </button>
       <div className="actions">
-        {card.id && (<Button className="delete-btn" type="button" onClick={onRemove}>
+        {card.id && (<Button type="button" className="delete-btn" onClick={onRemove}>
           <span>Eliminar</span>
         </Button>)}
         <Button className="save-btn" type="submit" disabled={!text} onClick={handleSubmit}>

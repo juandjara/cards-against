@@ -7,6 +7,7 @@ import useDecks from '../services/useCards'
 import uuid from 'uuid/v4'
 import config from '../config'
 import RadioGroup from '../components/RadioGroup'
+import CardLists from '../components/deck-edit/CardLists'
 
 const NewGameFormStyle = styled.form`
   max-width: 960px;
@@ -49,7 +50,7 @@ const NewGameFormStyle = styled.form`
     }
 
     > div {
-      flex: 1 1 calc(50% - 16px);
+      /* flex: 1 1 calc(50% - 16px); */
     }
   }
 
@@ -65,20 +66,32 @@ const NewGameFormStyle = styled.form`
     margin: 0;
     font-family: var(--fontDisplay), sans-serif;
     font-size: 42px;
-    line-height: 48px;
+    line-height: 1;
     font-weight: 600;
     letter-spacing: 1px;
   }
+
+  .card-lists {
+    max-width: calc(100vw - 24px);
+  }
+
+  .ar {
+    text-align: right;
+  }
 `
 
-export default function NewGameForm ({ navigate, roomid }) {
+export default function NewGameForm ({ navigate, gameId }) {
   const [socket] = useGlobalSlice('socket')
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
-  const [form, setForm] = useState({
-    id: uuid(),
-    deck: null,
-    rotation: 'winner'
-  })
+  const [game, setGame] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  function setFormValue (key) {
+    return function setFormValueInner (ev) {
+      const value = ev.target ? ev.target.value : ev
+      socket.emit('game:edit', { id: gameId, [key]: value })
+    }
+  }
 
   const [decks] = useDecks()
   const deckOptions = Object.values(decks).map(deck => ({
@@ -86,32 +99,32 @@ export default function NewGameForm ({ navigate, roomid }) {
     label: deck.name,
     value: deck.id
   }))
-
-  function fetchGame () {
-    return fetch(`${config.api}/games/${roomid}`)
-      .then(res => res.ok ? res.json() : null)
-      .then(data => {
-        if (data) setForm(data)
-      })
+ 
+  async function fetchGame () {
+    setLoading(true)
+    const res = await fetch(`${config.api}/games/${gameId}`)
+    const data = await res.json()
+    if (res.ok) {
+      setGame(data)
+      socket.emit('game:join', { gameId, user: currentUser })
+    }
+    setLoading(false)
   }
 
   useEffect(() => {
     fetchGame()
-  }, [])
-    
+    socket.on('game:edit', game => {
+      console.log('received game:edit', game)
+      setGame(game)
+    })
+    return () => {
+      socket.off('game:edit')
+      socket.emit('game:leave')
+    }
+  }, [socket])
+
   function handleSubmit (ev) {
     ev.preventDefault()
-    setCurrentUser({ ...currentUser, room: form.id })
-    socket.emit('game:create', { ...form, deck: form.deck.value })
-    socket.emit('user:join', { game: form.id, user: currentUser })
-    navigate('/')
-  }
-
-  function setFormValue (key) {
-    return function setFormValueInner (ev) {
-      const value = ev.target ? ev.target.value : ev
-      setForm(form => ({ ...form, [key]: value }))
-    }
   }
 
   const rotationOptions = [
@@ -119,41 +132,58 @@ export default function NewGameForm ({ navigate, roomid }) {
     { value: 'clockwise', label: 'En el sentido de las agujas del reloj' }
   ]
 
+  if (loading) {
+    return (
+      <div className="game-config">
+        <h2>Cargando...</h2>
+      </div>
+    )
+  }
+
+  if (!loading && !game) {
+    return (
+      <div className="game-config">
+        <h2>No hay ninguna partida aqui :c</h2>
+      </div>
+    )
+  }
+
   return (
     <NewGameFormStyle onSubmit={handleSubmit} className="game-config">
-      <h2>Nueva partida</h2>
-      <div className="input-block">
-        <label>Código</label>
-        <p className="display">X5G8</p>
-      </div>
-      <div className="flex-block">
+      <div className="flex-block" style={{ justifyContent: 'space-between' }}>
         <div className="input-block">
           <label>Jugadores</label>
           <ul>
-            <li>Notas 4</li>
-            <li>Notas 3</li>
-            <li>Notas 2</li>
-            <li>Notas 1</li>
+            {game.players.map(p => (
+              <li key={p.id}>{p.name}</li>
+            ))}
           </ul>
         </div>
         <div className="input-block">
-          <label>¿Quién lee la carta negra?</label>
-          <RadioGroup
-            value={form.rotation}
-            onChange={setFormValue('rotation')}
-            options={rotationOptions}
-          />
+          <label>Nueva partida</label>
+          <p className="display">{gameId}</p>
         </div>
+      </div>
+      <div className="input-block">
+        <label>¿Quién lee la carta negra?</label>
+        <RadioGroup
+          value={game.rotation}
+          onChange={setFormValue('rotation')}
+          options={rotationOptions}
+        />
       </div>
       <div className="input-block">
         <label>Mazo de cartas</label>
         <Select
-          value={form.deck}
+          value={game.deck}
           onChange={setFormValue('deck')}
           className="select-container" 
           options={deckOptions} />
       </div>
-      <Button type="submit">Comenzar</Button>
+      {game.deck && (<div className="input-block">
+        <CardLists cards={game.deck.cards} />
+      </div>)}
+      <Button className="big" type="submit">Comenzar</Button>
     </NewGameFormStyle>
   )
 }
