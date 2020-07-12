@@ -122,8 +122,6 @@ export default function NewGameForm ({ navigate, gameId }) {
     })
     return () => {
       socket.off('game:edit')
-      // TODO: dont emit when navigating to /play/:gameid
-      // socket.emit('game:leave', gameId)
     }
   }, [socket])
 

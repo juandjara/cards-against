@@ -165,9 +165,9 @@ export default function Home () {
     goTo(currentUser.game)
   }
 
-  if (currentUser.game) {
-    return (
-      <HomeStyles className="home">
+  return (
+    <HomeStyles className="home">
+      {currentUser.game ? (
         <div className="btn-group">
           <CardStyles as="button"
             onClick={leaveGame}
@@ -180,39 +180,35 @@ export default function Home () {
             Continuar partida
           </CardStyles>
         </div>
-      </HomeStyles>
-    )
-  }
-
-  return (
-    <HomeStyles className="home">
-      <div className="btn-group">
-        <div className={`card-flip ${isRotated ? 'rotated' : ''}`}>
+      ) : (
+        <div className="btn-group">
+          <div className={`card-flip ${isRotated ? 'rotated' : ''}`}>
+            <CardStyles as="button"
+              onClick={() => setIsRotated(true)} 
+              className="card-flip-elem card-flip-front white scale">
+              Unirse a una partida
+            </CardStyles>
+            <CardStyles as="form"
+              onSubmit={enterGame}
+              className="card-flip-elem card-flip-back white">
+              <label>Introduce el código</label>
+              <div className="input-group">
+                <InputStyles 
+                  type="text"
+                  value={code}
+                  onChange={ev => setCode(ev.target.value)}
+                  placeholder="xxxx" />
+                <Button type="submit"><CheckIcon /></Button>
+              </div>
+            </CardStyles>
+          </div>
           <CardStyles as="button"
-            onClick={() => setIsRotated(true)} 
-            className="card-flip-elem card-flip-front white scale">
-            Unirse a una partida
-          </CardStyles>
-          <CardStyles as="form"
-            onSubmit={enterGame}
-            className="card-flip-elem card-flip-back white">
-            <label>Introduce el código</label>
-            <div className="input-group">
-              <InputStyles 
-                type="text"
-                value={code}
-                onChange={ev => setCode(ev.target.value)}
-                placeholder="xxxx" />
-              <Button type="submit"><CheckIcon /></Button>
-            </div>
+            onClick={newGame}
+            className="black scale">
+            Nueva partida
           </CardStyles>
         </div>
-        <CardStyles as="button"
-          onClick={newGame}
-          className="black scale">
-          Nueva partida
-        </CardStyles>
-      </div>
+      )}
       <footer>
         <IconInterface />
         <span> by <a href="https://juandjara.com" target="_blank" rel="noopener noreferrer">juandjara</a></span>

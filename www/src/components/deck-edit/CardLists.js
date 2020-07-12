@@ -33,6 +33,7 @@ const PortalStyles = styled.div`
 
 const CardListsStyle = styled.main`
   margin: 24px 0;
+  max-width: calc(100vw - 24px);
 
   section {
     padding: 12px 0;
