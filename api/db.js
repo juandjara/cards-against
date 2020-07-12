@@ -31,7 +31,6 @@ const db = {
     return this.games[id]
   },
   editGame ({ id, ...data }) {
-    console.log('editGame ', id, data)
     const game = this.getGame(id)
     this.games[id] = { ...game, ...data }
     return this.games[id]

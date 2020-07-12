@@ -78,6 +78,7 @@ const HomeStyles = styled.div`
     transform-style: preserve-3d;
     width: 180px;
     height: 180px;
+    margin: 16px;
 
     ${CardStyles} {
       margin: 0;
@@ -137,11 +138,11 @@ export default function Home () {
   const [socket] = useGlobalSlice('socket')
   const [isRotated, setIsRotated] = useState(false)
   const [code, setCode] = useState('')
+  const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
 
   function newGame () {
     socket.emit('game:new')
     socket.once('game:new', game => {
-      console.log('game:new response', game)
       goTo(game.id)
     })
   }
@@ -153,6 +154,34 @@ export default function Home () {
   function enterGame (ev) {
     ev.preventDefault()
     goTo(code)
+  }
+
+  function leaveGame () {
+    socket.emit('game:leave', currentUser.game)
+    setCurrentUser({ ...currentUser, game: null })
+  }
+
+  function continueGame () {
+    goTo(currentUser.game)
+  }
+
+  if (currentUser.game) {
+    return (
+      <HomeStyles className="home">
+        <div className="btn-group">
+          <CardStyles as="button"
+            onClick={leaveGame}
+            className="white scale">
+            Abandonar partida
+          </CardStyles>
+          <CardStyles as="button"
+            onClick={continueGame}
+            className="black scale">
+            Continuar partida
+          </CardStyles>
+        </div>
+      </HomeStyles>
+    )
   }
 
   return (
@@ -179,7 +208,7 @@ export default function Home () {
           </CardStyles>
         </div>
         <CardStyles as="button"
-          onClick={() => newGame()}
+          onClick={newGame}
           className="black scale">
           Nueva partida
         </CardStyles>

@@ -11,8 +11,8 @@ const Button = styled.button`
   background: linear-gradient(to bottom, #fafafa 0%, #eaeaea 100%);
 
   &.big {
-    padding: 16px 32px;
-    font-size: 18px;
+    padding: 15px 30px;
+    font-size: 20px;
     font-weight: 500;
   }
 

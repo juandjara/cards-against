@@ -4,14 +4,15 @@ import Button from '../components/Button'
 import Select from 'react-select'
 import useGlobalSlice from '../services/useGlobalSlice'
 import useDecks from '../services/useCards'
-import uuid from 'uuid/v4'
 import config from '../config'
 import RadioGroup from '../components/RadioGroup'
 import CardLists from '../components/deck-edit/CardLists'
+import uuid from 'uuid/v4'
 
 const NewGameFormStyle = styled.form`
   max-width: 960px;
   margin: 0 auto;
+  margin-bottom: 3rem;
   padding: 1em 0;
   border-radius: 4px;
 
@@ -106,7 +107,10 @@ export default function NewGameForm ({ navigate, gameId }) {
     const data = await res.json()
     if (res.ok) {
       setGame(data)
-      socket.emit('game:join', { gameId, user: currentUser })
+      if (!currentUser.game) {
+        socket.emit('game:join', { gameId, user: currentUser })
+        setCurrentUser({ ...currentUser, game: gameId })
+      }
     }
     setLoading(false)
   }
@@ -114,12 +118,12 @@ export default function NewGameForm ({ navigate, gameId }) {
   useEffect(() => {
     fetchGame()
     socket.on('game:edit', game => {
-      console.log('received game:edit', game)
       setGame(game)
     })
     return () => {
       socket.off('game:edit')
-      socket.emit('game:leave')
+      // TODO: dont emit when navigating to /play/:gameid
+      // socket.emit('game:leave', gameId)
     }
   }, [socket])
 
@@ -131,6 +135,20 @@ export default function NewGameForm ({ navigate, gameId }) {
     { value: 'winner', label: 'El ganador de la ultima ronda' },
     { value: 'clockwise', label: 'En el sentido de las agujas del reloj' }
   ]
+
+  function addCard (newCard) {
+    newCard = { ...newCard, id: uuid(), created_at: Date.now() }
+    const deck = { ...game.deck, value: null, label: 'Nuevo mazo', cards: game.deck.cards.concat(newCard) }
+    setFormValue('deck')(deck)
+  }
+  function editCard (card) {
+    const deck = { ...game.deck, value: null, label: 'Nuevo mazo', cards: game.deck.cards.map(c => c.id === card.id ? card : c) }
+    setFormValue('deck')(deck)
+  }
+  function removeCard (cardid) {
+    const deck = { ...game.deck, value: null, label: 'Nuevo mazo', cards: game.deck.cards.filter(c => c.id !== cardid) }
+    setFormValue('deck')(deck)
+  }
 
   if (loading) {
     return (
@@ -181,9 +199,13 @@ export default function NewGameForm ({ navigate, gameId }) {
           options={deckOptions} />
       </div>
       {game.deck && (<div className="input-block">
-        <CardLists cards={game.deck.cards} />
+        <CardLists
+          cards={game.deck.cards.sort((a, b) => (b.created_at || 0) - (a.created_at || 0))}
+          addCard={addCard}
+          removeCard={removeCard}
+          editCard={editCard} />
       </div>)}
-      <Button className="big" type="submit">Comenzar</Button>
+      <Button disabled={!game.deck} className="big" type="submit">Comenzar</Button>
     </NewGameFormStyle>
   )
 }
