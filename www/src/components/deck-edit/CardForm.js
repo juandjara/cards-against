@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import Button from '../Button'
 import Input from '../Input'
@@ -64,6 +64,13 @@ export default function CardForm ({
   placeholder = 'Texto de la carta'
 }) {
   const [text, setText] = useState(card.text)
+  const inputRef = useRef()
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [])
 
   function handleSubmit (ev) {
     ev.preventDefault()
@@ -76,6 +83,7 @@ export default function CardForm ({
       <CardStyles className={card.type}>
         <Input
           required
+          ref={inputRef}
           as="textarea"
           name={`card-input-${card.id}`}
           value={text}

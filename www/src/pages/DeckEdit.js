@@ -83,8 +83,8 @@ export default function DeckEdit ({ deckid }) {
   const idRef = useRef(deck.id || uuid())
   const id = idRef.current
 
-  function createNewDeck ({ name, description }) {
-    setDecks({ ...decks, [id]: { id, name, description, cards: [] } })
+  function editDeck ({ name, description }) {
+    setDecks({ ...decks, [id]: { id, name, description, cards: deck.cards || [] } })
     navigate(`/decks/${id}`)
   }
   function addCard (newCard) {
@@ -101,7 +101,7 @@ export default function DeckEdit ({ deckid }) {
   if (deckIsNew) {
     return (
       <DeckEditStyles>
-        <NewDeckForm onSubmit={createNewDeck} />
+        <NewDeckForm onSubmit={editDeck} />
       </DeckEditStyles>
     )
   }
@@ -112,8 +112,9 @@ export default function DeckEdit ({ deckid }) {
         <IconArrowLeft />
       </button>
       <header>
-        <h2 className="title">{deck.name}</h2>
-        <p className="description">{deck.description}</p>
+        <NewDeckForm deck={deck} onSubmit={editDeck} />
+        {/* <h2 className="title">{deck.name}</h2>
+        <p className="description">{deck.description}</p> */}
       </header>
       <CardLists
         cards={deck.cards.sort((a, b) => (b.created_at || 0) - (a.created_at || 0))}

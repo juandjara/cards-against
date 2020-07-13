@@ -37,7 +37,11 @@ const NewGameFormStyle = styled.form`
   
   .radio-group {
     display: block;
-    min-width: 200px;
+    min-width: 260px;
+  }
+
+  .select-container {
+    max-width: 260px;
   }
 
   .flex-block {
@@ -53,10 +57,6 @@ const NewGameFormStyle = styled.form`
     > div {
       /* flex: 1 1 calc(50% - 16px); */
     }
-  }
-
-  .select-container {
-    max-width: 200px;
   }
 
   > button {
@@ -100,6 +100,7 @@ export default function NewGameForm ({ navigate, gameId }) {
     label: deck.name,
     value: deck.id
   }))
+  deckOptions.unshift({ label: 'Nuevo mazo', value: null, cards: [] })
  
   async function fetchGame () {
     setLoading(true)

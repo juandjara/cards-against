@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import InputStyles from '../Input'
 import Button from '../Button'
 
-export default function NewDeckForm ({ onSubmit }) {
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
+export default function NewDeckForm ({ deck = {}, onSubmit }) {
+  const [name, setName] = useState(deck.name || '')
+  const [description, setDescription] = useState(deck.description || '')
   function handleSubmit (ev) {
     ev.preventDefault()
     onSubmit({ name, description })

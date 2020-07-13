@@ -124,7 +124,7 @@ export default function CardLists ({
       <section>
         <header>
           <BlackCardsIcon />
-          <span>Preguntas</span>
+          <span>{blackCards.length} Preguntas</span>
         </header>
         <Button type="button" onClick={() => setSelectedCard({ type: 'black', text: '' })}>Nueva carta</Button>
         <ul>
@@ -142,7 +142,7 @@ export default function CardLists ({
       <section>
         <header>
           <WhiteCardsIcon />
-          <span>Respuestas</span>
+          <span>{whiteCards.length} Respuestas</span>
         </header>
         <Button type="button" onClick={() => setSelectedCard({ type: 'white', text: '' })}>Nueva carta</Button>
         <ul>
