@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Button from '../Button'
 import Input from '../Input'
 import CloseIcon from '../icons/CloseIcon'
+import WhiteCardsIcon from '../icons/CardsOutlineIcon'
 import CardStyles from './CardStyles'
 
 const CardFormStyle = styled.form`
@@ -29,21 +30,48 @@ const CardFormStyle = styled.form`
     border-radius: inherit;
   }
 
-  .close-btn {
+  .top-right {
     position: absolute;
     top: 0;
     right: 0;
-    background: none;
-    border: none;
-    padding: 8px;
-    height: 40px;
-    cursor: pointer;
-    border-radius: 0 8px 0 8px;
 
-    &:hover, &:focus {
-      background-color: #f2f2f2;
+    .close-btn {
+      background: none;
+      border: none;
+      padding: 8px;
+      height: 40px;
+      cursor: pointer;
+      border-radius: 0 8px 0 8px;
+      display: block;
+      margin-left: auto;
+  
+      &:hover, &:focus {
+        background-color: #f2f2f2;
+      }
+    }
+  
+    .n-of-answers {
+      padding: 12px 16px;
+      font-size: 12px;
+      color: var(--colorMidHigh);
+
+      .value {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
+
+      strong {
+        font-size: 16px;
+        margin-left: 8px;
+      }
+
+      svg {
+        margin-left: 4px;
+      }
     }
   }
+
 
   .actions {
     margin-top: 12px;
@@ -65,6 +93,7 @@ export default function CardForm ({
 }) {
   const [text, setText] = useState(card.text)
   const inputRef = useRef()
+  const answers = (text.split('___').length - 1) || 1
 
   useEffect(() => {
     if (inputRef.current) {
@@ -90,9 +119,18 @@ export default function CardForm ({
           onChange={ev => setText(ev.target.value)}
           placeholder={placeholder} />
       </CardStyles>
-      <button type="button" className="close-btn" onClick={onCancel}>
-        <CloseIcon />
-      </button>
+      <div className="top-right">
+        <button type="button" className="close-btn" onClick={onCancel}>
+          <CloseIcon />
+        </button>
+        {card.type === 'black' && (<div className="n-of-answers">
+          <div class="value">
+            <strong> {answers} </strong>
+            <WhiteCardsIcon />
+          </div>
+          <p>Nº de respuestas</p>
+        </div>)}
+      </div>
       <div className="actions">
         {card.id && (<Button type="button" className="delete-btn" onClick={onRemove}>
           <span>Eliminar</span>
