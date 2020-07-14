@@ -104,7 +104,7 @@ export default function CardForm ({
   function handleSubmit (ev) {
     ev.preventDefault()
     ev.stopPropagation()
-    onSave({ ...card, text })
+    onSave({ ...card, text, answers })
   }
 
   return (
