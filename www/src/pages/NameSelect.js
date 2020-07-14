@@ -12,13 +12,30 @@ const NameSelectStyle = styled.div`
   grid-template-rows: auto 1fr; 
   form {
     align-self: center;
-    display: flex;
-    align-items: stretch;
-    justify-content: center;
     padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    h2 {
+      font-size: 24px;
+      line-height: 32px;
+      font-weight: 500;
+      margin: 0;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      margin: 12px 0;
+    }
+    
     input {
       padding: 6px 12px;
-      font-size: 24px;
+      font-size: 20px;
+      height: 42px;
       background-color: inherit;
       color: inherit;
       border: 1px solid #bfbfbf;
@@ -76,15 +93,18 @@ export default function NameSelect () {
     <NameSelectStyle className="name-select">
       <Header />
       <form onSubmit={handleSubmit}>
-        <input 
-          ref={inputRef}
-          required
-          type="text"
-          name="name"
-          value={name}
-          onChange={ev => setName(ev.target.value.trim())}
-          placeholder="Hola, ¿Como te llamas?" />
-        <Button type="submit">Entrar</Button>
+        <h2>Hola, ¿Como te llamas?</h2>
+        <div className="input-group">
+          <input 
+            ref={inputRef}
+            required
+            type="text"
+            name="name"
+            value={name}
+            onChange={ev => setName(ev.target.value.trim())}
+            placeholder="Introduce tu nombre" />
+          <Button type="submit">Entrar</Button>
+        </div>
       </form>
     </NameSelectStyle>
   )
