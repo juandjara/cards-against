@@ -16,8 +16,8 @@ import {
 import "@reach/menu-button/styles.css";
 
 const HeaderStyles = styled.header`
-  background-color: var(--colorPrimary);
-  color: white;
+  border-bottom: 1px solid var(--colorModerate);
+
   h1 {
     margin: 0;
     padding: .5rem 1rem;
@@ -53,18 +53,17 @@ const HeaderStyles = styled.header`
     padding-left: 16px;
     padding-right: 12px;
     border-radius: 4px;
-    color: white;
     background: transparent;
     border: none;
     cursor: pointer;
-    /* border: 1px solid currentColor; */
     span {
       margin-right: 12px;
       font-weight: 600;
     }
 
     &:hover, &:focus {
-      background-color: hsla(80, 50%, 100%, 0.2);
+      /* background-color: hsla(80, 10%, 100%, 0.2); */
+      background-color: white;
     }
   }
 
@@ -86,18 +85,25 @@ const HeaderStyles = styled.header`
 const MenuListStlyes = styled(MenuList)`
   padding: 12px 0;
   border-radius: 2px;
+
   .username {
     margin: 0 16px 12px 0;
     text-align: right;
     font-size: 16px;
     font-weight: 600;
   }
+
   .menu-item {
     display: flex;
     align-items: center;
     padding: 6px 16px;
+
     span {
       margin-left: 8px;
+    }
+
+    &[data-selected] {
+      background: var(--colorPrimary);
     }
   }
 `
