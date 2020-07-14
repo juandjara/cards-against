@@ -40,7 +40,7 @@ const CardListsStyle = styled.main`
   }
 
   header {
-    color: #007bff;
+    color: var(--colorPrimary);
     padding: 12px 4px;
 
     svg {
