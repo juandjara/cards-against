@@ -4,13 +4,15 @@ import styled from 'styled-components'
 import useGlobalSlice from '../services/useGlobalSlice'
 import Header from '../components/Header'
 import Button from '../components/Button'
+import Input from '../components/Input'
 import config from '../config'
 
 const NameSelectStyle = styled.div`
   height: 100vh;
   display: grid;
   grid-template-rows: auto 1fr; 
-  form {
+
+  .name-form {
     align-self: center;
     padding: 1rem;
     display: flex;
@@ -31,20 +33,11 @@ const NameSelectStyle = styled.div`
       justify-content: center;
       margin: 12px 0;
     }
-    
+
     input {
-      padding: 6px 12px;
-      font-size: 20px;
-      height: 42px;
-      background-color: inherit;
-      color: inherit;
-      border: 1px solid #bfbfbf;
-      border-right-color: transparent;
-      border-radius: 4px 0 0 4px;
-      &::placeholder {
-        color: #aaa;
-      }
+      margin-right: -4px;
     }
+
     button {
       border-radius: 0 4px 4px 0;
       font-size: 16px;
@@ -58,6 +51,7 @@ export default function NameSelect () {
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
   const nameFromLS = localStorage.getItem(config.NAME_KEY) || ''
   const [name, setName] = useState(nameFromLS)
+  const [loading, setLoading] = useState(false)
   const inputRef = useRef()
 
   function handleSubmit (ev) {
@@ -67,8 +61,10 @@ export default function NameSelect () {
 
   function connect(name) {
     const socket = io(`${config.api}?name=${name}`)
+    setLoading(true)
     socket.on('connect', () => {
       socket.emit('user:id-request', (user) => {
+        setLoading(false)
         setSocket(socket)
         setCurrentUser(user)
         localStorage.setItem(config.NAME_KEY, name)
@@ -80,22 +76,34 @@ export default function NameSelect () {
     if (nameFromLS) {
       connect(nameFromLS)
     }
-    // eslint-disable-next-line
-  }, [])
-
-  useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus()
     }
+    // eslint-disable-next-line
   }, [])
 
-  return nameFromLS ? null : (
+  if (loading) {
+    return (
+      <NameSelectStyle className="name-select">
+        <Header />
+        <div className="name-form">
+          <h2>Cargando ...</h2>
+        </div>
+      </NameSelectStyle>
+    )
+  }
+
+  if (nameFromLS) {
+    return null
+  }
+
+  return (
     <NameSelectStyle className="name-select">
       <Header />
-      <form onSubmit={handleSubmit}>
+      <form className="name-form" onSubmit={handleSubmit}>
         <h2>Hola, ¿Como te llamas?</h2>
         <div className="input-group">
-          <input 
+          <Input 
             ref={inputRef}
             required
             type="text"
