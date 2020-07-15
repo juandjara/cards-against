@@ -196,8 +196,9 @@ export default function Home () {
                 <InputStyles 
                   type="text"
                   value={code}
+                  maxLength="4"
                   onChange={ev => setCode(ev.target.value)}
-                  placeholder="xxxx" />
+                  placeholder="ABCD" />
                 <Button type="submit"><CheckIcon /></Button>
               </div>
             </CardStyles>
