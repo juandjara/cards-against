@@ -64,6 +64,8 @@ const CardListsStyle = styled.main`
 
     .card {
       position: relative;
+      margin-top: 16px;
+      margin-bottom: 8px;
 
       & + .card {
         margin-left: -12px;

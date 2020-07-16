@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import DeckList from './pages/DeckList'
 import DeckEdit from './pages/DeckEdit'
 import NewGameForm from './pages/NewGameForm'
+import Game from './pages/Game'
 import styled from 'styled-components'
 
 const StyledRoot = styled(Router)`
@@ -29,6 +30,7 @@ function App() {
         <DeckList path="decks" />
         <DeckEdit path="decks/:deckid" />
         <NewGameForm path="config/:gameId" />
+        <Game path="game/:gameId" />
       </PrivateRoute>
     </StyledRoot>
   );

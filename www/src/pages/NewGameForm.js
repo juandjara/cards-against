@@ -17,8 +17,11 @@ const NewGameFormStyle = styled.form`
   border-radius: 4px;
 
   h2 {
-    margin-top: .5rem;
-    margin-bottom: 1.5rem;
+    font-size: 20px;
+    line-height: 24px;
+    font-weight: 500;
+    margin-top: 8px;
+    margin-bottom: 16px;
   }
 
   .input-block {
@@ -79,6 +82,16 @@ const NewGameFormStyle = styled.form`
   .ar {
     text-align: right;
   }
+
+  .players {
+    li {
+      background-color: white;
+      max-width: 156px;
+      padding: 4px 8px;
+      border-radius: 8px;
+      margin: 8px 0;
+    }
+  }
 `
 
 export default function NewGameForm ({ navigate, gameId }) {
@@ -128,6 +141,7 @@ export default function NewGameForm ({ navigate, gameId }) {
 
   function handleSubmit (ev) {
     ev.preventDefault()
+    navigate(`/game/${gameId}`)
   }
 
   const rotationOptions = [
@@ -151,43 +165,36 @@ export default function NewGameForm ({ navigate, gameId }) {
 
   if (loading) {
     return (
-      <div className="game-config">
+      <NewGameFormStyle className="game-config">
         <h2>Cargando...</h2>
-      </div>
+      </NewGameFormStyle>
     )
   }
 
   if (!loading && !game) {
     return (
-      <div className="game-config">
+      <NewGameFormStyle className="game-config">
         <h2>No hay ninguna partida aqui :c</h2>
-      </div>
+      </NewGameFormStyle>
     )
   }
 
   return (
     <NewGameFormStyle onSubmit={handleSubmit} className="game-config">
+      <h2>Nueva partida</h2>
       <div className="flex-block" style={{ justifyContent: 'space-between' }}>
         <div className="input-block">
-          <label>Jugadores</label>
-          <ul>
-            {game.players.map(p => (
-              <li key={p.id}>{p.name}</li>
-            ))}
-          </ul>
+          <label>¿Quién lee la carta negra?</label>
+          <RadioGroup
+            value={game.rotation}
+            onChange={setFormValue('rotation')}
+            options={rotationOptions}
+          />
         </div>
         <div className="input-block">
-          <label>Nueva partida</label>
+          <label>Código</label>
           <p className="display">{gameId}</p>
         </div>
-      </div>
-      <div className="input-block">
-        <label>¿Quién lee la carta negra?</label>
-        <RadioGroup
-          value={game.rotation}
-          onChange={setFormValue('rotation')}
-          options={rotationOptions}
-        />
       </div>
       <div className="input-block">
         <label>Mazo de cartas</label>
@@ -204,6 +211,14 @@ export default function NewGameForm ({ navigate, gameId }) {
           removeCard={removeCard}
           editCard={editCard} />
       </div>)}
+      <div className="input-block">
+        <label>Jugadores</label>
+        <ul className="players">
+          {game.players.map(p => (
+            <li key={p.id}>{p.name}</li>
+          ))}
+        </ul>
+      </div>
       <Button disabled={!game.deck} className="big" type="submit">Comenzar</Button>
     </NewGameFormStyle>
   )

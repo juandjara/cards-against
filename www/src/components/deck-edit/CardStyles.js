@@ -7,8 +7,6 @@ const CardStyles = styled.div`
   flex-shrink: 0;
   width: 180px;
   height: 180px;
-  margin-top: 16px;
-  margin-bottom: 8px; 
   padding: 12px 16px;
   padding-bottom: 24px;
   background-color: white;
@@ -16,7 +14,7 @@ const CardStyles = styled.div`
   border-radius: 16px;
   box-shadow: 0px 0px 8px 0px rgba(0,0,0, 0.25);
   font-weight: bold;
-  z-index: 1;
+  /* z-index: 1; */
   transform-style: preserve-3d;
   transition: transform 0.25s ease;
 
@@ -35,12 +33,14 @@ const CardStyles = styled.div`
   &.translate-y {
     &:hover {
       transform: translateY(-12px);
+      z-index: 1;
     }
   }
 
   &.scale {
     &:hover {
       transform: scale(1.05);
+      z-index: 1;
     }
   }
 `
