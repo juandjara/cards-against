@@ -105,7 +105,7 @@ const GameStyles = styled.div`
       margin-bottom: 8px;
 
       & + .card {
-        margin-left: -32px;
+        margin-left: -12px;
       }
 
       &.drag {
