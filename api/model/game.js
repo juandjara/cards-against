@@ -85,7 +85,7 @@ class Game {
     return this
   }
 
-  playWhiteCard (playerId, cardId) {
+  playWhiteCard (cardId, playerId) {
     const player = this.players.find(p => p.id === playerId)
     const cardIndex = player.cards.find(c => c.id === cardId)
     const card = player.cards.splice(cardIndex, 1)

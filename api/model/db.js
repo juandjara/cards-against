@@ -60,9 +60,9 @@ const db = {
     const game = this.getGame(gameId)
     return game.drawWhiteCards(playerId)
   },
-  playWhiteCard (gameId, playerId, cardId) {
+  playWhiteCard (gameId, cardId, playerId) {
     const game = this.getGame(gameId)
-    return game.playWhiteCard(playerId, cardId)
+    return game.playWhiteCard(cardId, playerId)
   }
 }
 
