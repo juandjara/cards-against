@@ -17,7 +17,7 @@ function createID () {
 }
 
 class Game {
-  constructor (firstUserId) {
+  constructor (firstPlayerId) {
     const id = createID()
     const data = {
       id,
@@ -27,10 +27,10 @@ class Game {
       shuffled: false,
       cardsPerHand: 5,
       round: {
-        reader: firstUserId,
+        reader: firstPlayerId,
         cards: {
           black: null,
-          white: []
+          white: {}
         }
       }
     }
@@ -49,11 +49,13 @@ class Game {
       name: player.name,
       cards: []
     })
+    this.round.cards.white[player.id] = null
     return this
   }
 
-  removePlayer (userId) {
-    this.players = this.players.filter(p => p.id !== userId)
+  removePlayer (playerId) {
+    this.players = this.players.filter(p => p.id !== playerId)
+    delete this.round.cards.white[player.id]
     return this
   }
 
@@ -80,6 +82,14 @@ class Game {
         return c
       })
     player.cards = cards
+    return this
+  }
+
+  playWhiteCard (playerId, cardId) {
+    const player = this.players.find(p => p.id === playerId)
+    const cardIndex = player.cards.find(c => c.id === cardId)
+    const card = player.cards.splice(cardIndex, 1)
+    this.round.cards.white[player.id] = card
     return this
   }
 }

@@ -16,8 +16,8 @@ const db = {
   hasGame (id) {
     return !!this.games[id]
   },
-  createGame (firstUserId) {
-    const game = new Game(firstUserId)
+  createGame (firstPlayerId) {
+    const game = new Game(firstPlayerId)
     this.games[game.id] = game
     return this.games[game.id]
   },
@@ -39,26 +39,30 @@ const db = {
     const game = this.getGame(gameId)
     return game.addPlayer(player)
   },
-  removePlayer (gameId, userId) {
+  removePlayer (gameId, playerId) {
     const game = this.getGame(gameId)
-    game.removePlayer(userId)
+    game.removePlayer(playerId)
     if (game.players.length == 0) {
       delete this.games[gameId]
     }
     return this.games[gameId]
   },
-  removePlayerAll (userId) {
+  removePlayerAll (playerId) {
     for (const key in this.games) {
-      this.removePlayer(key, userId)
+      this.removePlayer(key, playerId)
     }
   },
   drawBlackCard (gameId) {
     const game = this.getGame(gameId)
     return game.drawBlackCard()
   },
-  drawWhiteCards (gameId, userId) {
+  drawWhiteCards (gameId, playerId) {
     const game = this.getGame(gameId)
-    return game.drawWhiteCards(userId)
+    return game.drawWhiteCards(playerId)
+  },
+  playWhiteCard (gameId, playerId, cardId) {
+    const game = this.getGame(gameId)
+    return game.playWhiteCard(playerId, cardId)
   }
 }
 

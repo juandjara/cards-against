@@ -4,7 +4,7 @@ const socketIo = require("socket.io")
 const helmet = require('helmet')
 const cors = require('cors')
 const pkg = require('./package.json')
-const { db, ERRORS } = require('./db')
+const { db, ERRORS } = require('./model/db')
 
 const port = process.env.PORT || 5000
 const app = express()
