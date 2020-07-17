@@ -11,10 +11,9 @@ const app = express()
 const httpServer = http.createServer(app)
 const io = socketIo(httpServer, { origins: '*:*' })
 
-const userSocketHandler = require('./socketHandlers/users.socket')
-
+const socketsHandler = require('./sockets')
 io.on('connection', socket => {
-  userSocketHandler(socket, io, db)
+  socketsHandler(socket, io, db)
 })
 
 app.use(helmet())
