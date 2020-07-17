@@ -4,17 +4,8 @@ module.exports = function (socket, io, db) {
     name: socket.handshake.query.name
   }))
 
-  function createID () {
-    return Math.random()
-      .toString(36)
-      .toUpperCase()
-      .replace(/[^A-Z]+/g, '')
-      .substr(0, 4);
-  }
-
   socket.on('game:new', () => {
-    const id = createID()
-    const game = db.createGame({ id, owner: socket.id })
+    const game = db.createGame(socket.id)
     io.to(socket.id).emit('game:new', game)
   })
   
@@ -54,6 +45,39 @@ module.exports = function (socket, io, db) {
         io.to(socket.id).emit('error', err)
       }
     })
+  })
+
+  socket.on('game:shuffle', gameId => {
+    const room = `game-${gameId}`
+    try {
+      const game = db.shuffleGame(gameId)
+      io.to(room).emit('game:edit', game)
+    } catch (err) {
+      console.error(`[users.socket.js] error editing game ${gameId}: `, err)
+      io.to(socket.id).emit('error', err)
+    }
+  })
+
+  socket.on('game:draw-black-card', gameId => {
+    const room = `game-${gameId}`
+    try {
+      const game = db.drawBlackCard(gameId)
+      io.to(room).emit('game:edit', game)
+    } catch (err) {
+      console.error(`[users.socket.js] error editing game ${gameId}: `, err)
+      io.to(socket.id).emit('error', err)
+    }
+  })
+
+  socket.on('game:draw-white-cards', gameId => {
+    const room = `game-${gameId}`
+    try {
+      const game = db.drawWhiteCards(gameId, socket.id)
+      io.to(room).emit('game:edit', game)
+    } catch (err) {
+      console.error(`[users.socket.js] error editing game ${gameId}: `, err)
+      io.to(socket.id).emit('error', err)
+    }
   })
 
   socket.on('disconnect', () => {

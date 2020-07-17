@@ -66,6 +66,11 @@ const GameStyles = styled.div`
         padding: 4px 8px;
         border-radius: 8px;
         margin: 8px 0;
+
+        &.reader {
+          background-color: var(--colorTop);
+          color: white;
+        }
       }
     }
 
@@ -108,8 +113,8 @@ const GameStyles = styled.div`
         margin-left: -12px;
       }
 
-      &.drag {
-        background-color: var(--colorVeryLow);
+      &.drag:not(.card-placeholder) {
+        opacity: 0.5;
       }
     }
   }
@@ -132,6 +137,7 @@ const CardPlaceholder = styled.div`
 
   &.drag {
     background-color: white;
+    border-color: transparent;
   }
 `
 
@@ -140,6 +146,8 @@ export default function Game ({ navigate, gameId }) {
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
   const [game, setGame] = useState(null)
   const [loading, setLoading] = useState(true)
+  const playerData = game && game.players.find(p => p.id === currentUser.id) || { cards: [] }
+  const roundData = game && game.round
 
   async function fetchGame () {
     setLoading(true)
@@ -151,11 +159,19 @@ export default function Game ({ navigate, gameId }) {
         socket.emit('game:join', { gameId, user: currentUser })
         setCurrentUser({ ...currentUser, game: gameId })
       }
-      if (data.owner === currentUser.id && !data.started) {
-        socket.emit('game:start', gameId)
+      if (!data.shuffled) {
+        socket.emit('game:shuffle', gameId)
       }
+      askCards(data.round.reader === currentUser.id)
     }
     setLoading(false)
+  }
+
+  function askCards (isReader) {
+    socket.emit('game:draw-white-cards', gameId)
+    if (isReader) {
+      socket.emit('game:draw-black-card', gameId)
+    }
   }
 
   useEffect(() => {
@@ -167,6 +183,19 @@ export default function Game ({ navigate, gameId }) {
       socket.off('game:edit')
     }
   }, [socket])
+
+  function onDragEnter (ev) {
+    ev.target.classList.add('drag')
+  }
+  function onDragLeave (ev) {
+    ev.target.classList.remove('drag')
+  }
+  function onDragStart (ev) {
+    ev.target.classList.add('drag')
+  }
+  function onDragEnd (ev) {
+    ev.target.classList.remove('drag')
+  }
 
   if (loading) {
     return (
@@ -184,19 +213,6 @@ export default function Game ({ navigate, gameId }) {
     )
   }
 
-  function onDragEnter (ev) {
-    ev.target.classList.add('drag')
-  }
-  function onDragLeave (ev) {
-    ev.target.classList.remove('drag')
-  }
-  function onDragStart (ev) {
-    ev.target.classList.add('drag')
-  }
-  function onDragEnd (ev) {
-    ev.target.classList.remove('drag')
-  }
-
   return (
     <GameStyles className="game">
       <section className="top">
@@ -204,12 +220,14 @@ export default function Game ({ navigate, gameId }) {
           <p className="label">Jugadores</p>
           <ul>
             {game.players.map(p => (
-              <li key={p.id}>{p.name}</li>
+              <li key={p.id} className={p.id === game.round.reader ? 'reader' : ''}>
+                {p.name}
+              </li>
             ))}
           </ul>
         </div>
         <CardStyles className="card black">
-          {game.deck.cards.find(c => c.type === 'black').text}
+          {roundData.cards.black && roundData.cards.black.text}
         </CardStyles>
         {/** TODO: Mostrar CardPlaceholder solo en fase 2 (elegir carta blanca ganadora) */}
         <CardPlaceholder className="card card-placeholder">
@@ -232,7 +250,7 @@ export default function Game ({ navigate, gameId }) {
       <section className="player-hand">
         <h3 className="heading-small">Cartas en tu mano</h3>
         <ul className="card-list">
-          {game.deck.cards.filter(c => c.type === 'white').slice(0, 5).map(c => (
+          {playerData.cards.map(c => (
             <CardStyles
               draggable="true"
               key={c.id}
