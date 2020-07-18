@@ -55,7 +55,10 @@ class Game {
 
   removePlayer (playerId) {
     this.players = this.players.filter(p => p.id !== playerId)
-    delete this.round.cards.white[player.id]
+    delete this.round.cards.white[playerId]
+    if (this.players.length && this.round.reader === playerId) {
+      this.round.reader = this.players[0].id
+    }
     return this
   }
 
@@ -87,8 +90,8 @@ class Game {
 
   playWhiteCard (cardId, playerId) {
     const player = this.players.find(p => p.id === playerId)
-    const cardIndex = player.cards.find(c => c.id === cardId)
-    const card = player.cards.splice(cardIndex, 1)
+    const cardIndex = player.cards.findIndex(c => c.id === cardId)
+    const card = player.cards.splice(cardIndex, 1)[0]
     this.round.cards.white[player.id] = card
     return this
   }

@@ -83,7 +83,7 @@ module.exports = function (socket, io, db) {
   socket.on('game:play-white-card', ({ gameId, cardId }) => {
     const room = `game-${gameId}`
     try {
-      const game = db.drawWhiteCards(gameId, cardId, socket.id)
+      const game = db.playWhiteCard(gameId, cardId, socket.id)
       io.to(room).emit('game:edit', game)
     } catch (err) {
       console.error(`[users.socket.js] error editing game ${gameId}: `, err)

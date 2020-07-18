@@ -109,12 +109,18 @@ const GameStyles = styled.div`
       margin-top: 16px;
       margin-bottom: 8px;
 
-      & + .card {
+      & + .card:not(.card-placeholder) {
         margin-left: -12px;
       }
 
       &.drag:not(.card-placeholder) {
         opacity: 0.5;
+      }
+    }
+
+    .card-placeholder {
+      & + .card-placeholder {
+        margin-left: 12px;
       }
     }
   }
@@ -146,8 +152,13 @@ export default function Game ({ navigate, gameId }) {
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
   const [game, setGame] = useState(null)
   const [loading, setLoading] = useState(true)
-  const playerData = game && game.players.find(p => p.id === currentUser.id) || { cards: [] }
-  const roundData = game && game.round
+  const playerData = (game && game.players.find(p => p.id === currentUser.id)) || { cards: [] }
+  const blackCard = game && game.round.cards.black
+  const cardsInGame = game && Object.entries(game.round.cards.white)
+    .map(pair => {
+      const [key, value] = pair
+      return { owner: key, ...(value || {}) }
+    })
 
   async function fetchGame () {
     setLoading(true)
@@ -185,16 +196,34 @@ export default function Game ({ navigate, gameId }) {
   }, [socket])
 
   function onDragEnter (ev) {
+    console.log('drag enter')
     ev.target.classList.add('drag')
   }
   function onDragLeave (ev) {
+    console.log('drag leave')
     ev.target.classList.remove('drag')
   }
-  function onDragStart (ev) {
+  function onDragStart (ev, card) {
+    console.log('drag start')
     ev.target.classList.add('drag')
+    ev.dataTransfer.effectAllowed = 'move'
+    ev.dataTransfer.setData('text/plain', card.id)
   }
   function onDragEnd (ev) {
+    console.log('drag end')
     ev.target.classList.remove('drag')
+  }
+  function onDragOver (ev) {
+    ev.preventDefault()
+    ev.dataTransfer.dropEffect = 'move'
+    return false
+  }
+  function onDrop (ev) {
+    const cardId = ev.dataTransfer.getData('text/plain')
+    socket.emit('game:play-white-card', { gameId, cardId })
+    ev.preventDefault()
+    ev.stopPropagation()
+    return false
   }
 
   if (loading) {
@@ -227,7 +256,7 @@ export default function Game ({ navigate, gameId }) {
           </ul>
         </div>
         <CardStyles className="card black">
-          {roundData.cards.black && roundData.cards.black.text}
+          {blackCard && blackCard.text}
         </CardStyles>
         {/** TODO: Mostrar CardPlaceholder solo en fase 2 (elegir carta blanca ganadora) */}
         <CardPlaceholder className="card card-placeholder">
@@ -237,14 +266,30 @@ export default function Game ({ navigate, gameId }) {
       <section className="cards-in-game">
         <h3 className="heading-small">Cartas en juego</h3>
         <ul className="card-list">
-          {game.players.map(p => (
-            <CardPlaceholder key={p.id}
-              onDragEnter={onDragEnter}
-              onDragLeave={onDragLeave}
-              className="card card-placeholder">
-              <p></p>
-            </CardPlaceholder>
-          ))}
+          {cardsInGame.map(c => {
+            if (!c.id) {
+              return (
+                <CardPlaceholder key={c.owner}
+                  onDragEnter={onDragEnter}
+                  onDragLeave={onDragLeave}
+                  onDragOver={onDragOver}
+                  onDrop={onDrop}
+                  className="card card-placeholder">
+                  <p></p>
+                </CardPlaceholder>
+              )
+            }
+            return (
+              <CardStyles
+                draggable="true"
+                key={c.id}
+                onDragStart={ev => onDragStart(ev, c)}
+                onDragEnd={onDragEnd}
+                className="card white translate-y">
+                <p>{c.text}</p>
+              </CardStyles>
+            )
+          })}
         </ul>
       </section>
       <section className="player-hand">
@@ -254,7 +299,7 @@ export default function Game ({ navigate, gameId }) {
             <CardStyles
               draggable="true"
               key={c.id}
-              onDragStart={onDragStart}
+              onDragStart={ev => onDragStart(ev, c)}
               onDragEnd={onDragEnd}
               className="card white translate-y">
               <p>{c.text}</p>
