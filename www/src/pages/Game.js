@@ -4,6 +4,15 @@ import config from '../config'
 import styled from 'styled-components'
 import CardStyles from '../components/deck-edit/CardStyles'
 
+import { polyfill } from 'mobile-drag-drop'
+import {scrollBehaviourDragImageTranslateOverride} from "mobile-drag-drop/scroll-behaviour";
+import 'mobile-drag-drop/default.css'
+
+polyfill({
+  dragImageTranslateOverride: scrollBehaviourDragImageTranslateOverride,
+  holdToDrag: 200
+})
+
 const GameStyles = styled.div`
   padding-top: 2rem;
   min-height: calc(100vh - 65px);
@@ -186,6 +195,7 @@ export default function Game ({ navigate, gameId }) {
   }
 
   useEffect(() => {
+    window.addEventListener( 'touchmove', function() {})
     fetchGame()
     socket.on('game:edit', game => {
       setGame(game)
@@ -195,22 +205,20 @@ export default function Game ({ navigate, gameId }) {
     }
   }, [socket])
 
-  function onDragEnter (ev) {
-    console.log('drag enter')
-    ev.target.classList.add('drag')
-  }
-  function onDragLeave (ev) {
-    console.log('drag leave')
-    ev.target.classList.remove('drag')
-  }
   function onDragStart (ev, card) {
-    console.log('drag start')
     ev.target.classList.add('drag')
     ev.dataTransfer.effectAllowed = 'move'
     ev.dataTransfer.setData('text/plain', card.id)
   }
   function onDragEnd (ev) {
-    console.log('drag end')
+    ev.target.classList.remove('drag')
+  }
+
+  function onDragEnter (ev) {
+    ev.preventDefault()
+    ev.target.classList.add('drag')
+  }
+  function onDragLeave (ev) {
     ev.target.classList.remove('drag')
   }
   function onDragOver (ev) {
@@ -218,6 +226,7 @@ export default function Game ({ navigate, gameId }) {
     ev.dataTransfer.dropEffect = 'move'
     return false
   }
+  
   function onDrop (ev) {
     const cardId = ev.dataTransfer.getData('text/plain')
     socket.emit('game:play-white-card', { gameId, cardId })
@@ -286,7 +295,7 @@ export default function Game ({ navigate, gameId }) {
                 onDragStart={ev => onDragStart(ev, c)}
                 onDragEnd={onDragEnd}
                 className="card white translate-y">
-                <p>{c.text}</p>
+                <p>{c.hidden ? '¿?' : c.text}</p>
               </CardStyles>
             )
           })}

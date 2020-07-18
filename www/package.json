@@ -10,13 +10,13 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "mobile-drag-drop": "^2.3.0-rc.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "3.3.0",
     "react-select": "^3.0.8",
     "socket.io-client": "^2.3.0",
     "styled-components": "^4.4.1",
-    "swr": "^0.1.16",
     "uuid": "^3.4.0"
   },
   "scripts": {
