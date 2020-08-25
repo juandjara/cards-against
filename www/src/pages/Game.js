@@ -3,6 +3,7 @@ import useGlobalSlice from '../services/useGlobalSlice'
 import config from '../config'
 import styled from 'styled-components'
 import CardStyles from '../components/deck-edit/CardStyles'
+import CardFlip from '../components/CardFlip'
 
 import { polyfill } from 'mobile-drag-drop'
 import {scrollBehaviourDragImageTranslateOverride} from "mobile-drag-drop/scroll-behaviour";
@@ -34,21 +35,39 @@ const GameStyles = styled.div`
     font-weight: normal;
   }
 
-  section {
-    &:not(.player-hand) {
-      padding-bottom: 24px;
-    }
-
-    &.cards-in-game {
-      padding-bottom: 216px;
-    }
-
-    @media (max-width: 45rem) {
-      padding-bottom: 200px;
-    }
-    
+  section {    
     & + section {
       border-top: 1px solid var(--colorModerate);
+    }
+  }
+
+  .card-list {
+    list-style: none;
+    margin: 0;
+
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-start;
+    overflow: auto;
+
+    .card, .card-flip {
+      margin-top: 16px;
+      margin-bottom: 8px;
+
+      & + .card, & + .card-flip {
+        margin-left: -12px;
+      }
+
+      &.drag:not(.card-placeholder) {
+        opacity: 0.5;
+      }
+    }
+  }
+
+  @media (max-width: 45rem) {
+    .card {
+      width: 160px;
+      height: 160px;
     }
   }
 
@@ -57,6 +76,7 @@ const GameStyles = styled.div`
     flex-wrap: wrap;
     align-items: stretch;
     justify-content: flex-start;
+    padding-bottom: 24px;
 
     .players {
       flex-basis: 160px;
@@ -90,6 +110,10 @@ const GameStyles = styled.div`
     }
   }
 
+  .cards-in-game {
+    padding-bottom: 216px;
+  }
+
   .player-hand {
     position: absolute;
     bottom: 0;
@@ -103,43 +127,6 @@ const GameStyles = styled.div`
       max-height: 200px;
     }
   }
-
-  .card-list {
-    list-style: none;
-    margin: 0;
-
-    display: flex;
-    align-items: stretch;
-    justify-content: flex-start;
-    overflow: auto;
-
-    .card {
-      position: relative;
-      margin-top: 16px;
-      margin-bottom: 8px;
-
-      & + .card:not(.card-placeholder) {
-        margin-left: -12px;
-      }
-
-      &.drag:not(.card-placeholder) {
-        opacity: 0.5;
-      }
-    }
-
-    .card-placeholder {
-      & + .card-placeholder {
-        margin-left: 12px;
-      }
-    }
-  }
-
-  @media (max-width: 45rem) {
-    .card {
-      width: 160px;
-      height: 160px;
-    }
-  }
 `
 
 const CardPlaceholder = styled.div`
@@ -149,6 +136,7 @@ const CardPlaceholder = styled.div`
   padding-bottom: 24px;
   border-radius: 16px;
   border: 2px dashed #333;
+  background-color: var(--colorVeryLow);
 
   &.drag {
     background-color: white;
@@ -163,11 +151,17 @@ export default function Game ({ navigate, gameId }) {
   const [loading, setLoading] = useState(true)
   const playerData = (game && game.players.find(p => p.id === currentUser.id)) || { cards: [] }
   const blackCard = game && game.round.cards.black
+  const playerHasPlayed = game && !!game.round.cards.white[currentUser.id]
+  const playerIsReader = game && game.round.reader === currentUser.id
   const cardsInGame = game && Object.entries(game.round.cards.white)
     .map(pair => {
       const [key, value] = pair
       return { owner: key, ...(value || {}) }
     })
+    .filter(c => c.owner !== game.round.reader)
+  
+  const allCardsReady = cardsInGame && cardsInGame.length && cardsInGame.every(c => c.id)
+  const allCardsShown = cardsInGame && cardsInGame.length && cardsInGame.every(c => c.id && !c.hidden)
 
   async function fetchGame () {
     setLoading(true)
@@ -267,10 +261,9 @@ export default function Game ({ navigate, gameId }) {
         <CardStyles className="card black">
           {blackCard && blackCard.text}
         </CardStyles>
-        {/** TODO: Mostrar CardPlaceholder solo en fase 2 (elegir carta blanca ganadora) */}
-        <CardPlaceholder className="card card-placeholder">
+        {allCardsShown ? (<CardPlaceholder className="card card-placeholder">
           <p>Arrastra aquí la carta ganadora</p>
-        </CardPlaceholder>
+        </CardPlaceholder>) : null}
       </section>
       <section className="cards-in-game">
         <h3 className="heading-small">Cartas en juego</h3>
@@ -279,6 +272,7 @@ export default function Game ({ navigate, gameId }) {
             if (!c.id) {
               return (
                 <CardPlaceholder key={c.owner}
+                  as="li"
                   onDragEnter={onDragEnter}
                   onDragLeave={onDragLeave}
                   onDragOver={onDragOver}
@@ -289,14 +283,22 @@ export default function Game ({ navigate, gameId }) {
               )
             }
             return (
-              <CardStyles
-                draggable="true"
-                key={c.id}
-                onDragStart={ev => onDragStart(ev, c)}
-                onDragEnd={onDragEnd}
-                className="card white translate-y">
-                <p>{c.hidden ? '¿?' : c.text}</p>
-              </CardStyles>
+              <CardFlip key={c.id} className="card-flip" as="li" rotated={!c.hidden}>
+                <CardStyles 
+                  draggable={playerIsReader}
+                  onDragStart={ev => onDragStart(ev, c)}
+                  onDragEnd={onDragEnd}
+                  className="card-flip-elem card-flip-front white translate-y">
+                  <p>¿?</p>
+                </CardStyles>
+                <CardStyles
+                  draggable={playerIsReader}
+                  onDragStart={ev => onDragStart(ev, c)}
+                  onDragEnd={onDragEnd}
+                  className="card-flip-elem card-flip-back white translate-y">
+                  <p>{c.text}</p>
+                </CardStyles>
+              </CardFlip>
             )
           })}
         </ul>
@@ -305,9 +307,9 @@ export default function Game ({ navigate, gameId }) {
         <h3 className="heading-small">Cartas en tu mano</h3>
         <ul className="card-list">
           {playerData.cards.map(c => (
-            <CardStyles
-              draggable="true"
-              key={c.id}
+            <CardStyles key={c.id}
+              as="li"
+              draggable={!playerHasPlayed && !playerIsReader}
               onDragStart={ev => onDragStart(ev, c)}
               onDragEnd={onDragEnd}
               className="card white translate-y">

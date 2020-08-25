@@ -14,9 +14,9 @@ const CardStyles = styled.div`
   border-radius: 16px;
   box-shadow: 0px 0px 8px 0px rgba(0,0,0, 0.25);
   font-weight: bold;
-  /* z-index: 1; */
   transform-style: preserve-3d;
   transition: transform 0.25s ease;
+  user-select: none;
 
   &.white {
     border-color: #333;

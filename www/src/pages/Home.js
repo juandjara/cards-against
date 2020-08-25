@@ -7,6 +7,7 @@ import IconInterface from '../components/icons/IconInterface'
 import CheckIcon from '../components/icons/CheckIcon'
 import CardStyles from '../components/deck-edit/CardStyles'
 import InputStyles from '../components/Input'
+import CardFlip from '../components/CardFlip'
 
 const HomeStyles = styled.div`
   display: flex;
@@ -28,8 +29,12 @@ const HomeStyles = styled.div`
       font-weight: 600;
       text-align: center;
       display: block;
-      margin: 16px;
       cursor: pointer;
+    }
+
+    > ${CardStyles},
+    > ${CardFlip} {
+      margin: 16px;
     }
   }
 
@@ -68,32 +73,6 @@ const HomeStyles = styled.div`
       width: 20px;
       height: 20px;
       color: var(--colorMedium);
-    }
-  }
-
-  .card-flip {
-    position: relative;
-    transition: transform 1s;
-    transform-style: preserve-3d;
-    width: 180px;
-    height: 180px;
-    margin: 16px;
-
-    ${CardStyles} {
-      margin: 0;
-    }
-
-    &.rotated {
-      transform: rotateY(180deg);
-    }
-
-    .card-flip-elem {
-      position: absolute;
-      backface-visibility: hidden;
-    }
-  
-    .card-flip-back {
-      transform: rotateY(180deg);
     }
   }
 
@@ -181,15 +160,15 @@ export default function Home () {
         </div>
       ) : (
         <div className="btn-group">
-          <div className={`card-flip ${isRotated ? 'rotated' : ''}`}>
+          <CardFlip rotated={isRotated}>
             <CardStyles as="button"
               onClick={() => setIsRotated(true)} 
-              className="card-flip-elem card-flip-front white scale">
+              className="card-flip-elem card-flip-front card white scale">
               Unirse a una partida
             </CardStyles>
             <CardStyles as="form"
               onSubmit={enterGame}
-              className="card-flip-elem card-flip-back white">
+              className="card-flip-elem card-flip-back card white">
               <label>Introduce el código</label>
               <div className="input-group">
                 <InputStyles 
@@ -201,7 +180,7 @@ export default function Home () {
                 <Button type="submit"><CheckIcon /></Button>
               </div>
             </CardStyles>
-          </div>
+          </CardFlip>
           <CardStyles as="button"
             onClick={newGame}
             className="black scale">
