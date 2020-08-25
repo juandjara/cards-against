@@ -9,7 +9,7 @@ import RadioGroup from '../components/RadioGroup'
 import CardLists from '../components/deck-edit/CardLists'
 import uuid from 'uuid/v4'
 
-const NewGameFormStyle = styled.form`
+const GameConfigStyle = styled.form`
   max-width: 960px;
   margin: 0 auto;
   margin-bottom: 3rem;
@@ -22,6 +22,10 @@ const NewGameFormStyle = styled.form`
     font-weight: 500;
     margin-top: 8px;
     margin-bottom: 16px;
+
+    &.center {
+      text-align: center;
+    }
   }
 
   .input-block {
@@ -94,7 +98,7 @@ const NewGameFormStyle = styled.form`
   }
 `
 
-export default function NewGameForm ({ navigate, gameId }) {
+export default function GameConfig ({ navigate, gameId }) {
   const [socket] = useGlobalSlice('socket')
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
   const [game, setGame] = useState(null)
@@ -165,22 +169,22 @@ export default function NewGameForm ({ navigate, gameId }) {
 
   if (loading) {
     return (
-      <NewGameFormStyle className="game-config">
-        <h2>Cargando...</h2>
-      </NewGameFormStyle>
+      <GameConfigStyle className="game-config">
+        <h2 className="center">Cargando...</h2>
+      </GameConfigStyle>
     )
   }
 
   if (!loading && !game) {
     return (
-      <NewGameFormStyle className="game-config">
-        <h2>No hay ninguna partida aqui :c</h2>
-      </NewGameFormStyle>
+      <GameConfigStyle className="game-config">
+        <h2 className="center">No hay ninguna partida aqui :c</h2>
+      </GameConfigStyle>
     )
   }
 
   return (
-    <NewGameFormStyle onSubmit={handleSubmit} className="game-config">
+    <GameConfigStyle onSubmit={handleSubmit} className="game-config">
       <h2>Nueva partida</h2>
       <div className="flex-block" style={{ justifyContent: 'space-between' }}>
         <div className="input-block">
@@ -220,6 +224,6 @@ export default function NewGameForm ({ navigate, gameId }) {
         </ul>
       </div>
       <Button disabled={!game.deck} className="big" type="submit">Comenzar</Button>
-    </NewGameFormStyle>
+    </GameConfigStyle>
   )
 }

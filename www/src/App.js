@@ -5,7 +5,7 @@ import Main from './pages/Main'
 import Home from './pages/Home'
 import DeckList from './pages/DeckList'
 import DeckEdit from './pages/DeckEdit'
-import NewGameForm from './pages/NewGameForm'
+import GameConfig from './pages/GameConfig'
 import Game from './pages/Game'
 import styled from 'styled-components'
 
@@ -29,7 +29,7 @@ function App() {
         <Home default />
         <DeckList path="decks" />
         <DeckEdit path="decks/:deckid" />
-        <NewGameForm path="config/:gameId" />
+        <GameConfig path="config/:gameId" />
         <Game path="game/:gameId" />
       </PrivateRoute>
     </StyledRoot>
