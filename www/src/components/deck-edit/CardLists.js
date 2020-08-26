@@ -91,7 +91,8 @@ export default function CardLists ({
   cards = [],
   addCard = () => {},
   editCard = () => {},
-  removeCard = () => {}
+  removeCard = () => {},
+  editable = true
 }) {
   const whiteCards = cards.filter(c => c.type === 'white')
   const blackCards = cards.filter(c => c.type === 'black')
@@ -128,7 +129,7 @@ export default function CardLists ({
 
   return (
     <CardListsStyle className="card-lists">
-      {selectedCard && (
+      {editable && selectedCard && (
         <Portal>
           <PortalStyles onClick={handlePortalClick} className="portal-backdrop">
             <CardForm
@@ -145,7 +146,7 @@ export default function CardLists ({
           <BlackCardsIcon />
           <span>{blackCards.length} Preguntas</span>
         </header>
-        <Button type="button" onClick={() => setSelectedCard({ type: 'black', text: '' })}>Nueva carta</Button>
+        {editable && (<Button type="button" onClick={() => setSelectedCard({ type: 'black', text: '' })}>Nueva carta</Button>)}
         <ul>
           {blackCards.map(card => (
             <CardStyles
@@ -164,7 +165,7 @@ export default function CardLists ({
           <WhiteCardsIcon />
           <span>{whiteCards.length} Respuestas</span>
         </header>
-        <Button type="button" onClick={() => setSelectedCard({ type: 'white', text: '' })}>Nueva carta</Button>
+        {editable && (<Button type="button" onClick={() => setSelectedCard({ type: 'white', text: '' })}>Nueva carta</Button>)}
         <ul>
           {whiteCards.map(card => (
             <CardStyles 

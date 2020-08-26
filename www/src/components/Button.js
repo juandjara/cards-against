@@ -10,6 +10,15 @@ const Button = styled.button`
   cursor: pointer;
   background: linear-gradient(to bottom, #fafafa 0%, #eaeaea 100%);
 
+  ${props => props.disabled ? `
+    pointer-events: none;
+  ` : ''}
+
+  &.align-center {
+    display: block;
+    margin: 0 auto;
+  }
+
   &.big {
     padding: 15px 30px;
     font-size: 20px;

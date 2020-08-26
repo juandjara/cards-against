@@ -7,7 +7,13 @@ import useDecks from '../services/useCards'
 import config from '../config'
 import RadioGroup from '../components/RadioGroup'
 import CardLists from '../components/deck-edit/CardLists'
-import uuid from 'uuid/v4'
+import { Link } from '@reach/router'
+
+import IconSave from '../components/icons/IconSave'
+import AddIcon from '../components/icons/AddIcon'
+import EditIcon from '../components/icons/EditIcon'
+import IconViewVisible from '../components/icons/IconViewVisible'
+import IconViewHidden from '../components/icons/IconViewHidden'
 
 const GameConfigStyle = styled.form`
   max-width: 960px;
@@ -29,7 +35,7 @@ const GameConfigStyle = styled.form`
   }
 
   .input-block {
-    margin-bottom: 24px;
+    margin-bottom: 32px;
     > label {
       font-size: 12px;
       font-weight: 600;
@@ -82,18 +88,50 @@ const GameConfigStyle = styled.form`
   .card-lists {
     max-width: calc(100vw - 24px);
   }
-
-  .ar {
-    text-align: right;
+  
+  .align-center {
+    text-align: center;
   }
 
   .players {
+    display: flex;
+    justify-content: center;
     li {
       background-color: white;
       max-width: 156px;
-      padding: 4px 8px;
-      border-radius: 8px;
-      margin: 8px 0;
+      padding: 6px 12px;
+      border-radius: 12px;
+      margin-top: 4px;
+      margin-bottom: 8px;
+      margin-right: 8px;
+    }
+  }
+
+  .select-actions {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+    .action {
+      display: flex;
+      align-items: center;
+      text-align: left;
+      padding: 0;
+      border: 0;
+      background: none;
+      color: var(--colorPrimary);
+      margin-right: 16px;
+      font-size: 12px;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      svg {
+        margin-right: 2px;
+        width: 20px;
+        height: 20px;
+      }
     }
   }
 `
@@ -103,6 +141,7 @@ export default function GameConfig ({ navigate, gameId }) {
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
   const [game, setGame] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [deckVisible, setDeckVisible] = useState(false)
 
   function setFormValue (key) {
     return function setFormValueInner (ev) {
@@ -111,13 +150,19 @@ export default function GameConfig ({ navigate, gameId }) {
     }
   }
 
-  const [decks] = useDecks()
-  const deckOptions = Object.values(decks).map(deck => ({
+  const [decks, setDecks] = useDecks()
+  const deckOptions = Object.values(decks)
+  .map(deck => ({
     ...deck,
     label: deck.name,
     value: deck.id
   }))
-  deckOptions.unshift({ label: 'Nuevo mazo', value: null, cards: [] })
+
+  const gameDeckIsNotSaved = game && game.deck && !deckOptions.some(d => d.id === game.deck.id)
+
+  if (gameDeckIsNotSaved) {
+    deckOptions.unshift(game.deck)
+  }
  
   async function fetchGame () {
     setLoading(true)
@@ -148,24 +193,16 @@ export default function GameConfig ({ navigate, gameId }) {
     navigate(`/game/${gameId}`)
   }
 
+  function saveCurrentDeck () {
+    // TODO: replace with "react-toast" or "react-alert" or something like that
+    setDecks({ ...decks, [game.deck.id]: game.deck })
+    window.alert('Se ha guardado el mazo en este dispositivo')
+  }
+
   const rotationOptions = [
     { value: 'winner', label: 'El ganador de la ultima ronda' },
     { value: 'clockwise', label: 'En el sentido de las agujas del reloj' }
   ]
-
-  function addCard (newCard) {
-    newCard = { ...newCard, id: uuid(), created_at: Date.now() }
-    const deck = { ...game.deck, value: null, label: 'Nuevo mazo', cards: game.deck.cards.concat(newCard) }
-    setFormValue('deck')(deck)
-  }
-  function editCard (card) {
-    const deck = { ...game.deck, value: null, label: 'Nuevo mazo', cards: game.deck.cards.map(c => c.id === card.id ? card : c) }
-    setFormValue('deck')(deck)
-  }
-  function removeCard (cardid) {
-    const deck = { ...game.deck, value: null, label: 'Nuevo mazo', cards: game.deck.cards.filter(c => c.id !== cardid) }
-    setFormValue('deck')(deck)
-  }
 
   if (loading) {
     return (
@@ -178,7 +215,7 @@ export default function GameConfig ({ navigate, gameId }) {
   if (!loading && !game) {
     return (
       <GameConfigStyle className="game-config">
-        <h2 className="center">No hay ninguna partida aqui :c</h2>
+        <h2 className="center">Ninguna partida activa con el c&oacute;digo <strong>{gameId}</strong></h2>
       </GameConfigStyle>
     )
   }
@@ -207,23 +244,46 @@ export default function GameConfig ({ navigate, gameId }) {
           onChange={setFormValue('deck')}
           className="select-container" 
           options={deckOptions} />
+        <footer className="select-actions">
+          <Link to="/decks/new" className="action">
+            <AddIcon />
+            <span>Nuevo mazo</span>
+          </Link>
+          {game.deck && (
+            <>
+              {gameDeckIsNotSaved ? (
+                <button type="button" className="action" onClick={saveCurrentDeck}>
+                  <IconSave />
+                  <span>Guardar mazo</span>
+                </button>
+              ) : (
+                <Link to={`/decks/${game.deck.id}`} className="action">
+                  <EditIcon />
+                  <span>Editar mazo</span>
+                </Link>
+              )}
+              <button type="button" className="action" onClick={() => setDeckVisible(!deckVisible)}>
+                {deckVisible ? <IconViewHidden /> : <IconViewVisible />}
+                <span>{deckVisible ? 'Ocultar' : 'Mostrar'} cartas</span>
+              </button>
+            </>
+          )}
+        </footer>
       </div>
-      {game.deck && (<div className="input-block">
+      {deckVisible && (<div className="input-block">
         <CardLists
           cards={game.deck.cards.sort((a, b) => (b.created_at || 0) - (a.created_at || 0))}
-          addCard={addCard}
-          removeCard={removeCard}
-          editCard={editCard} />
+          editable={false} />
       </div>)}
       <div className="input-block">
-        <label>Jugadores</label>
+        <label className="align-center">Jugadores</label>
         <ul className="players">
           {game.players.map(p => (
             <li key={p.id}>{p.name}</li>
           ))}
         </ul>
       </div>
-      <Button disabled={!game.deck} className="big" type="submit">Comenzar</Button>
+      <Button disabled={!game.deck} className="big align-center" type="submit">Comenzar</Button>
     </GameConfigStyle>
   )
 }
