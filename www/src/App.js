@@ -3,7 +3,7 @@ import { Router } from '@reach/router'
 import PrivateRoute from './components/PrivateRoute'
 import Main from './pages/Main'
 import Home from './pages/Home'
-import DeckList from './pages/DeckList'
+import Settings from './pages/Settings'
 import DeckEdit from './pages/DeckEdit'
 import GameConfig from './pages/GameConfig'
 import Game from './pages/Game'
@@ -27,7 +27,7 @@ function App() {
     <StyledRoot className="router">
       <PrivateRoute as={Main} path="/">
         <Home default />
-        <DeckList path="settings" />
+        <Settings path="settings" />
         <DeckEdit path="decks/:deckid" />
         <GameConfig path="config/:gameId" />
         <Game path="game/:gameId" />

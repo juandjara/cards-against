@@ -14,6 +14,7 @@ import AddIcon from '../components/icons/AddIcon'
 import EditIcon from '../components/icons/EditIcon'
 import IconViewVisible from '../components/icons/IconViewVisible'
 import IconViewHidden from '../components/icons/IconViewHidden'
+import IconArrowLeft from '../components/icons/IconArrowLeft'
 
 const GameConfigStyle = styled.form`
   max-width: 960px;
@@ -21,6 +22,22 @@ const GameConfigStyle = styled.form`
   margin-bottom: 3rem;
   padding: 1em 0;
   border-radius: 4px;
+
+  .back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    margin-bottom: 12px;
+
+    span {
+      margin-left: 2px;
+    }
+
+    svg .primary {
+      display: none;
+    }
+  }
 
   h2 {
     font-size: 20px;
@@ -98,9 +115,8 @@ const GameConfigStyle = styled.form`
     justify-content: center;
     li {
       background-color: white;
-      max-width: 156px;
       padding: 6px 12px;
-      border-radius: 12px;
+      border-radius: 16px;
       margin-top: 4px;
       margin-bottom: 8px;
       margin-right: 8px;
@@ -216,6 +232,10 @@ export default function GameConfig ({ navigate, gameId }) {
     return (
       <GameConfigStyle className="game-config">
         <h2 className="center">Ninguna partida activa con el c&oacute;digo <strong>{gameId}</strong></h2>
+        <Link to="/" className="back">
+          <IconArrowLeft width="20" height="20" />
+          <span>Volver al men&uacute; principal</span>
+        </Link>
       </GameConfigStyle>
     )
   }

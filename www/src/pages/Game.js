@@ -4,9 +4,11 @@ import config from '../config'
 import styled from 'styled-components'
 import CardStyles from '../components/deck-edit/CardStyles'
 import CardFlip from '../components/CardFlip'
+import { Link } from '@reach/router'
+import IconArrowLeft from '../components/icons/IconArrowLeft'
 
 import { polyfill } from 'mobile-drag-drop'
-import {scrollBehaviourDragImageTranslateOverride} from "mobile-drag-drop/scroll-behaviour";
+import { scrollBehaviourDragImageTranslateOverride } from "mobile-drag-drop/scroll-behaviour";
 import 'mobile-drag-drop/default.css'
 
 polyfill({
@@ -15,10 +17,26 @@ polyfill({
 })
 
 const GameStyles = styled.div`
-  padding-top: 2rem;
+  padding: 1rem 0;
   min-height: calc(100vh - 65px);
   max-width: calc(100vw - 24px);
   position: relative;
+
+  .back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    margin-bottom: 12px;
+
+    span {
+      margin-left: 2px;
+    }
+
+    svg .primary {
+      display: none;
+    }
+  }
 
   .heading {
     font-size: 20px;
@@ -26,6 +44,10 @@ const GameStyles = styled.div`
     font-weight: 500;
     margin-top: 8px;
     margin-bottom: 16px;
+
+    &.center {
+      text-align: center;
+    }
   }
 
   .heading-small {
@@ -240,7 +262,11 @@ export default function Game ({ navigate, gameId }) {
   if (!loading && !game) {
     return (
       <GameStyles className="game">
-        <h2 className="heading">No hay ninguna partida aqui :c</h2>
+        <h2 className="heading center">Ninguna partida activa con el c&oacute;digo <strong>{gameId}</strong></h2>
+        <Link to="/" className="back">
+          <IconArrowLeft width="20" height="20" />
+          <span>Volver al men&uacute; principal</span>
+        </Link>
       </GameStyles>
     )
   }

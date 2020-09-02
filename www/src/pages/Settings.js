@@ -10,7 +10,7 @@ import BlackCardsIcon from '../components/icons/CardsIcon'
 import IconArrowLeft from '../components/icons/IconArrowLeft'
 import EditIcon from '../components/icons/EditIcon'
 
-const DeckListStyles = styled.div`
+const SettingsStyles = styled.div`
   margin-top: 1.5rem;
 
   .back {
@@ -48,13 +48,6 @@ const DeckListStyles = styled.div`
     align-items: center;
   }
 
-  .edit-username {
-    button {
-      margin-left: 8px;
-      height: 36px;
-    }
-  }
-
   .pill {
     padding: 6px 12px;
     background-color: white;
@@ -86,9 +79,30 @@ const DeckListStyles = styled.div`
     }
   }
 
+  .edit-username {
+    button {
+      margin-left: 8px;
+      height: 36px;
+    }
+  }
+
   input {
-    max-width: 200px;
+    max-width: 215px;
     height: 36px;
+  }
+
+  @media (max-width: 45rem) {
+    .edit-username {
+      display: block;
+      input {
+        display: block;
+        margin-bottom: 8px;
+      }
+      button {
+        margin-left: 0;
+        margin-right: 8px;
+      }
+    }
   }
 
   .cancel-btn {
@@ -123,9 +137,9 @@ const DeckListStyles = styled.div`
   }
 `
 
-export default function DeckList () {
+export default function Settings () {
   const [decks] = useDecks()
-  const deckList = Object.values(decks)
+  const Settings = Object.values(decks)
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
   const [username, setUsername] = useState(currentUser.name)
   const [editMode, setEditMode] = useState(false)
@@ -136,7 +150,7 @@ export default function DeckList () {
   }
 
   return (
-    <DeckListStyles className="deck-list">
+    <SettingsStyles className="deck-list">
       <Link to="/" className="back">
         <IconArrowLeft width="20" height="20" />
         <span>Volver al men&uacute; principal</span>
@@ -165,11 +179,11 @@ export default function DeckList () {
         <Link to="/decks/new">
           <Button>Crear mazo</Button>
         </Link>
-        {deckList.length === 0 ? (
+        {Settings.length === 0 ? (
           <p>Todavia no has guardado ningún mazo</p>
         ) : (
           <ul>
-            {deckList.map(d => ({
+            {Settings.map(d => ({
               ...d,
               no_white: d.cards.filter(c => c.type === 'white').length,
               no_black: d.cards.filter(c => c.type === 'black').length
@@ -185,6 +199,6 @@ export default function DeckList () {
           </ul>
         )}
       </section>
-    </DeckListStyles>
+    </SettingsStyles>
   )
 }
