@@ -84,7 +84,7 @@ class Game {
         c.used = true
         return c
       })
-    player.cards = cards
+    player.cards = player.cards.concat(cards)
     return this
   }
 

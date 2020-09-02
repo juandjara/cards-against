@@ -27,7 +27,7 @@ function App() {
     <StyledRoot className="router">
       <PrivateRoute as={Main} path="/">
         <Home default />
-        <DeckList path="decks" />
+        <DeckList path="settings" />
         <DeckEdit path="decks/:deckid" />
         <GameConfig path="config/:gameId" />
         <Game path="game/:gameId" />

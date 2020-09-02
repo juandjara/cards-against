@@ -9,10 +9,6 @@ import CardLists from '../components/deck-edit/CardLists'
 
 const DeckEditStyles = styled.div`
   margin-top: 2rem;
-  &.new {
-    display: flex;
-    justify-content: center;
-  }
 `
 
 export default function DeckEdit ({ deckid }) {
@@ -38,7 +34,7 @@ export default function DeckEdit ({ deckid }) {
   }
 
   return (
-    <DeckEditStyles className={deckIsNew ? 'new' : ''}>
+    <DeckEditStyles className="deck-edit">
       <NewDeckForm deck={deck} onSubmit={editDeck} />
       {!deckIsNew && (
         <CardLists
