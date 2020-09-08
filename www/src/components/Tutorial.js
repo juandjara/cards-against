@@ -12,18 +12,21 @@ const TutorialStyles = styled(Dialog)`
   h3 {
     font-size: 18px;
     margin-top: -4px;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
   }
 
   > p {
     font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    margin-bottom: 1rem;
   }
 
   .checkbox {
     display: flex;
     align-items: center;
     font-size: 14px;
-    margin-top: 8px;
+    margin-top: 24px;
     margin-bottom: 32px;
     margin-left: -4px;
 
@@ -38,27 +41,36 @@ const TutorialStyles = styled(Dialog)`
   }
 `
 
-export default function Tutorial ({ flagKey, title, text }) {
-  const [flag, setFlag] = useTutorial(flagKey)
+export default function Tutorial () {
+  const [flag, setFlag] = useTutorial()
   const [open, setOpen] = useState(true)
   const [dontshow, setDontshow] = useState(false)
   const buttonRef = useRef()
 
   function close () {
     if (dontshow) {
-      setFlag(false)
+      setFlag(true)
     }
     setOpen(false)
   }
 
-  if (!flag) {
+  if (flag) {
     return null
   }
 
   return (
-    <TutorialStyles aria-label={title} isOpen={open} initialFocusRef={buttonRef}>
-      <h3>{title}</h3>
-      <p>{text}</p>
+    <TutorialStyles aria-label="¿Como se juega?" isOpen={open} initialFocusRef={buttonRef}>
+      <h3>¿Como se juega?</h3>
+      <p>
+        Los jugadores envian sus cartas arrastrandolas a la zona central o pulsando sobre ellas.
+      </p>
+      <p>
+        Cuando todos los jugadores hayan enviado sus cartas, el Juez las va revelando una a una pulsando sobre ellas
+      </p>
+      <p>
+        Cuando todas las cartas estén reveladas, el Juez deberá escoger la carta ganadora.
+        El jugador que haya enviado la carta ganadora sera recompensado con un punto
+      </p>
       <label className="checkbox">
         <input type="checkbox" checked={dontshow} onChange={ev => setDontshow(ev.target.checked)} />
         <span>No volver a mostrar</span>

@@ -329,7 +329,7 @@ export default function Game ({ navigate, gameId }) {
 
   function onHandClick (card) {
     if (!disableHand) {
-      setActiveSendBtn(card.id)
+      setActiveSendBtn(activeSendBtn === card.id ? null : card.id)
     }
   }
 
@@ -363,16 +363,7 @@ export default function Game ({ navigate, gameId }) {
 
   return (
     <GameStyles className="game">
-      <Tutorial
-        flagKey="player"
-        title="Tutorial del jugador"
-        text="Arrastra tus cartas a la zona central o pulsa dos veces sobre ellas para ponerlas en juego" />
-      {playerIsReader && allCardsReady ? (
-      <Tutorial
-        flagKey="reader_reveal"
-        title="Tutorial del juez"
-        text="Pulsa sobre las cartas con ¿? para revelarlas" />
-      ) : null}
+      <Tutorial />
       <section className="top">
         <CardStyles className="card black">
           {blackCard && blackCard.text}

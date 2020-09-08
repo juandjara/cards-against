@@ -4,5 +4,5 @@ export default {
     : 'http://localhost:5000',
   NAME_KEY: 'cards-against-username',
   DATA_KEY: 'cards-against-data',
-  TUTORIALS_KEY: 'cards-against-tutorials',
+  TUTORIAL_KEY: 'cards-against-tutorial',
 }
