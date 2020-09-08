@@ -102,7 +102,7 @@ class Game {
     if (!card) {
       return null
     }
-    card.hidden = true
+    card.hidden = false
     return this
   }
 }
