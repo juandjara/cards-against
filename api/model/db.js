@@ -12,8 +12,6 @@ const ERRORS = {
   CARD_404: 'CARD_NOT_FOUND'
 }
 
-module.exports.ERRORS = ERRORS
-
 const db = {
   games: {},
   hasGame (id) {
@@ -69,7 +67,11 @@ const db = {
   },
   revealCard (gameId, cardId) {
     const game = this.getGame(gameId)
-    return game.revealCard(cardId)
+    const result = game.revealCard(cardId)
+    if (!result) {
+      throw new GameError(ERRORS.CARD_404, `Card for player "${playerId}" not found in the white cards played this round`)
+    }
+    return result
   }
 }
 
