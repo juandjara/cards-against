@@ -30,7 +30,8 @@ const CardStyles = styled.div`
     color: white;
   }
 
-  &.translate-y {
+  &.selectable {
+    cursor: pointer;
     &:hover {
       transform: translateY(-12px);
       z-index: 1;

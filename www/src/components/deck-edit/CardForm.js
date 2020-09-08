@@ -61,9 +61,10 @@ const CardFormStyle = styled.form`
         justify-content: flex-end;
       }
 
-      strong {
-        font-size: 16px;
-        margin-left: 8px;
+      input {
+        max-width: 64px;
+        margin-right: 8px;
+        margin-bottom: 4px;
       }
 
       svg {
@@ -92,8 +93,8 @@ export default function CardForm ({
   placeholder = 'Texto de la carta'
 }) {
   const [text, setText] = useState(card.text)
+  const [answers, setAnswers] = useState(card.answers)
   const inputRef = useRef()
-  const answers = (text.split('___').length - 1) || 1
 
   useEffect(() => {
     if (inputRef.current) {
@@ -116,6 +117,7 @@ export default function CardForm ({
           as="textarea"
           name={`card-input-${card.id}`}
           value={text}
+          maxLength={70}
           onChange={ev => setText(ev.target.value)}
           placeholder={placeholder} />
       </CardStyles>
@@ -124,8 +126,8 @@ export default function CardForm ({
           <CloseIcon />
         </button>
         {card.type === 'black' && (<div className="n-of-answers">
-          <div class="value">
-            <strong> {answers} </strong>
+          <div className="value">
+            <Input type="number" value={answers} onChange={ev => setAnswers(ev.target.value)} />
             <WhiteCardsIcon />
           </div>
           <p>Nº de respuestas</p>

@@ -15,7 +15,7 @@ module.exports = function (socket, io, db) {
       const game = db.editGame(data)
       io.to(room).emit('game:edit', game)
     } catch (err) {
-      console.error(`[users.socket.js] error editing game ${data.id}: `, err)
+      console.error(`[sockets.js] error editing game ${data.id}: `, err)
       io.to(socket.id).emit('error', err)
     }
   })
@@ -28,7 +28,7 @@ module.exports = function (socket, io, db) {
         const game = db.addPlayer(gameId, user)
         io.to(room).emit('game:edit', game)
       } catch (err) {
-        console.error(`[users.socket.js] error joining ${gameId}: `, err)
+        console.error(`[sockets.js] error joining ${gameId}: `, err)
         io.to(socket.id).emit('error', err)
       }
     })
@@ -41,7 +41,7 @@ module.exports = function (socket, io, db) {
         const game = db.removePlayer(gameId, socket.id)
         socket.to(room).emit('game:edit', game)
       } catch (err) {
-        console.error(`[users.socket.js] error leaving ${gameId}: `, err)
+        console.error(`[sockets.js] error leaving ${gameId}: `, err)
         io.to(socket.id).emit('error', err)
       }
     })
@@ -53,7 +53,7 @@ module.exports = function (socket, io, db) {
       const game = db.shuffleGame(gameId)
       io.to(room).emit('game:edit', game)
     } catch (err) {
-      console.error(`[users.socket.js] error editing game ${gameId}: `, err)
+      console.error(`[sockets.js] error editing game ${gameId}: `, err)
       io.to(socket.id).emit('error', err)
     }
   })
@@ -64,7 +64,7 @@ module.exports = function (socket, io, db) {
       const game = db.drawBlackCard(gameId)
       io.to(room).emit('game:edit', game)
     } catch (err) {
-      console.error(`[users.socket.js] error editing game ${gameId}: `, err)
+      console.error(`[sockets.js] error editing game ${gameId}: `, err)
       io.to(socket.id).emit('error', err)
     }
   })
@@ -75,7 +75,7 @@ module.exports = function (socket, io, db) {
       const game = db.drawWhiteCards(gameId, socket.id)
       io.to(room).emit('game:edit', game)
     } catch (err) {
-      console.error(`[users.socket.js] error editing game ${gameId}: `, err)
+      console.error(`[sockets.js] error editing game ${gameId}: `, err)
       io.to(socket.id).emit('error', err)
     }
   })
@@ -86,8 +86,18 @@ module.exports = function (socket, io, db) {
       const game = db.playWhiteCard(gameId, cardId, socket.id)
       io.to(room).emit('game:edit', game)
     } catch (err) {
-      console.error(`[users.socket.js] error editing game ${gameId}: `, err)
+      console.error(`[sockets.js] error editing game ${gameId}: `, err)
       io.to(socket.id).emit('error', err)
+    }
+  })
+
+  socket.on('game:reveal-card', ({ gameId, cardId }) => {
+    const room = `game-${gameId}`
+    try {
+      const game = db.revealCard(gameId, cardId)
+      io.to(room).emit('game:edit', game)
+    } catch (err) {
+      console.error(`[sockets.js] error editing game ${gameId}: `, err)
     }
   })
 
@@ -101,7 +111,7 @@ module.exports = function (socket, io, db) {
         }
       }
     } catch (err) {
-      console.error(`[users.socket.js] error on disconnect: `, err)
+      console.error(`[sockets.js] error on disconnect: `, err)
       io.to(socket.id).emit('error', err)
     }
   })

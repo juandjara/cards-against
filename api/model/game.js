@@ -1,3 +1,5 @@
+const { GameError, ERRORS } = require("./db");
+
 // code from here: https://javascript.info/task/shuffle
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -94,6 +96,15 @@ class Game {
     const card = player.cards.splice(cardIndex, 1)[0]
     card.hidden = true
     this.round.cards.white[player.id] = card
+    return this
+  }
+
+  revealCard (playerId) {
+    const card = this.round.cards.white[playerId]
+    if (!card) {
+      throw new GameError(ERRORS.CARD_404, `Card for player "${playerId}" not found in the white cards played this round`)
+    }
+    card.hidden = false
     return this
   }
 }

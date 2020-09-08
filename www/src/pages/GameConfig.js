@@ -185,6 +185,9 @@ export default function GameConfig ({ navigate, gameId }) {
     const res = await fetch(`${config.api}/games/${gameId}`)
     const data = await res.json()
     if (res.ok) {
+      if (data.shuffled) {
+        navigate(`/game/${gameId}`)
+      }
       setGame(data)
       if (!currentUser.game) {
         socket.emit('game:join', { gameId, user: currentUser })
@@ -210,8 +213,8 @@ export default function GameConfig ({ navigate, gameId }) {
   }
 
   function saveCurrentDeck () {
-    // TODO: replace with "react-toast" or "react-alert" or something like that
     setDecks({ ...decks, [game.deck.id]: game.deck })
+    // TODO: replace with "react-toast" or "react-alert" or something like that
     window.alert('Se ha guardado el mazo en este dispositivo')
   }
 
@@ -245,7 +248,7 @@ export default function GameConfig ({ navigate, gameId }) {
       <h2>Nueva partida</h2>
       <div className="flex-block" style={{ justifyContent: 'space-between' }}>
         <div className="input-block">
-          <label>¿Quién lee la carta negra?</label>
+          <label>¿Quién será El Juez de las Cartas?</label>
           <RadioGroup
             value={game.rotation}
             onChange={setFormValue('rotation')}

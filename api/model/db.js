@@ -8,8 +8,11 @@ class GameError extends Error {
 }
 
 const ERRORS = {
-  GAME_404: 'GAME_NOT_FOUND'
+  GAME_404: 'GAME_NOT_FOUND',
+  CARD_404: 'CARD_NOT_FOUND'
 }
+
+module.exports.ERRORS = ERRORS
 
 const db = {
   games: {},
@@ -27,7 +30,7 @@ const db = {
   },
   getGame (id) {
     if (!this.hasGame(id)) {
-      throw new GameError(ERRORS.GAME_404, `Game ${id} not found`)
+      throw new GameError(ERRORS.GAME_404, `Game "${id}" not found`)
     }
     return this.games[id]
   },
@@ -63,6 +66,10 @@ const db = {
   playWhiteCard (gameId, cardId, playerId) {
     const game = this.getGame(gameId)
     return game.playWhiteCard(cardId, playerId)
+  },
+  revealCard (gameId, cardId) {
+    const game = this.getGame(gameId)
+    return game.revealCard(cardId)
   }
 }
 

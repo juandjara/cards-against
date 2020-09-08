@@ -152,7 +152,7 @@ export default function CardLists ({
             <CardStyles
               key={card.id}
               as="li"
-              className="card black translate-y"
+              className="card black selectable"
               onClick={() => setSelectedCard(card)}>
               <span>{card.text}</span>
               {card.answers > 1 && (<div className="answers">{card.answers}</div>)}
@@ -171,7 +171,7 @@ export default function CardLists ({
             <CardStyles 
               key={card.id}
               as="li"
-              className="card white translate-y"
+              className="card white selectable"
               onClick={() => setSelectedCard(card)}>
               {card.text}
             </CardStyles>
