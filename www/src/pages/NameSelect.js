@@ -62,7 +62,7 @@ export default function NameSelect () {
   function connect(name) {
     const socket = io(`${config.api}?name=${name}`)
     setLoading(true)
-    socket.on('connect', () => {
+    socket.once('connect', () => {
       socket.emit('user:id-request', (user) => {
         setLoading(false)
         setSocket(socket)
