@@ -42,7 +42,7 @@ module.exports = function (socket, io, db) {
         socket.to(room).emit('game:edit', game)
       } catch (err) {
         console.error(`[sockets.js] error leaving ${gameId}: `, err)
-        io.to(socket.id).emit('error', err)
+        io.to(socket.id).emit('error', { message: err.message, stack: err.stack })
       }
     })
   })

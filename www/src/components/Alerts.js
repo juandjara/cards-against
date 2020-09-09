@@ -9,7 +9,6 @@ const AlertsStyle = styled.div`
   left: 0;
   right: 0;
   top: 32px;
-  bottom: 0;
   
   .alert {
     max-width: 600px;
@@ -44,6 +43,7 @@ const AlertsStyle = styled.div`
     &.error {
       background-color: #ffdddd;
       box-shadow: 2px 2px 4px -2px #800000;
+      white-space: pre-line;
     }
 
     button {
@@ -65,14 +65,14 @@ const AlertsStyle = styled.div`
 
   @keyframes slideIn {
     from {
-      transform: translateY(-12px);
+      transform: translateX(200%);
     }
     to {
-      transform: translateY(0);
+      transform: translateX(0);
     }
   }
 `
-const ALERT_TIMEOUT = 3000
+const ALERT_TIMEOUT = 5000
 
 export function useAlerts () {
   const [alerts, setAlerts] = useGlobalSlice('alerts')
@@ -98,20 +98,25 @@ export default function Alerts () {
   const [addAlert, removeAlert, alerts] = useAlerts()
 
   useEffect(() => {
-    socket.on('error', error => {
-      addAlert({ text: `PUM! Algo se ha roto!! ${error}`, className: 'error' })
-    })
-    socket.on('disconnect', () => {
+    function onError (error) {
+      addAlert({ text: `PUM! Algo se ha roto!! \n${error.message}`, className: 'error' })
+      console.error(error.stack)
+    }
+    function onDisconnect () {
       addAlert({ text: 'Se ha perdido la conexion con el servidor', className: 'warning' })
-    })
-    socket.on('reconnect', () => {
+    }
+    function onReconnect () {
       addAlert({ text: 'Recuperada la conexion con el servidor', className: 'success' })
-    })
+    }
+
+    socket.on('error', onError)
+    socket.on('disconnect', onDisconnect)
+    socket.on('reconnect', onReconnect)
 
     return () => {
-      socket.off('error')
-      socket.off('disconnect')
-      socket.off('reconnect')
+      socket.off('error', onError)
+      socket.off('disconnect', onDisconnect)
+      socket.off('reconnect', onReconnect)
     }
   }, [socket, addAlert])
 
