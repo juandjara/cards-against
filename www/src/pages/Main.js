@@ -1,30 +1,12 @@
 import React, { Fragment, useEffect } from 'react'
 import Header from '../components/Header'
-import useGlobalSlice from '../services/useGlobalSlice'
+import Alerts from '../components/Alerts'
 
-export default function Main ({ children }) {
-  const [socket] = useGlobalSlice('socket')
-  useEffect(() => {
-    socket.on('error', error => {
-      alert('[socket.io] Error from socket', error)
-    })
-    socket.on('disconnect', () => {
-      alert('disconnected from server')
-    })
-    socket.on('reconnect', () => {
-      alert('connected again')
-    })
-
-    return () => {
-      socket.off('error')
-      socket.off('disconnect')
-      socket.off('reconnect')
-    }
-  }, [])
-  
+export default function Main ({ children }) {  
   return (
     <Fragment>
-      <Header></Header>
+      <Alerts />
+      <Header />
       <main className="main-content">{children}</main>
     </Fragment>
   )

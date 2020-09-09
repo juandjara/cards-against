@@ -5,7 +5,8 @@ export const Context = createContext()
 export function GlobalStateProvider({ children }) {
   const context = useState({
     socket: null,
-    currentUser: null
+    currentUser: null,
+    alerts: []
   })
   
   return (
