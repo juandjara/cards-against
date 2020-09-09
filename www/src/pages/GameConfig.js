@@ -8,6 +8,7 @@ import config from '../config'
 import RadioGroup from '../components/RadioGroup'
 import CardLists from '../components/deck-edit/CardLists'
 import { Link } from '@reach/router'
+import { useAlerts } from '../components/Alerts'
 
 import IconSave from '../components/icons/IconSave'
 import AddIcon from '../components/icons/AddIcon'
@@ -155,6 +156,7 @@ const GameConfigStyle = styled.form`
 export default function GameConfig ({ navigate, gameId }) {
   const [socket] = useGlobalSlice('socket')
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
+  const [addAlert] = useAlerts()
   const [game, setGame] = useState(null)
   const [loading, setLoading] = useState(true)
   const [deckVisible, setDeckVisible] = useState(false)
@@ -214,8 +216,7 @@ export default function GameConfig ({ navigate, gameId }) {
 
   function saveCurrentDeck () {
     setDecks({ ...decks, [game.deck.id]: game.deck })
-    // TODO: replace with "react-toast" or "react-alert" or something like that
-    window.alert('Se ha guardado el mazo en este dispositivo')
+    addAlert({ text: 'Se ha guardado el mazo en este dispositivo' })
   }
 
   const rotationOptions = [
