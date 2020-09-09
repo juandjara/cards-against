@@ -99,13 +99,13 @@ export default function Alerts () {
 
   useEffect(() => {
     socket.on('error', error => {
-      addAlert({ text: `API error: ${error}`, className: 'error' })
+      addAlert({ text: `PUM! Algo se ha roto!! ${error}`, className: 'error' })
     })
     socket.on('disconnect', () => {
-      addAlert({ text: 'disconnected from server', className: 'warning' })
+      addAlert({ text: 'Se ha perdido la conexion con el servidor', className: 'warning' })
     })
     socket.on('reconnect', () => {
-      addAlert({ text: 'connected again', className: 'success' })
+      addAlert({ text: 'Recuperada la conexion con el servidor', className: 'success' })
     })
 
     return () => {
