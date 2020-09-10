@@ -46,7 +46,7 @@ export default function NewDeckForm ({ deck = {}, onSubmit }) {
 
   return (
     <DeckFormStyles className="new-deck-form" onSubmit={handleSubmit}>
-      <h2>Crear mazo</h2>
+      <h2>Edición de mazo</h2>
       <label htmlFor="deckName">Nombre</label>
       <InputStyles 
         required

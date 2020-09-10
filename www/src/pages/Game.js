@@ -5,10 +5,14 @@ import styled from 'styled-components'
 import CardStyles from '../components/deck-edit/CardStyles'
 import CardFlip from '../components/CardFlip'
 import { Link } from '@reach/router'
-import IconArrowLeft from '../components/icons/IconArrowLeft'
 import classnames from 'classnames'
 import Tutorial from '../components/Tutorial'
 import Button from '../components/Button'
+import { Dialog } from '@reach/dialog'
+import '@reach/dialog/styles.css'
+
+import IconArrowLeft from '../components/icons/IconArrowLeft'
+import CloseIcon from '../components/icons/CloseIcon'
 
 import { polyfill } from 'mobile-drag-drop'
 import { scrollBehaviourDragImageTranslateOverride } from 'mobile-drag-drop/scroll-behaviour'
@@ -224,15 +228,42 @@ const GameStyles = styled.div`
   }
 `
 
-const CardPlaceholder = styled.div`
-  width: 180px;
-  height: 180px;
-  padding: 12px 16px;
-  padding-bottom: 24px;
-  border-radius: 16px;
-  border: 2px dashed #333;
-  background-color: var(--colorVeryLow);
+const WinningModalStyles = styled(Dialog)`
+  h3 {
+    font-size: 16px;
+    line-height: 24px;
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+
+  .card-pair {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
 `
+
+function WinningModal ({ blackCard, whiteCard }) {
+  if (!blackCard || !whiteCard) {
+    return null
+  }
+  return (
+    <WinningModalStyles className="winning-modal">
+      <Button>
+        <CloseIcon />
+      </Button>
+      <h3>¿Elegir esta combinaci&oacute;n como ganadora?</h3>
+      <div className="card-pair">
+        <CardStyles className="black">{blackCard.text}</CardStyles>
+        <CardStyles className="white">{whiteCard.text}</CardStyles>
+      </div>
+      <div className="actions">
+        <Button>Si</Button>
+        <Button>No</Button>
+      </div>
+    </WinningModalStyles>
+  )
+}
 
 export default function Game ({ navigate, gameId }) {
   const [socket] = useGlobalSlice('socket')
@@ -240,6 +271,7 @@ export default function Game ({ navigate, gameId }) {
   const [game, setGame] = useState(null)
   const [loading, setLoading] = useState(true)
   const [activeSendBtn, setActiveSendBtn] = useState(null)
+  const [winningCard, setWinningCard] = useState(null)
   const playerData = (game && game.players.find(p => p.id === currentUser.id)) || { cards: [] }
   const blackCard = game && game.round.cards.black
   const playerIsReader = game && game.round.reader === currentUser.id
@@ -252,7 +284,7 @@ export default function Game ({ navigate, gameId }) {
   
   const numCardsReady = cardsInGame.filter(c => c.id).length
   const allCardsReady = cardsInGame.length && cardsInGame.length === numCardsReady
-  const allCardsShown = cardsInGame.length && cardsInGame.every(c => c.id && !c.hidden)
+  // const allCardsShown = cardsInGame.length && cardsInGame.every(c => c.id && !c.hidden)
   const disableHand = playerIsReader || cardsInGame.some(c => c.id && c.owner === currentUser.id)
 
   async function fetchGame () {
@@ -341,6 +373,10 @@ export default function Game ({ navigate, gameId }) {
     socket.emit('game:reveal-card', { gameId, cardId })
   }
 
+  function showWinningCard (card) {
+    setWinningCard(card)
+  }
+
   if (loading) {
     return (
       <GameStyles className="game">
@@ -364,13 +400,11 @@ export default function Game ({ navigate, gameId }) {
   return (
     <GameStyles className="game">
       <Tutorial />
+      <WinningModal whiteCard={winningCard} blackCard={blackCard} />
       <section className="top">
         <CardStyles className="card black">
           {blackCard && blackCard.text}
         </CardStyles>
-        {allCardsShown ? (<CardPlaceholder className="card card-placeholder">
-          <p>Arrastra aquí la carta ganadora</p>
-        </CardPlaceholder>) : null}
         <div className="block players">
           <p className="label">Jugadores</p>
           <ul>
@@ -410,6 +444,7 @@ export default function Game ({ navigate, gameId }) {
                     draggable={playerIsReader}
                     onDragStart={ev => onDragStart(ev, c)}
                     onDragEnd={onDragEnd}
+                    onClick={() => showWinningCard(c)}
                     className="card-flip-elem card-flip-back">
                     <p>{c.text}</p>
                   </CardStyles>
@@ -427,7 +462,7 @@ export default function Game ({ navigate, gameId }) {
           </CardStyles>
         )}
       </section>
-      <section className={classnames('player-hand', { disabled: playerIsReader })}>
+      <section className={classnames('player-hand', { disabled: disableHand })}>
         <h3 className="heading-small center">Cartas en tu mano</h3>
         <ul className="card-list">
           {playerData.cards.map(c => (
