@@ -8,11 +8,9 @@ import { Link } from '@reach/router'
 import classnames from 'classnames'
 import Tutorial from '../components/Tutorial'
 import Button from '../components/Button'
-import { Dialog } from '@reach/dialog'
-import '@reach/dialog/styles.css'
+import WinningModal from '../components/WinningModal'
 
 import IconArrowLeft from '../components/icons/IconArrowLeft'
-import CloseIcon from '../components/icons/CloseIcon'
 
 import { polyfill } from 'mobile-drag-drop'
 import { scrollBehaviourDragImageTranslateOverride } from 'mobile-drag-drop/scroll-behaviour'
@@ -228,43 +226,6 @@ const GameStyles = styled.div`
   }
 `
 
-const WinningModalStyles = styled(Dialog)`
-  h3 {
-    font-size: 16px;
-    line-height: 24px;
-    margin-bottom: 24px;
-    font-weight: 500;
-  }
-
-  .card-pair {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-  }
-`
-
-function WinningModal ({ blackCard, whiteCard }) {
-  if (!blackCard || !whiteCard) {
-    return null
-  }
-  return (
-    <WinningModalStyles className="winning-modal">
-      <Button>
-        <CloseIcon />
-      </Button>
-      <h3>¿Elegir esta combinaci&oacute;n como ganadora?</h3>
-      <div className="card-pair">
-        <CardStyles className="black">{blackCard.text}</CardStyles>
-        <CardStyles className="white">{whiteCard.text}</CardStyles>
-      </div>
-      <div className="actions">
-        <Button>Si</Button>
-        <Button>No</Button>
-      </div>
-    </WinningModalStyles>
-  )
-}
-
 export default function Game ({ navigate, gameId }) {
   const [socket] = useGlobalSlice('socket')
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
@@ -319,8 +280,12 @@ export default function Game ({ navigate, gameId }) {
     socket.on('game:edit', game => {
       setGame(game)
     })
+    socket.on('game:show-pair', card => {
+      setWinningCard(card)
+    })
     return () => {
       socket.off('game:edit')
+      socket.off('game:show-pair')
     }
   }, [socket])
 
@@ -359,6 +324,7 @@ export default function Game ({ navigate, gameId }) {
     return false
   }
 
+  // click handlers
   function onHandClick (card) {
     if (!disableHand) {
       setActiveSendBtn(activeSendBtn === card.id ? null : card.id)
@@ -370,12 +336,22 @@ export default function Game ({ navigate, gameId }) {
   }
 
   function revealCard (cardId) {
-    socket.emit('game:reveal-card', { gameId, cardId })
+    if (playerIsReader) {
+      socket.emit('game:reveal-card', { gameId, cardId })
+    }
   }
 
   function showWinningCard (card) {
-    setWinningCard(card)
+    if (playerIsReader) {
+      socket.emit('game:show-pair', { gameId, card })
+    }
   }
+
+  function closeWinningCard () {
+    setWinningCard(null)
+  }
+
+  function confirmWinningCard () {}
 
   if (loading) {
     return (
@@ -400,7 +376,12 @@ export default function Game ({ navigate, gameId }) {
   return (
     <GameStyles className="game">
       <Tutorial />
-      <WinningModal whiteCard={winningCard} blackCard={blackCard} />
+      <WinningModal
+        whiteCard={winningCard}
+        blackCard={blackCard}
+        showConfirm={playerIsReader}
+        onClose={closeWinningCard}
+        onConfirm={confirmWinningCard} />
       <section className="top">
         <CardStyles className="card black">
           {blackCard && blackCard.text}
@@ -437,7 +418,7 @@ export default function Game ({ navigate, gameId }) {
                     onDragStart={ev => onDragStart(ev, c)}
                     onDragEnd={onDragEnd}
                     onClick={() => revealCard(c.owner)}
-                    className={classnames('card-flip-elem card-flip-front', { 'selectable': c.hidden && playerIsReader })}>
+                    className={classnames('card-flip-elem card-flip-front', { selectable: c.hidden && playerIsReader })}>
                     <p>¿?</p>
                   </CardStyles>
                   <CardStyles

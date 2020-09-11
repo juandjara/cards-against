@@ -98,7 +98,13 @@ module.exports = function (socket, io, db) {
       io.to(room).emit('game:edit', game)
     } catch (err) {
       console.error(`[sockets.js] error editing game ${gameId}: `, err)
+      io.to(socket.id).emit('error', err)
     }
+  })
+
+  socket.on('game:show-pair', ({ gameId, card }) => {
+    const room = `game-${gameId}`
+    io.to(room).emit('game:show-pair', card)
   })
 
   socket.on('disconnect', () => {
