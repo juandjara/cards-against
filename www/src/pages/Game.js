@@ -94,18 +94,22 @@ const GameStyles = styled.div`
 
   .top {
     display: flex;
-    /* flex-wrap: wrap; */
     align-items: stretch;
     justify-content: flex-start;
     padding-bottom: 24px;
 
     .players {
+      flex-grow: 1;
       flex-basis: 160px;
-      margin: 0 16px 16px 16px;
+      margin-left: 16px;
       
       .label {
         font-size: 14px;
         color: var(--colorMedium);
+      }
+
+      .player {
+        margin-right: 0;
       }
     }
 
@@ -189,6 +193,10 @@ const GameStyles = styled.div`
   }
 
   @media (max-width: 45rem) {
+    .player {
+      max-width: none;
+    }
+
     .card {
       width: 160px;
       height: 160px;
