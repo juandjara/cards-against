@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Link } from '@reach/router'
 import useGlobalSlice from '../services/useGlobalSlice'
 import IconCog from './icons/IconCog'
-import IconDoorExit from './icons/IconDoorExit'
+import IconArrowLeft from './icons/IconArrowLeft'
 
 const HeaderStyles = styled.header`
   border-bottom: 1px solid var(--colorModerate);
@@ -29,12 +29,18 @@ const HeaderStyles = styled.header`
 
     .link {
       padding: 4px;
-      margin-left: 8px;
+      margin-right: 4px;
       border-radius: 8px;
       height: 32px;
+      color: var(--colorHigh);
+      transition: background-color 0.25s;
 
-      &:hover {
+      &:hover, &:focus {
         background-color: white;
+      }
+
+      &.back {
+        padding: 0;
       }
 
       svg {
@@ -66,13 +72,13 @@ export default function Header () {
       <h1>Cartas contra la web</h1>
       {currentUser && (
         <div className="right">
-          <p className="username">{currentUser.name}</p>
-          <Link to="/settings" className="link" title="Ajustes" aria-label="Ajustes">
+          <Link to="/" className="link back" title="Menu principal" aria-label="Menu principal">
+            <IconArrowLeft width="32" height="32" />
+          </Link>
+          <Link to="/settings" className="link settings" title="Ajustes" aria-label="Ajustes">
             <IconCog />
           </Link>
-          <Link to="/" className="link" title="Menu principal" aria-label="Menu principal">
-            <IconDoorExit />
-          </Link>
+          <p className="username">{currentUser.name}</p>
         </div>
       )}
     </HeaderStyles>

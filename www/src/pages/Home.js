@@ -176,8 +176,9 @@ export default function Home () {
                   value={code}
                   maxLength="4"
                   onChange={ev => setCode(ev.target.value)}
+                  disabled={!isRotated}
                   placeholder="ABCD" />
-                <Button type="submit"><IconCheck /></Button>
+                <Button type="submit" disabled={!isRotated}><IconCheck /></Button>
               </div>
             </CardStyles>
           </CardFlip>
