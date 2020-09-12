@@ -16,6 +16,8 @@ import IconEdit from '../components/icons/IconEdit'
 import IconViewVisible from '../components/icons/IconViewVisible'
 import IconViewHidden from '../components/icons/IconViewHidden'
 import IconArrowLeft from '../components/icons/IconArrowLeft'
+import WhiteIconCards from '../components/icons/IconCardsOutline'
+import BlackIconCards from '../components/icons/IconCards'
 
 const GameConfigStyle = styled.form`
   max-width: 960px;
@@ -116,11 +118,25 @@ const GameConfigStyle = styled.form`
     justify-content: center;
     li {
       background-color: white;
-      padding: 6px 12px;
       border-radius: 16px;
-      margin-top: 4px;
-      margin-bottom: 8px;
-      margin-right: 8px;
+      padding: 6px 8px 6px 12px;
+      margin: 4px 12px 8px 0;
+      max-width: 160px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      box-shadow: 0 2px 4px 0px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      transition: transform 0.25s, box-shadow 0.25s;
+
+      span {
+        margin-right: 12px;
+      }
+
+      &:hover, &:focus {
+        box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
+        transform: translateY(-4px);
+      }
     }
   }
 
@@ -303,7 +319,10 @@ export default function GameConfig ({ navigate, gameId }) {
         <label className="align-center">Jugadores</label>
         <ul className="players">
           {game.players.map(p => (
-            <li key={p.id}>{p.name}</li>
+            <li key={p.id}>
+              <span>{p.name}</span>
+              {p.id === game.round.reader ? <BlackIconCards /> : <WhiteIconCards />}
+            </li>
           ))}
         </ul>
       </div>
