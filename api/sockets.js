@@ -102,11 +102,6 @@ module.exports = function (socket, io, db) {
     }
   })
 
-  socket.on('game:show-pair', ({ gameId, card }) => {
-    const room = `game-${gameId}`
-    io.to(room).emit('game:show-pair', card)
-  })
-
   socket.on('disconnect', () => {
     try {
       for (const key in db.games) {

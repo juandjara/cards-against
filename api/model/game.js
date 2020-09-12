@@ -47,7 +47,8 @@ class Game {
     this.players.push({
       id: player.id,
       name: player.name,
-      cards: []
+      cards: [],
+      wins: []
     })
     this.round.cards.white[player.id] = null
     return this
@@ -104,6 +105,38 @@ class Game {
     }
     card.hidden = false
     return this
+  }
+
+  setRoundWinner (playerId, winningPair) {
+    const player = this.players.find(p => p.id === playerId)
+    player.wins.push(winningPair)
+    this.createNewRound(playerId)
+  }
+
+  createNewRound (lastWinnerId) {
+    this.rotateReader(lastWinnerId)
+    this.drawBlackCard()
+    for (const player of this.players) {
+      this.drawWhiteCards(player.id)
+    }
+  }
+
+  rotateReader (lastWinnerId) {
+    if (this.rotation === 'winner') {
+      this.round.reader = lastWinnerId
+    }
+    if (this.rotation === 'clockwise') {
+      this.players.forEach((p, i) => {
+        if (p.id === lastWinnerId) {
+          let nextIndex = i + 1
+          if (nextIndex >= this.players.length) {
+            nextIndex = 0
+          }
+          const nextPlayer = this.players[nextIndex]
+          this.round.reader = nextPlayer.id
+        }
+      })
+    }
   }
 }
 

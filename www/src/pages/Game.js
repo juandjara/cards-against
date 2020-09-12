@@ -280,12 +280,8 @@ export default function Game ({ navigate, gameId }) {
     socket.on('game:edit', game => {
       setGame(game)
     })
-    socket.on('game:show-pair', card => {
-      setWinningCard(card)
-    })
     return () => {
       socket.off('game:edit')
-      socket.off('game:show-pair')
     }
   }, [socket])
 
@@ -343,7 +339,7 @@ export default function Game ({ navigate, gameId }) {
 
   function showWinningCard (card) {
     if (playerIsReader) {
-      socket.emit('game:show-pair', { gameId, card })
+      setWinningCard(card)
     }
   }
 
@@ -351,7 +347,15 @@ export default function Game ({ navigate, gameId }) {
     setWinningCard(null)
   }
 
-  function confirmWinningCard () {}
+  function confirmWinningCard () {
+    socket.emit('game:set-round-winner', {
+      playerId: winningCard.owner,
+      winningPair: {
+        black: blackCard,
+        white: winningCard
+      }
+    })
+  }
 
   if (loading) {
     return (
@@ -379,7 +383,7 @@ export default function Game ({ navigate, gameId }) {
       <WinningModal
         whiteCard={winningCard}
         blackCard={blackCard}
-        showConfirm={playerIsReader}
+        playerIsReader={playerIsReader}
         onClose={closeWinningCard}
         onConfirm={confirmWinningCard} />
       <section className="top">

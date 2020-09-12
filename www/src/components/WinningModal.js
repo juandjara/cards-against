@@ -16,7 +16,6 @@ const WinningModalStyles = styled(Dialog)`
     font-size: 16px;
     line-height: 24px;
     margin-bottom: 24px;
-    font-weight: 500;
     text-align: center;
   }
 
@@ -24,16 +23,17 @@ const WinningModalStyles = styled(Dialog)`
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
 
-    div + div {
-      margin-left: 8px;
+    .card {
+      margin: 8px;
     }
   }
 
   .close-btn {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 4px;
+    right: 4px;
     background: none;
     border: none;
     padding: 8px;
@@ -54,7 +54,7 @@ const WinningModalStyles = styled(Dialog)`
   }
 `
 
-export default function WinningModal ({ blackCard, whiteCard, showConfirm = true, onClose, onConfirm }) {
+export default function WinningModal ({ blackCard, whiteCard, playerIsReader = true, onClose, onConfirm }) {
   if (!blackCard || !whiteCard) {
     return null
   }
@@ -63,12 +63,12 @@ export default function WinningModal ({ blackCard, whiteCard, showConfirm = true
       <Button className="close-btn" onClick={onClose}>
         <CloseIcon />
       </Button>
-      <h3>¿Elegir esta combinaci&oacute;n como ganadora?</h3>
+      <h3>{playerIsReader ? '¿Elegir esta combinación como ganadora?' : 'Y la victoria es para...'}</h3>
       <div className="card-pair">
-        <CardStyles className="black">{blackCard.text}</CardStyles>
-        <CardStyles className="white">{whiteCard.text}</CardStyles>
+        <CardStyles className="card black">{blackCard.text}</CardStyles>
+        <CardStyles className="card white">{whiteCard.text}</CardStyles>
       </div>
-      {showConfirm && <Button onClick={onConfirm} className="confirm-btn">Confirmar</Button>}
+      {playerIsReader && <Button onClick={onConfirm} className="confirm-btn">Confirmar</Button>}
     </WinningModalStyles>
   )
 }

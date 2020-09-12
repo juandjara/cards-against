@@ -43,7 +43,7 @@ const TutorialStyles = styled(Dialog)`
 
 export default function Tutorial () {
   const [flag, setFlag] = useTutorial()
-  const [open, setOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(true)
   const [dontshow, setDontshow] = useState(false)
   const buttonRef = useRef()
 
@@ -51,7 +51,7 @@ export default function Tutorial () {
     if (dontshow) {
       setFlag(true)
     }
-    setOpen(false)
+    setIsOpen(false)
   }
 
   if (flag) {
@@ -59,7 +59,8 @@ export default function Tutorial () {
   }
 
   return (
-    <TutorialStyles aria-label="¿Como se juega?" isOpen={open} initialFocusRef={buttonRef}>
+    <TutorialStyles isOpen={isOpen} aria-label="¿Como se juega?"
+      onDismiss={close} initialFocusRef={buttonRef}>
       <h3>¿Como se juega?</h3>
       <p>
         Los jugadores envian sus cartas arrastrandolas a la zona central o pulsando sobre ellas.
@@ -69,7 +70,10 @@ export default function Tutorial () {
       </p>
       <p>
         Cuando todas las cartas estén reveladas, el Juez deberá escoger la carta ganadora.
-        El jugador que haya enviado la carta ganadora sera recompensado con un punto
+        El jugador que haya enviado la carta ganadora sera recompensado con un punto.
+      </p>
+      <p>
+        Para el caso de una carta con 2 respuestas, la carta que envias primero es la que se lee primero.
       </p>
       <label className="checkbox">
         <input type="checkbox" checked={dontshow} onChange={ev => setDontshow(ev.target.checked)} />
