@@ -5,10 +5,10 @@ import Input from '../components/Input'
 import { Link } from '@reach/router'
 import useDecks from '../services/useCards'
 import useGlobalSlice from '../services/useGlobalSlice'
-import WhiteCardsIcon from '../components/icons/CardsOutlineIcon'
-import BlackCardsIcon from '../components/icons/CardsIcon'
+import WhiteIconCards from '../components/icons/IconCardsOutline'
+import BlackIconCards from '../components/icons/IconCards'
 import IconArrowLeft from '../components/icons/IconArrowLeft'
-import EditIcon from '../components/icons/EditIcon'
+import IconEdit from '../components/icons/IconEdit'
 
 const SettingsStyles = styled.div`
   margin-top: 1.5rem;
@@ -168,7 +168,7 @@ export default function Settings () {
           <div className="username">
             <p className="pill">{currentUser.name}</p>
             <button className="button-link" onClick={() => setEditMode(true)}>
-              <EditIcon />
+              <IconEdit />
               <span>Editar</span>
             </button>
           </div>
@@ -189,8 +189,8 @@ export default function Settings () {
               no_black: d.cards.filter(c => c.type === 'black').length
             })).map(d => (
               <li key={d.id}>
-                <BlackCardsIcon /><span>{d.no_black}</span>
-                <WhiteCardsIcon /><span>{d.no_white}</span>
+                <BlackIconCards /><span>{d.no_black}</span>
+                <WhiteIconCards /><span>{d.no_white}</span>
                 <Link to={`/decks/${d.id}`}>
                   {d.name}
                 </Link>{' '}

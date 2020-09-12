@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import Portal from '@reach/portal'
-import WhiteCardsIcon from '../icons/CardsOutlineIcon'
-import BlackCardsIcon from '../icons/CardsIcon'
+import WhiteIconCards from '../icons/IconCardsOutline'
+import BlackIconCards from '../icons/IconCards'
 import Button from '../Button'
 import CardForm from './CardForm'
 import CardStyles from './CardStyles'
@@ -143,7 +143,7 @@ export default function CardLists ({
       )}
       <section>
         <header>
-          <BlackCardsIcon />
+          <BlackIconCards />
           <span>{blackCards.length} Preguntas</span>
         </header>
         {editable && (<Button type="button" onClick={() => setSelectedCard({ type: 'black', text: '' })}>Nueva carta</Button>)}
@@ -162,7 +162,7 @@ export default function CardLists ({
       </section>
       <section>
         <header>
-          <WhiteCardsIcon />
+          <WhiteIconCards />
           <span>{whiteCards.length} Respuestas</span>
         </header>
         {editable && (<Button type="button" onClick={() => setSelectedCard({ type: 'white', text: '' })}>Nueva carta</Button>)}

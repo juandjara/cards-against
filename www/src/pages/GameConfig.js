@@ -11,8 +11,8 @@ import { Link } from '@reach/router'
 import { useAlerts } from '../components/Alerts'
 
 import IconSave from '../components/icons/IconSave'
-import AddIcon from '../components/icons/AddIcon'
-import EditIcon from '../components/icons/EditIcon'
+import IconAdd from '../components/icons/IconAdd'
+import IconEdit from '../components/icons/IconEdit'
 import IconViewVisible from '../components/icons/IconViewVisible'
 import IconViewHidden from '../components/icons/IconViewHidden'
 import IconArrowLeft from '../components/icons/IconArrowLeft'
@@ -211,7 +211,7 @@ export default function GameConfig ({ navigate, gameId }) {
 
   function handleSubmit (ev) {
     ev.preventDefault()
-    navigate(`/game/${gameId}`)
+    navigate(`/game/${gameId}`, { replace: true })
   }
 
   function saveCurrentDeck () {
@@ -221,7 +221,7 @@ export default function GameConfig ({ navigate, gameId }) {
 
   const rotationOptions = [
     { value: 'winner', label: 'El ganador de la ultima ronda' },
-    { value: 'clockwise', label: 'En el sentido de las agujas del reloj' }
+    { value: 'clockwise', label: 'El siguiente jugador de la lista' }
   ]
 
   if (loading) {
@@ -249,7 +249,7 @@ export default function GameConfig ({ navigate, gameId }) {
       <h2>Nueva partida</h2>
       <div className="flex-block" style={{ justifyContent: 'space-between' }}>
         <div className="input-block">
-          <label>¿Quién será El Juez de las Cartas?</label>
+          <label>¿Quién será El Juez de las Cartas en cada ronda?</label>
           <RadioGroup
             value={game.rotation}
             onChange={setFormValue('rotation')}
@@ -270,7 +270,7 @@ export default function GameConfig ({ navigate, gameId }) {
           options={deckOptions} />
         <footer className="select-actions">
           <Link to="/decks/new" className="action">
-            <AddIcon />
+            <IconAdd />
             <span>Nuevo mazo</span>
           </Link>
           {game.deck && (
@@ -282,7 +282,7 @@ export default function GameConfig ({ navigate, gameId }) {
                 </button>
               ) : (
                 <Link to={`/decks/${game.deck.id}`} className="action">
-                  <EditIcon />
+                  <IconEdit />
                   <span>Editar mazo</span>
                 </Link>
               )}

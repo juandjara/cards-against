@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import Button from '../Button'
 import Input from '../Input'
-import CloseIcon from '../icons/CloseIcon'
-import WhiteCardsIcon from '../icons/CardsOutlineIcon'
+import IconClose from '../icons/IconClose'
+import WhiteIconCards from '../icons/IconCardsOutline'
 import CardStyles from './CardStyles'
 
 const CardFormStyle = styled.form`
@@ -123,12 +123,12 @@ export default function CardForm ({
       </CardStyles>
       <div className="top-right">
         <button type="button" className="close-btn" onClick={onCancel}>
-          <CloseIcon />
+          <IconClose />
         </button>
         {card.type === 'black' && (<div className="n-of-answers">
           <div className="value">
             <Input type="number" value={answers} onChange={ev => setAnswers(ev.target.value)} />
-            <WhiteCardsIcon />
+            <WhiteIconCards />
           </div>
           <p>Nº de respuestas</p>
         </div>)}

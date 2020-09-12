@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function CheckIcon () {
+export default function IconCheck () {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24">
       <path d="M0 0h24v24H0z" fill="none"/>

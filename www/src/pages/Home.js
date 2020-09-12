@@ -4,7 +4,7 @@ import Button from '../components/Button'
 import { navigate } from '@reach/router'
 import useGlobalSlice from '../services/useGlobalSlice'
 import IconInterface from '../components/icons/IconInterface'
-import CheckIcon from '../components/icons/CheckIcon'
+import IconCheck from '../components/icons/IconCheck'
 import CardStyles from '../components/deck-edit/CardStyles'
 import InputStyles from '../components/Input'
 import CardFlip from '../components/CardFlip'
@@ -177,14 +177,14 @@ export default function Home () {
                   maxLength="4"
                   onChange={ev => setCode(ev.target.value)}
                   placeholder="ABCD" />
-                <Button type="submit"><CheckIcon /></Button>
+                <Button type="submit"><IconCheck /></Button>
               </div>
             </CardStyles>
           </CardFlip>
           <CardStyles as="button"
             onClick={newGame}
             className="black scale">
-            Nueva partida
+            Crear partida
           </CardStyles>
         </div>
       )}

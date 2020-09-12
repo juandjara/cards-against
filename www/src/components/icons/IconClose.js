@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function CloseIcon (props) {
+export default function IconClose (props) {
   return (
     <svg 
       fill="currentColor"

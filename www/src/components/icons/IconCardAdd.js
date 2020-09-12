@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function CardAddIcon () {
+export default function IconCardAdd () {
   return (
     <svg x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24">
       <g id="Bounding_Box">

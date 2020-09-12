@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import CloseIcon from './icons/CloseIcon'
+import IconClose from './icons/IconClose'
 import Button from './Button'
 import CardStyles from './deck-edit/CardStyles'
 
@@ -61,7 +61,7 @@ export default function WinningModal ({ blackCard, whiteCard, playerIsReader = t
   return (
     <WinningModalStyles aria-label="Elegir carta ganadora" onDismiss={onClose} className="winning-modal">
       <Button className="close-btn" onClick={onClose}>
-        <CloseIcon />
+        <IconClose />
       </Button>
       <h3>{playerIsReader ? '¿Elegir esta combinación como ganadora?' : 'Y la victoria es para...'}</h3>
       <div className="card-pair">

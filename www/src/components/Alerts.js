@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import Alert from '@reach/alert'
 import styled from 'styled-components'
 import useGlobalSlice from '../services/useGlobalSlice'
-import CloseIcon from './icons/CloseIcon'
+import IconClose from './icons/IconClose'
 
 const AlertsStyle = styled.div`
   position: fixed;
@@ -126,7 +126,7 @@ export default function Alerts () {
         <Alert key={i} className={`alert ${a.className || 'info'}`}>
           <p>{a.text}</p>
           <button onClick={() => removeAlert(a)}>
-            <CloseIcon width="14" height="14" />
+            <IconClose width="14" height="14" />
           </button>
         </Alert>
       ))}

@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function EditIcon (props) {
+export default function IconEdit (props) {
   return (
     <svg fill="currentColor" width="24" height="24" viewBox="0 0 24 24" {...props}>
       <path fill="none" d="M0 0h24v24H0V0z"/>
