@@ -6,7 +6,7 @@ import CardStyles from '../components/deck-edit/CardStyles'
 import CardFlip from '../components/CardFlip'
 import { Link } from '@reach/router'
 import classnames from 'classnames'
-import Tutorial from '../components/Tutorial'
+import TutorialModal from '../components/TutorialModal'
 import Button from '../components/Button'
 import WinningModal from '../components/WinningModal'
 import Player from '../components/Player'
@@ -375,7 +375,7 @@ export default function Game ({ navigate, gameId }) {
 
   return (
     <GameStyles className="game">
-      <Tutorial />
+      <TutorialModal />
       <WinningModal
         whiteCard={winningCard}
         blackCard={blackCard}

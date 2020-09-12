@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import useTutorial from '../services/useTutorial'
-import Button from '../components/Button'
+import Button from './Button'
 import { Dialog } from '@reach/dialog'
 import '@reach/dialog/styles.css'
 import styled from 'styled-components'
@@ -41,7 +41,7 @@ const TutorialStyles = styled(Dialog)`
   }
 `
 
-export default function Tutorial () {
+export default function TutorialModal () {
   const [flag, setFlag] = useTutorial()
   const [isOpen, setIsOpen] = useState(true)
   const [dontshow, setDontshow] = useState(false)
