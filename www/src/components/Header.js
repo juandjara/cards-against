@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { Link } from '@reach/router'
 import useGlobalSlice from '../services/useGlobalSlice'
 import IconCog from './icons/IconCog'
+import IconDoorExit from './icons/IconDoorExit'
 
 const HeaderStyles = styled.header`
   border-bottom: 1px solid var(--colorModerate);
@@ -66,7 +67,12 @@ export default function Header () {
       {currentUser && (
         <div className="right">
           <p className="username">{currentUser.name}</p>
-          <Link title="Ajustes" aria-label="Ajustes" className="link" to="/settings"><IconCog /></Link>
+          <Link to="/settings" className="link" title="Ajustes" aria-label="Ajustes">
+            <IconCog />
+          </Link>
+          <Link to="/" className="link" title="Menu principal" aria-label="Menu principal">
+            <IconDoorExit />
+          </Link>
         </div>
       )}
     </HeaderStyles>
