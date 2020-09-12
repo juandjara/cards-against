@@ -15,6 +15,7 @@ const PlayerStyles = styled.div`
   box-shadow: 0 2px 4px 0px rgba(0,0,0,0.2);
   display: flex;
   align-items: center;
+  justify-content: space-between;
   transition: transform 0.25s, box-shadow 0.25s;
 
   p {
@@ -40,8 +41,7 @@ const PlayerStyles = styled.div`
 
   &.selectable {
     &:hover, &:focus {
-      box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
-      transform: translateY(-4px);
+      box-shadow: 0 0 8px 4px rgba(0,0,0,0.2);
     }
   }
 `
@@ -49,7 +49,8 @@ const PlayerStyles = styled.div`
 export default function Player ({ as, player, readerId, selectable })  {
   return (
     <PlayerStyles as={as}
-      tabIndex={selectable ? '0' : undefined}
+      tabIndex={selectable ? '0' : null}
+      title={selectable ? 'Pulsa para ver los puntos de este jugador' : null}
       className={classnames('player', { selectable })}>
       <p>
         <span>{player.name}</span>

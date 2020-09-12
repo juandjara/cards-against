@@ -9,6 +9,7 @@ import classnames from 'classnames'
 import Tutorial from '../components/Tutorial'
 import Button from '../components/Button'
 import WinningModal from '../components/WinningModal'
+import Player from '../components/Player'
 
 import IconArrowLeft from '../components/icons/IconArrowLeft'
 
@@ -105,19 +106,6 @@ const GameStyles = styled.div`
       .label {
         font-size: 14px;
         color: var(--colorMedium);
-      }
-
-      li {
-        background-color: white;
-        max-width: 156px;
-        padding: 4px 8px;
-        border-radius: 8px;
-        margin: 8px 0;
-
-        &.reader {
-          background-color: var(--colorTop);
-          color: white;
-        }
       }
     }
 
@@ -394,9 +382,10 @@ export default function Game ({ navigate, gameId }) {
           <p className="label">Jugadores</p>
           <ul>
             {game.players.map(p => (
-              <li key={p.id} className={p.id === game.round.reader ? 'reader' : ''}>
-                {p.name}
-              </li>
+              <Player key={p.id} as="li"
+                player={p}
+                selectable
+                readerId={game.round.reader} />
             ))}
           </ul>
         </div>
