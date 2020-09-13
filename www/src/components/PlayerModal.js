@@ -76,11 +76,11 @@ const PlayerModalStyles = styled(Dialog)`
       }
 
       &.back {
-        left: 8px;
+        left: -16px;
       }
 
       &.next {
-        right: 8px;
+        right: -16px;
       }
     }
   }

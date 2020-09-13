@@ -223,13 +223,15 @@ const GameStyles = styled.div`
   }
 `
 
+const EMPTY_PAIR_DATA = { whiteCard: null, blackCard: null, player: null, reader: false }
+
 export default function Game ({ navigate, gameId }) {
   const [socket] = useGlobalSlice('socket')
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
   const [game, setGame] = useState(null)
   const [loading, setLoading] = useState(true)
   const [activeSendBtn, setActiveSendBtn] = useState(null)
-  const [winningCard, setWinningCard] = useState(null)
+  const [cardPair, setCardPair] = useState(EMPTY_PAIR_DATA)
   const [selectedPlayerModal, setSelectedPlayerModal] = useState(null)
 
   const playerData = (game && game.players.find(p => p.id === currentUser.id)) || { cards: [] }
@@ -244,7 +246,6 @@ export default function Game ({ navigate, gameId }) {
   
   const numCardsReady = cardsInGame.filter(c => c.id).length
   const allCardsReady = cardsInGame.length && cardsInGame.length === numCardsReady
-  // const allCardsShown = cardsInGame.length && cardsInGame.every(c => c.id && !c.hidden)
   const disableHand = playerIsReader || cardsInGame.some(c => c.id && c.owner === currentUser.id)
 
   async function fetchGame () {
@@ -279,8 +280,12 @@ export default function Game ({ navigate, gameId }) {
     socket.on('game:edit', game => {
       setGame(game)
     })
+    socket.on('game:show-round-winner', ({ player, whiteCard, blackCard }) => {
+      setCardPair({ reader: false, player, whiteCard, blackCard })
+    })
     return () => {
       socket.off('game:edit')
+      socket.off('game:show-round-winner')
     }
   }, [socket])
 
@@ -336,24 +341,29 @@ export default function Game ({ navigate, gameId }) {
     }
   }
 
-  function showWinningCard (card) {
+  function showCardPair (card) {
     if (playerIsReader) {
-      setWinningCard(card)
+      setCardPair({
+        reader: true,
+        player: null,
+        whiteCard: card,
+        blackCard
+      })
     }
   }
 
-  function closeWinningCard () {
-    setWinningCard(null)
+  function closeCardPair () {
+    setCardPair(EMPTY_PAIR_DATA)
   }
 
   function confirmWinningCard () {
     socket.emit('game:set-round-winner', {
-      playerId: winningCard.owner,
-      winningPair: {
-        black: blackCard,
-        white: winningCard
-      }
+      gameId,
+      player: cardPair.whiteCard.owner,
+      blackCard: cardPair.blackCard.id,
+      whiteCard: cardPair.whiteCard.id
     })
+    closeCardPair()
   }
 
   if (loading) {
@@ -380,10 +390,11 @@ export default function Game ({ navigate, gameId }) {
     <GameStyles className="game">
       <TutorialModal />
       <WinningModal
-        whiteCard={winningCard}
-        blackCard={blackCard}
-        playerIsReader={playerIsReader}
-        onClose={closeWinningCard}
+        whiteCard={cardPair.whiteCard}
+        blackCard={cardPair.blackCard}
+        isReader={cardPair.reader}
+        player={cardPair.player}
+        onClose={closeCardPair}
         onConfirm={confirmWinningCard} />
       <PlayerModal player={selectedPlayerModal} onClose={() => setSelectedPlayerModal(null)} />
       <section className="top">
@@ -431,7 +442,7 @@ export default function Game ({ navigate, gameId }) {
                     draggable={playerIsReader}
                     onDragStart={ev => onDragStart(ev, c)}
                     onDragEnd={onDragEnd}
-                    onClick={() => showWinningCard(c)}
+                    onClick={() => showCardPair(c)}
                     className="card-flip-elem card-flip-back">
                     <p>{c.text}</p>
                   </CardStyles>

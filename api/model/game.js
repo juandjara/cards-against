@@ -107,10 +107,15 @@ class Game {
     return this
   }
 
-  setRoundWinner (playerId, winningPair) {
+  setRoundWinner (playerId, whiteCardId, blackCardId) {
     const player = this.players.find(p => p.id === playerId)
-    player.wins.push(winningPair)
+    const cards = {
+      white: this.deck.cards.find(c => c.id === whiteCardId),
+      black: this.deck.cards.find(c => c.id === blackCardId)
+    }
+    player.wins.push(cards)
     this.createNewRound(playerId)
+    return this
   }
 
   createNewRound (lastWinnerId) {

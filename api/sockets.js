@@ -102,6 +102,23 @@ module.exports = function (socket, io, db) {
     }
   })
 
+  socket.on('game:set-round-winner', ({ gameId, player, whiteCard, blackCard }) => {
+    const room = `game-${gameId}`
+    try {
+      const game = db.setRoundWinner(gameId, player, whiteCard, blackCard)
+      socket.to(room).emit('game:show-round-winner', {
+        player: game.players.find(p => p.id === player),
+        whiteCard: game.deck.cards.find(c => c.id === whiteCard),
+        blackCard: game.deck.cards.find(c => c.id === blackCard)
+      })
+      io.to(room).emit('game:edit', game)
+      io.to(room).emit('alert', { text: 'Comienza una nueva ronda' })
+    } catch (err) {
+      console.error(`[sockets.js] error editing game ${gameId}: `, err)
+      io.to(socket.id).emit('error', err)
+    }
+  })
+
   socket.on('disconnect', () => {
     try {
       for (const key in db.games) {

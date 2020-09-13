@@ -72,6 +72,10 @@ const db = {
       throw new GameError(ERRORS.CARD_404, `Card for player "${playerId}" not found in the white cards played this round`)
     }
     return result
+  },
+  setRoundWinner (gameId, playerId, whiteCardId, blackCardId) {
+    const game = this.getGame(gameId)
+    return game.setRoundWinner(playerId, whiteCardId, blackCardId)
   }
 }
 

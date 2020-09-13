@@ -54,8 +54,8 @@ const WinningModalStyles = styled(Dialog)`
   }
 `
 
-export default function WinningModal ({ blackCard, whiteCard, playerIsReader = true, onClose, onConfirm }) {
-  if (!blackCard || !whiteCard) {
+export default function WinningModal ({ whiteCard, blackCard, player, isReader, onClose, onConfirm }) {
+  if (!whiteCard || !blackCard) {
     return null
   }
   return (
@@ -63,12 +63,14 @@ export default function WinningModal ({ blackCard, whiteCard, playerIsReader = t
       <Button className="close-btn" onClick={onClose}>
         <IconClose />
       </Button>
-      <h3>{playerIsReader ? '¿Elegir esta combinación como ganadora?' : 'Y la victoria es para...'}</h3>
+      <h3>{isReader
+        ? '¿Elegir esta combinación como ganadora?'
+        : `Y la victoria es para... ${player.name}`}</h3>
       <div className="card-pair">
         <CardStyles className="card black">{blackCard.text}</CardStyles>
         <CardStyles className="card white">{whiteCard.text}</CardStyles>
       </div>
-      {playerIsReader && <Button onClick={onConfirm} className="confirm-btn">Confirmar</Button>}
+      {isReader && <Button onClick={onConfirm} className="confirm-btn">Confirmar</Button>}
     </WinningModalStyles>
   )
 }

@@ -112,11 +112,13 @@ export default function Alerts () {
     socket.on('error', onError)
     socket.on('disconnect', onDisconnect)
     socket.on('reconnect', onReconnect)
+    socket.on('alert', alert => addAlert({ text: alert.text, className: alert.className || 'info' }))
 
     return () => {
       socket.off('error', onError)
       socket.off('disconnect', onDisconnect)
       socket.off('reconnect', onReconnect)
+      socket.off('alert')
     }
   }, [socket, addAlert])
 
