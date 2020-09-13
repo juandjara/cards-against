@@ -93,7 +93,7 @@ export default function CardForm ({
   placeholder = 'Texto de la carta'
 }) {
   const [text, setText] = useState(card.text)
-  const [answers, setAnswers] = useState(card.answers)
+  const [answers, setAnswers] = useState(card.answers || 1)
   const inputRef = useRef()
 
   useEffect(() => {
@@ -127,7 +127,7 @@ export default function CardForm ({
         </button>
         {card.type === 'black' && (<div className="n-of-answers">
           <div className="value">
-            <Input type="number" value={answers} onChange={ev => setAnswers(ev.target.value)} />
+            <Input type="number" min="1" value={answers} onChange={ev => setAnswers(ev.target.value)} />
             <WhiteIconCards />
           </div>
           <p>Nº de respuestas</p>
