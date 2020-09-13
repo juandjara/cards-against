@@ -16,6 +16,7 @@ import IconArrowLeft from '../components/icons/IconArrowLeft'
 import { polyfill } from 'mobile-drag-drop'
 import { scrollBehaviourDragImageTranslateOverride } from 'mobile-drag-drop/scroll-behaviour'
 import 'mobile-drag-drop/default.css'
+import PlayerModal from '../components/PlayerModal'
 
 polyfill({
   dragImageTranslateOverride: scrollBehaviourDragImageTranslateOverride,
@@ -229,6 +230,8 @@ export default function Game ({ navigate, gameId }) {
   const [loading, setLoading] = useState(true)
   const [activeSendBtn, setActiveSendBtn] = useState(null)
   const [winningCard, setWinningCard] = useState(null)
+  const [selectedPlayerModal, setSelectedPlayerModal] = useState(null)
+
   const playerData = (game && game.players.find(p => p.id === currentUser.id)) || { cards: [] }
   const blackCard = game && game.round.cards.black
   const playerIsReader = game && game.round.reader === currentUser.id
@@ -382,6 +385,7 @@ export default function Game ({ navigate, gameId }) {
         playerIsReader={playerIsReader}
         onClose={closeWinningCard}
         onConfirm={confirmWinningCard} />
+      <PlayerModal player={selectedPlayerModal} onClose={() => setSelectedPlayerModal(null)} />
       <section className="top">
         <CardStyles className="card black">
           {blackCard && blackCard.text}
@@ -393,6 +397,7 @@ export default function Game ({ navigate, gameId }) {
               <Player key={p.id} as="li"
                 player={p}
                 selectable
+                onClick={() => setSelectedPlayerModal(p)}
                 readerId={game.round.reader} />
             ))}
           </ul>

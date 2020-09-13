@@ -41,14 +41,15 @@ const PlayerStyles = styled.div`
 
   &.selectable {
     &:hover, &:focus {
-      box-shadow: 0 0 8px 4px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 8px 0px hsla(211, 81%, 36%, 0.2);
     }
   }
 `
 
-export default function Player ({ as, player, readerId, selectable })  {
+export default function Player ({ as, player, readerId, selectable, onClick })  {
   return (
     <PlayerStyles as={as}
+      onClick={onClick}
       tabIndex={selectable ? '0' : null}
       title={selectable ? 'Pulsa para ver los puntos de este jugador' : null}
       className={classnames('player', { selectable })}>
