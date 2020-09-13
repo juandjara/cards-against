@@ -10,8 +10,10 @@ export default function Main ({ children }) {
   
   useEffect(() => {
     function onDisconnect () {
-      setCurrentUser({ ...currentUser, game: null })
-      navigate('/')
+      if (currentUser.game) {
+        setCurrentUser({ ...currentUser, game: null })
+        navigate('/')
+      }
     }
     function onReconnect () {
       setCurrentUser({ ...currentUser, id: socket.id })
