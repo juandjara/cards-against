@@ -34,13 +34,14 @@ const SettingsStyles = styled.div`
   }
 
   h3 {
-    font-size: 14px;
+    font-size: 12px;
+    line-height: 16px;
     font-weight: 600;
     margin-bottom: 4px;
   }
 
   section {
-    margin-top: 24px;
+    margin-top: 32px;
   }
 
   .username, .edit-username {
@@ -116,30 +117,57 @@ const SettingsStyles = styled.div`
   ul {
     list-style: none;
     padding: 0;
-    margin: 16px 0 24px 0;
+    margin: 12px -12px 24px -12px;
     li {
-      display: flex;
-      align-items: center;
       padding: 12px 4px;
-      & + li {
+      border-radius: 8px;
+      margin-bottom: 8px;
+
+      &:hover {
+        background-color: white;
+        box-shadow: 1px 1px 3px 0 rgba(0,0,0, 0.2);
+      }
+
+      /* & + li {
         border-top: 2px solid #e8e8e8;
+      } */
+
+      .title {
+        display: flex;
+        align-items: center;
+
+        svg {
+          margin: 0 8px;
+        }
+        > span {
+          min-width: 30px;
+        }
+        a {
+          margin-left: 8px;
+        }
       }
-      svg {
-        margin: 0 8px;
-      }
-      > span {
-        min-width: 30px;
-      }
-      a {
-        margin-left: 8px;
+
+      .description {
+        margin: 10px;
+        font-size: 14px;
+        line-height: 20px;
+        max-width: 690px;
       }
     }
+  }
+
+  .no-data {
+    margin-top: 16px;
   }
 `
 
 export default function Settings () {
-  const [decks] = useDecks()
-  const Settings = Object.values(decks)
+  const [decksTree] = useDecks()
+  const decks = Object.values(decksTree).map(d => ({
+    ...d,
+    num_white: d.cards.filter(c => c.type === 'white').length,
+    num_black: d.cards.filter(c => c.type === 'black').length
+  }))
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
   const [username, setUsername] = useState(currentUser.name)
   const [editMode, setEditMode] = useState(false)
@@ -179,21 +207,18 @@ export default function Settings () {
         <Link to="/decks/new">
           <Button>Crear mazo</Button>
         </Link>
-        {Settings.length === 0 ? (
-          <p>Todavia no has guardado ningún mazo</p>
+        {decks.length === 0 ? (
+          <p className="no-data">Todavia no has guardado ningún mazo</p>
         ) : (
           <ul>
-            {Settings.map(d => ({
-              ...d,
-              no_white: d.cards.filter(c => c.type === 'white').length,
-              no_black: d.cards.filter(c => c.type === 'black').length
-            })).map(d => (
+            {decks.map(d => (
               <li key={d.id}>
-                <BlackIconCards /><span>{d.no_black}</span>
-                <WhiteIconCards /><span>{d.no_white}</span>
-                <Link to={`/decks/${d.id}`}>
-                  {d.name}
-                </Link>{' '}
+                <div className="title">
+                  <BlackIconCards /> <span>{d.num_black}</span>
+                  <WhiteIconCards /> <span>{d.num_white}</span>
+                  <Link to={`/decks/${d.id}`}>{d.name}</Link>
+                </div>
+                <p className="description">{d.description}</p>
               </li>
             ))}
           </ul>
