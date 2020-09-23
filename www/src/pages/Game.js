@@ -272,6 +272,7 @@ export default function Game ({ navigate, gameId }) {
       socket.off('game:edit')
       socket.off('game:show-round-winner')
     }
+    // eslint-disable-next-line
   }, [socket])
 
   // functions for d&d in cards

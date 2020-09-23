@@ -26,6 +26,7 @@ export default function Main ({ children }) {
       socket.off('disconnect', onDisconnect)
       socket.off('reconnect', onReconnect)
     }
+    // eslint-disable-next-line
   }, [socket])
 
   return (

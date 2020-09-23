@@ -93,6 +93,7 @@ export default function WaitRoom ({ navigate, gameId }) {
     return () => {
       socket.off('game:edit')
     }
+    // eslint-disable-next-line
   }, [socket])
 
   if (loading) return <Loading />
