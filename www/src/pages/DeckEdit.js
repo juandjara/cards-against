@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import uuid from 'uuid/v4'
 import { navigate } from '@reach/router'
 
-import useDecks from '../services/useCards'
+import useDecks from '../services/useDecks'
 import NewDeckForm from '../components/deck-edit/NewDeckForm'
 import CardLists from '../components/deck-edit/CardLists'
 

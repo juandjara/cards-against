@@ -19,12 +19,13 @@ const RadioGroupStyles = styled.div`
   }
 `
 
-export default function RadioGroup ({ name, options, value, onChange }) {
+export default function RadioGroup ({ name, options, value, onChange, required }) {
   return (
     <RadioGroupStyles className="radio-group">
       {options.map(opt => (
         <label key={opt.value}>
           <input type="radio"
+            required={required}
             checked={value === opt.value}
             onChange={() => onChange(opt.value)}
             value={opt.value} name={name} />

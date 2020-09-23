@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Button from '../Button'
 import Input from '../Input'
 import IconClose from '../icons/IconClose'
-import WhiteIconCards from '../icons/IconCardsOutline'
+import WhiteIconCards from '../icons/IconWhiteCards'
 import CardStyles from './CardStyles'
 
 const CardFormStyle = styled.form`
@@ -28,6 +28,11 @@ const CardFormStyle = styled.form`
     background-color: inherit;
     color: inherit;
     border-radius: inherit;
+    border: none;
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(19,133,229,0.3);
+    }
   }
 
   .top-right {
@@ -117,7 +122,6 @@ export default function CardForm ({
           as="textarea"
           name={`card-input-${card.id}`}
           value={text}
-          maxLength={70}
           onChange={ev => setText(ev.target.value)}
           placeholder={placeholder} />
       </CardStyles>
@@ -134,12 +138,12 @@ export default function CardForm ({
         </div>)}
       </div>
       <div className="actions">
-        {card.id && (<Button type="button" className="delete-btn" onClick={onRemove}>
-          <span>Eliminar</span>
-        </Button>)}
         <Button className="save-btn" type="submit" disabled={!text} onClick={handleSubmit}>
           <span>Guardar</span>
         </Button>
+        {card.id && (<Button type="button" className="delete-btn" onClick={onRemove}>
+          <span>Eliminar</span>
+        </Button>)}
       </div>
     </CardFormStyle>
   )

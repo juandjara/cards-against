@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Button from '../components/Button'
 import Select from 'react-select'
 import useGlobalSlice from '../services/useGlobalSlice'
-import useDecks from '../services/useCards'
+import useDecks from '../services/useDecks'
 import config from '../config'
 import RadioGroup from '../components/RadioGroup'
 import CardLists from '../components/deck-edit/CardLists'
@@ -25,32 +25,12 @@ const GameConfigStyle = styled.form`
   padding: 1em 0;
   border-radius: 4px;
 
-  .back {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    margin-bottom: 12px;
-
-    span {
-      margin-left: 2px;
-    }
-
-    svg .primary {
-      display: none;
-    }
-  }
-
   h2 {
     font-size: 20px;
     line-height: 24px;
     font-weight: 500;
     margin-top: 8px;
     margin-bottom: 16px;
-
-    &.center {
-      text-align: center;
-    }
   }
 
   .input-block {
@@ -146,6 +126,26 @@ const GameConfigStyle = styled.form`
   }
 `
 
+function Loading () {
+  return (
+    <GameConfigStyle className="game-config">
+      <h2 className="center">Cargando...</h2>
+    </GameConfigStyle>
+  )
+}
+
+function NoGame ({ id }) {
+  return (
+    <GameConfigStyle className="game-config">
+      <h2 className="center">Ninguna partida activa con el c&oacute;digo <strong>{id}</strong></h2>
+      <Link to="/" className="back">
+        <IconArrowLeft width="20" height="20" />
+        <span>Volver al men&uacute; principal</span>
+      </Link>
+    </GameConfigStyle>
+  )
+}
+
 export default function GameConfig ({ navigate, gameId }) {
   const [socket] = useGlobalSlice('socket')
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
@@ -217,25 +217,8 @@ export default function GameConfig ({ navigate, gameId }) {
     { value: 'clockwise', label: 'El siguiente jugador de la lista' }
   ]
 
-  if (loading) {
-    return (
-      <GameConfigStyle className="game-config">
-        <h2 className="center">Cargando...</h2>
-      </GameConfigStyle>
-    )
-  }
-
-  if (!loading && !game) {
-    return (
-      <GameConfigStyle className="game-config">
-        <h2 className="center">Ninguna partida activa con el c&oacute;digo <strong>{gameId}</strong></h2>
-        <Link to="/" className="back">
-          <IconArrowLeft width="20" height="20" />
-          <span>Volver al men&uacute; principal</span>
-        </Link>
-      </GameConfigStyle>
-    )
-  }
+  if (loading) return <Loading />
+  if (!loading && !game) return <NoGame id={gameId} />
 
   return (
     <GameConfigStyle onSubmit={handleSubmit} className="game-config">

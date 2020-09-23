@@ -75,7 +75,7 @@ const PlayerModalStyles = styled(Dialog)`
         }
       }
 
-      &.back {
+      &.prev {
         left: -16px;
       }
 
@@ -141,7 +141,7 @@ export default function PlayerModal ({ player, onClose }) {
           </Carousel>
           <Dots className="slider-dots" value={slide} onChange={setSlide} number={player.wins.length} />
           <div className="actions">
-            <button className="btn back" onClick={prevSlide}>
+            <button className="btn prev" onClick={prevSlide}>
               <IconArrowLeft width="32" height="32" />
             </button>
             <button className="btn next" onClick={nextSlide}>

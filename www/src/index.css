@@ -54,3 +54,31 @@ a:hover, a:focus {
 *::after {
   box-sizing: border-box;
 }
+
+.heading {
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 500;
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+
+.center {
+  text-align: center;
+}
+
+.back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.back span {
+  margin-left: 2px;
+}
+
+.back svg .primary {
+  display: none;
+}

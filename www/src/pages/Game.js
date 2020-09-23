@@ -12,6 +12,8 @@ import WinningModal from '../components/WinningModal'
 import Player from '../components/Player'
 
 import IconArrowLeft from '../components/icons/IconArrowLeft'
+import IconWhiteCards from '../components/icons/IconWhiteCards'
+import IconBlackCards from '../components/icons/IconBlackCards'
 
 import { polyfill } from 'mobile-drag-drop'
 import { scrollBehaviourDragImageTranslateOverride } from 'mobile-drag-drop/scroll-behaviour'
@@ -23,54 +25,30 @@ polyfill({
   holdToDrag: 200
 })
 
+const PLAYER_HAND_HEIGHT = 250
+
 const GameStyles = styled.div`
   padding: 1rem 0;
   min-height: calc(100vh - 65px);
   max-width: calc(100vw - 24px);
   position: relative;
 
-  .back {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    margin-bottom: 12px;
-
-    span {
-      margin-left: 2px;
-    }
-
-    svg .primary {
-      display: none;
-    }
-  }
-
-  .heading {
-    font-size: 20px;
-    line-height: 24px;
-    font-weight: 500;
-    margin-top: 8px;
-    margin-bottom: 16px;
-
-    &.center {
-      text-align: center;
+  section {    
+    & + section {
+      border-top: 1px solid var(--colorModerate);
     }
   }
 
   .heading-small {
-    margin: 24px 8px 0 8px;
+    margin: 16px 8px 0 8px;
     font-size: 16px;
     line-height: 20px;
     font-weight: normal;
 
-    &.center {
-      text-align: center;
-    }
-  }
-
-  section {    
-    & + section {
-      border-top: 1px solid var(--colorModerate);
+    .subtitle {
+      margin-top: 4px;
+      font-size: 12px;
+      line-height: 16px;
     }
   }
 
@@ -126,23 +104,33 @@ const GameStyles = styled.div`
   }
 
   .cards-in-game {
-    padding-bottom: 230px;
+    padding-bottom: ${PLAYER_HAND_HEIGHT}px;
 
     &.drag, .drag {
       background-color: var(--colorLow);
+    }
+
+    .subtitle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .card-counter {
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      margin-top: 16px;
       font-weight: normal;
       margin: 16px auto 0 auto;
+      padding: 12px;
+      width: 160px;
+      height: 160px;
 
       strong {
         font-size: 32px;
+        line-height: 1;
         font-weight: normal;
+        margin-bottom: 4px;
       }
 
       .hidden-card {
@@ -163,7 +151,7 @@ const GameStyles = styled.div`
     left: 0;
     right: 0;
 
-    max-height: 230px;
+    max-height: ${PLAYER_HAND_HEIGHT}px;
     overflow: hidden;
     background-color: var(--colorVeryLow);
 
@@ -173,6 +161,7 @@ const GameStyles = styled.div`
 
     .heading-small {
       margin-top: 12px;
+      min-height: 40px;
     }
 
     .card-list {
@@ -196,11 +185,6 @@ const GameStyles = styled.div`
   @media (max-width: 45rem) {
     .player {
       max-width: none;
-    }
-
-    .card {
-      width: 160px;
-      height: 160px;
     }
 
     .card-list {
@@ -246,7 +230,8 @@ export default function Game ({ navigate, gameId }) {
   
   const numCardsReady = cardsInGame.filter(c => c.id).length
   const allCardsReady = cardsInGame.length && cardsInGame.length === numCardsReady
-  const disableHand = playerIsReader || cardsInGame.some(c => c.id && c.owner === currentUser.id)
+  const cardAlreadySent = cardsInGame.some(c => c.id && c.owner === currentUser.id)
+  const disableHand = playerIsReader || cardAlreadySent
 
   async function fetchGame () {
     setLoading(true)
@@ -420,11 +405,20 @@ export default function Game ({ navigate, gameId }) {
         onDragLeave={onDragLeave}
         onDragOver={onDragOver}
         onDrop={onDrop}>
-        <h3 className="heading-small center">
-          {allCardsReady
-            ? 'Cartas en juego'
-            : 'Esperando a que los jugadores envien sus cartas'}
-        </h3>
+        <header className="heading-small center">
+          <p className="title">Cartas en juego</p>
+          <p className="subtitle">
+            {allCardsReady ? (
+              <>
+                <IconBlackCards/> <strong>Juez</strong>, revela las cartas y haz tu elecci&oacute;n
+              </>
+            ) : (
+              <>
+                <IconWhiteCards /> <strong>Jugadores</strong>, enviad vuestras cartas
+              </>
+            )}
+          </p>
+        </header>
         {allCardsReady ? (
           <ul className="card-list">
             {cardsInGame.map(c => {
@@ -461,7 +455,15 @@ export default function Game ({ navigate, gameId }) {
         )}
       </section>
       <section className={classnames('player-hand', { disabled: disableHand })}>
-        <h3 className="heading-small center">Cartas en tu mano</h3>
+        <header className="heading-small center">
+          <p className="title">Cartas en tu mano</p>
+          {playerIsReader && <p className="subtitle">
+            En esta ronda no envias cartas, eres quien las juzga
+          </p>}
+          {cardAlreadySent && <p className="subtitle">
+            Ya has enviado tus cartas esta ronda
+          </p>}
+        </header>
         <ul className="card-list">
           {playerData.cards.map(c => (
             <CardStyles key={c.id} as="li"

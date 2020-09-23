@@ -39,7 +39,7 @@ const HeaderStyles = styled.header`
         background-color: white;
       }
 
-      &.back {
+      &.home {
         padding: 0;
       }
 
@@ -72,7 +72,7 @@ export default function Header () {
       <h1>Cartas contra la web</h1>
       {currentUser && (
         <div className="right">
-          <Link to="/" className="link back" title="Menu principal" aria-label="Menu principal">
+          <Link to="/" className="link home" title="Menu principal" aria-label="Menu principal">
             <IconArrowLeft width="32" height="32" />
           </Link>
           <Link to="/settings" className="link settings" title="Ajustes" aria-label="Ajustes">

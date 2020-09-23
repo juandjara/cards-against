@@ -2,31 +2,17 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import Button from '../components/Button'
 import Input from '../components/Input'
-import { Link } from '@reach/router'
-import useDecks from '../services/useCards'
+import { Link, navigate } from '@reach/router'
+import useDecks from '../services/useDecks'
 import useGlobalSlice from '../services/useGlobalSlice'
-import WhiteIconCards from '../components/icons/IconCardsOutline'
-import BlackIconCards from '../components/icons/IconCards'
+import WhiteIconCards from '../components/icons/IconWhiteCards'
+import BlackIconCards from '../components/icons/IconBlackCards'
 import IconArrowLeft from '../components/icons/IconArrowLeft'
 import IconEdit from '../components/icons/IconEdit'
+import IconDoorExit from '../components/icons/IconDoorExit'
 
 const SettingsStyles = styled.div`
   margin-top: 1.5rem;
-
-  .back {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    margin-bottom: 12px;
-
-    span {
-      margin-left: 2px;
-    }
-
-    svg .primary {
-      display: none;
-    }
-  }
 
   h2 {
     margin-top: 0;
@@ -69,7 +55,7 @@ const SettingsStyles = styled.div`
     font-size: 12px;
     cursor: pointer;
 
-    &:hover {
+    &:hover, &:focus {
       text-decoration: underline;
     }
 
@@ -117,7 +103,7 @@ const SettingsStyles = styled.div`
   ul {
     list-style: none;
     padding: 0;
-    margin: 12px -12px 24px -12px;
+    margin: 12px 0 24px 0;
     li {
       padding: 12px 4px;
       border-radius: 8px;
@@ -137,7 +123,8 @@ const SettingsStyles = styled.div`
         align-items: center;
 
         svg {
-          margin: 0 8px;
+          margin-left: 8px;
+          margin-right: 4px;
         }
         > span {
           min-width: 30px;
@@ -159,6 +146,25 @@ const SettingsStyles = styled.div`
   .no-data {
     margin-top: 16px;
   }
+
+  .back {
+    justify-content: flex-start;
+    margin: 0;
+  }
+
+  .game-id {
+    margin-right: 4px;
+    font-family: var(--fontDisplay), sans-serif;
+    font-size: 32px;
+    line-height: 38px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  .game-id-wrapper {
+    display: flex;
+    align-items: centeR;
+  }
 `
 
 export default function Settings () {
@@ -168,6 +174,7 @@ export default function Settings () {
     num_white: d.cards.filter(c => c.type === 'white').length,
     num_black: d.cards.filter(c => c.type === 'black').length
   }))
+  const [socket] = useGlobalSlice('socket')
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
   const [username, setUsername] = useState(currentUser.name)
   const [editMode, setEditMode] = useState(false)
@@ -177,12 +184,18 @@ export default function Settings () {
     setEditMode(false)
   }
 
+  function leaveGame () {
+    socket.emit('game:leave', currentUser.game)
+    setCurrentUser({ ...currentUser, game: null })
+    navigate('/')
+  }
+
   return (
     <SettingsStyles className="deck-list">
-      <Link to="/" className="back">
+      <button onClick={() => window.history.back()} className="button-link back">
         <IconArrowLeft width="20" height="20" />
-        <span>Volver al men&uacute; principal</span>
-      </Link>
+        <span>Volver</span>
+      </button>
       <h2>Ajustes</h2>
       <section>
         <h3>Nombre de jugador</h3>
@@ -200,6 +213,20 @@ export default function Settings () {
               <span>Editar</span>
             </button>
           </div>
+        )}
+      </section>
+      <section>
+        <h3>Partida</h3>
+        {currentUser.game ? (
+          <div className="game-id-wrapper">
+            <p className="game-id">{currentUser.game}</p>
+            <button className="button-link" onClick={leaveGame}>
+              <IconDoorExit />
+              <span>Abandonar partida</span>
+            </button>
+          </div>
+        ) : (
+          <p>Ninguna partida comenzada</p>
         )}
       </section>
       <section>

@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function IconDoorExit (props) {
   return (
-    <svg height="24" width="24" 
+    <svg height="24" width="24" fill="currentColor"
       viewBox="0 0 24 24" className="icon-door-exit"
       {...props}>
         <path className="primary" d="M11 4h3a1 1 0 0 1 1 1v3a1 1 0 0 1-2 0V6h-2v12h2v-2a1 1 0 0 1 2 0v3a1 1 0 0 1-1 1h-3v1a1 1 0 0 1-1.27.96l-6.98-2A1 1 0 0 1 2 19V5a1 1 0 0 1 .75-.97l6.98-2A1 1 0 0 1 11 3v1z"/>

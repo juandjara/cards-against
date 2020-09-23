@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import Portal from '@reach/portal'
-import WhiteIconCards from '../icons/IconCardsOutline'
-import BlackIconCards from '../icons/IconCards'
+import WhiteIconCards from '../icons/IconWhiteCards'
+import BlackIconCards from '../icons/IconBlackCards'
 import Button from '../Button'
 import CardForm from './CardForm'
 import CardStyles from './CardStyles'
+import classnames from 'classnames'
 
 const PortalStyles = styled.div`
   position: fixed;
@@ -49,6 +50,12 @@ const CardListsStyle = styled.main`
 
     span {
       margin-left: 8px;
+    }
+  }
+
+  &.readonly {
+    header {
+      padding-bottom: 0;
     }
   }
 
@@ -128,7 +135,7 @@ export default function CardLists ({
   }
 
   return (
-    <CardListsStyle className="card-lists">
+    <CardListsStyle className={classnames('card-lists', { readonly: !editable })}>
       {editable && selectedCard && (
         <Portal>
           <PortalStyles onClick={handlePortalClick} className="portal-backdrop">

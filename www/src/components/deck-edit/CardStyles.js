@@ -17,6 +17,8 @@ const CardStyles = styled.div`
   transform-style: preserve-3d;
   transition: transform 0.25s ease;
   user-select: none;
+  font-size: 14px;
+  line-height: 20px;
 
   &.white {
     border-color: #333;

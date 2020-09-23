@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import WhiteIconCards from '../components/icons/IconCardsOutline'
-import BlackIconCards from '../components/icons/IconCards'
+import WhiteIconCards from '../components/icons/IconWhiteCards'
+import BlackIconCards from '../components/icons/IconBlackCards'
 import classnames from 'classnames'
 
 const PlayerStyles = styled.div`

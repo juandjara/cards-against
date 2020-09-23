@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import Button from '../components/Button'
-import { navigate } from '@reach/router'
 import useGlobalSlice from '../services/useGlobalSlice'
 import IconInterface from '../components/icons/IconInterface'
 import IconCheck from '../components/icons/IconCheck'
 import CardStyles from '../components/deck-edit/CardStyles'
 import InputStyles from '../components/Input'
 import CardFlip from '../components/CardFlip'
+import bg from '../assets/humaaans.png';
 
 const HomeStyles = styled.div`
   display: flex;
@@ -110,9 +110,14 @@ const HomeStyles = styled.div`
       }
     }
   }
+
+  .bg {
+    max-width: 90vw;
+    margin: 1rem 0;
+  }
 `
 
-export default function Home () {
+export default function Home ({ navigate }) {
   const [socket] = useGlobalSlice('socket')
   const [isRotated, setIsRotated] = useState(false)
   const [code, setCode] = useState('')
@@ -145,6 +150,7 @@ export default function Home () {
 
   return (
     <HomeStyles className="home">
+      <img className="bg" src={bg} />
       {currentUser.game ? (
         <div className="btn-group">
           <CardStyles as="button"
@@ -183,7 +189,7 @@ export default function Home () {
             </CardStyles>
           </CardFlip>
           <CardStyles as="button"
-            onClick={newGame}
+            onClick={() => navigate('/newgame')}
             className="black scale">
             Crear partida
           </CardStyles>

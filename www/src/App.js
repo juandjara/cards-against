@@ -5,8 +5,9 @@ import Main from './pages/Main'
 import Home from './pages/Home'
 import Settings from './pages/Settings'
 import DeckEdit from './pages/DeckEdit'
-import GameConfig from './pages/GameConfig'
 import Game from './pages/Game'
+import NewGame from './pages/NewGame'
+import WaitRoom from './pages/WaitRoom'
 import styled from 'styled-components'
 
 const StyledRoot = styled(Router)`
@@ -29,7 +30,8 @@ function App() {
         <Home default />
         <Settings path="settings" />
         <DeckEdit path="decks/:deckid" />
-        <GameConfig path="config/:gameId" />
+        <NewGame path="newgame" />
+        <WaitRoom path="wait/:gameId" />
         <Game path="game/:gameId" />
       </PrivateRoute>
     </StyledRoot>
