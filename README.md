@@ -1,7 +1,7 @@
 # cards-against
 Cartas contra la humanidad version web distribuida
 
-desplegado el front en https://cards-against-www.vercel.app
+desplegado el front en https://cards-against.netlify.app
 desplegado el back en https://cards-against-api-socket.herokuapp.com
 
 ### como montar el proyecto
