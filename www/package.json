@@ -1,6 +1,6 @@
 {
-  "name": "www-react",
-  "version": "0.1.0",
+  "name": "cards-against-www",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@brainhubeu/react-carousel": "^1.19.26",
