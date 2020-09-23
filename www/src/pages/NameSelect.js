@@ -47,8 +47,10 @@ const NameSelectStyle = styled.div`
 `
 
 export default function NameSelect () {
+  /* eslint-disable no-unused-vars */
   const [socket, setSocket] = useGlobalSlice('socket')
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
+  /* eslint-enable no-unused-vars */
   const nameFromLS = localStorage.getItem(config.NAME_KEY) || ''
   const [name, setName] = useState(nameFromLS)
   const [loading, setLoading] = useState(false)

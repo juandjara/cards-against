@@ -123,13 +123,6 @@ export default function Home ({ navigate }) {
   const [code, setCode] = useState('')
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
 
-  function newGame () {
-    socket.emit('game:new')
-    socket.once('game:new', game => {
-      goTo(game.id)
-    })
-  }
-
   function goTo (id) {
     navigate(`/config/${id}`)
   }
@@ -150,7 +143,7 @@ export default function Home ({ navigate }) {
 
   return (
     <HomeStyles className="home">
-      <img className="bg" src={bg} />
+      <img className="bg" src={bg} alt="" />
       {currentUser.game ? (
         <div className="btn-group">
           <CardStyles as="button"
