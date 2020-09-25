@@ -162,7 +162,7 @@ class Game {
     if (this.rotation === 'winner') {
       this.round.reader = lastWinnerId
     }
-    if (this.rotation === 'clockwise') {
+    if (this.rotation === 'next-in-list') {
       this.players.forEach((p, i) => {
         if (p.id === lastWinnerId) {
           let nextIndex = i + 1

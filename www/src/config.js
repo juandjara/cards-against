@@ -7,6 +7,6 @@ export default {
   TUTORIAL_KEY: 'cards-against-tutorial',
   rotationOptions: [
     { value: 'winner', label: 'El ganador de la ultima ronda' },
-    { value: 'clockwise', label: 'El siguiente jugador de la lista' }
+    { value: 'next-in-list', label: 'El siguiente jugador de la lista' }
   ]
 }
