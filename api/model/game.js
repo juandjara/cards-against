@@ -18,6 +18,8 @@ function createID () {
 
 class Game {
   constructor (firstPlayerId) {
+    // TODO: add parameteres for customizing gameover condition
+    // maybe switch first arg to a destructured object?
     const id = createID()
     const data = {
       id,
