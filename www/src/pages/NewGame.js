@@ -148,6 +148,9 @@ export default function NewGame ({ navigate }) {
     })
   }
 
+  // TODO: add radio-groups and number inputs to customize the
+  // num of max cards per player hand and the gameover condition
+
   return (
     <NewGameStyles onSubmit={handleSubmit} className="new-game">
       <h2>Nueva partida</h2>

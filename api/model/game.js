@@ -25,7 +25,10 @@ class Game {
       deck: null,
       players: [],
       shuffled: false,
+      finished: false,
       cardsPerHand: 5,
+      maxWins: null,
+      maxRounds: null,
       round: {
         reader: firstPlayerId,
         cards: {
@@ -71,6 +74,9 @@ class Game {
 
   drawBlackCard () {
     const card = this.deck.cards.find(c => c.type === 'black' && !c.used)
+    if (!card) {
+      return this.gameOver()
+    }
     card.used = true
     this.round.cards.black = card
     return this
@@ -114,6 +120,15 @@ class Game {
       black: this.deck.cards.find(c => c.id === blackCardId)
     }
     player.wins.push(cards)
+    if (this.maxWins && player.wins.length >= this.maxWins) {
+      return this.gameOver()
+    }
+    if (this.maxRounds) {
+      const numRounds = this.deck.cards.filter(c => c.type === 'black' && c.used)
+      if (numRounds >= this.maxRounds) {
+        return this.gameOver()
+      }
+    }
     this.createNewRound(playerId)
     return this
   }
@@ -142,6 +157,11 @@ class Game {
         }
       })
     }
+  }
+
+  gameOver () {
+    this.finished = true
+    return this
   }
 }
 
