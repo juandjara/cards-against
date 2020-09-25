@@ -85,6 +85,11 @@ class Game {
   }
 
   drawWhiteCards (playerId) {
+    const availableCards = this.deck.cards.filter(c => c.type === 'white' && !c.used)
+    if (availableCards.length < this.cardsPerHand) {
+      this.recoverWhiteCards()
+    }
+
     const player = this.players.find(p => p.id === playerId)
     const numCards = this.cardsPerHand - player.cards.length
     const cards = this.deck.cards.filter(c => c.type === 'white' && !c.used)
@@ -95,6 +100,16 @@ class Game {
       })
     player.cards = player.cards.concat(cards)
     return this
+  }
+
+  recoverWhiteCards () {
+    const whiteCardsInUse = Object.values(this.round.cards.white).map(c => c.id)
+    for (const card of this.deck.cards) {
+      if (card.type === 'white' && c.used && whiteCardsInUse.indexOf(card.id) === -1) {
+        c.used = false
+      }
+    }
+    shuffle(this.deck.cards)
   }
 
   playWhiteCard (cardId, playerId) {
