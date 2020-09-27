@@ -7,7 +7,7 @@ import Button from '../components/Button'
 import Input from '../components/Input'
 import config from '../config'
 import Select from "react-select";
-import Localise, {parseTranslation} from "../components/Localise";
+import Localise, {fetchTranslation, parseTranslation} from "../components/Localise";
 
 const NameSelectStyle = styled.div`
   height: 100vh;
@@ -52,12 +52,6 @@ const NameSelectStyle = styled.div`
   }
 `
 
-async function fetchTranslation (langCode = 'es') {
-  let response = await fetch(`${process.env.PUBLIC_URL}/locales/${langCode}.json`)
-  if(response) return await response.json();
-  return {}
-}
-
 
 export default function NameSelect () {
   /* eslint-disable no-unused-vars */
@@ -68,11 +62,6 @@ export default function NameSelect () {
 
   /* eslint-enable no-unused-vars */
   const nameFromLS = localStorage.getItem(config.NAME_KEY) || ''
-  const languageFromLS = localStorage.getItem(config.LANGUAGE_KEY);
-  let fallbackLanguage = config.availableLanguages[0];
-  try {
-    fallbackLanguage = JSON.parse(languageFromLS);
-  } catch (ignore) {}
 
   const [name, setName] = useState(nameFromLS)
   const [loading, setLoading] = useState(false)
@@ -100,17 +89,15 @@ export default function NameSelect () {
 
   useEffect(() => {
     if(language) {
-      const fetch = async () => {
-        const translation = await fetchTranslation(language.value)
+      fetchTranslation(language.value).then(translation => {
         if(translation) {
           localStorage.setItem(config.LANGUAGE_KEY, JSON.stringify(language))
           setTranslations(translation);
         }
-      }
-
-      fetch();
+      })
     }
-  }, [language, setTranslations])
+    // eslint-disable-next-line
+  }, [language])
 
   useEffect(() => {
     if (nameFromLS) {
@@ -119,8 +106,6 @@ export default function NameSelect () {
     if (inputRef.current) {
       inputRef.current.focus()
     }
-    console.log('Fallback Language:', fallbackLanguage, languageFromLS)
-    setLanguage(fallbackLanguage);
     // eslint-disable-next-line
   }, [])
 

@@ -40,3 +40,9 @@ export default function Localise({node, variables, dangerouslySetInnerHTML = fal
     const [translations] = useGlobalSlice('translations')
     return <Localised node={node} variables={variables} translations={translations} dangerouslySetInnerHTML={dangerouslySetInnerHTML} />
 };
+
+export async function fetchTranslation (langCode = 'es') {
+    let response = await fetch(`${process.env.PUBLIC_URL}/locales/${langCode}.json`)
+    if(response) return await response.json();
+    return {}
+}
