@@ -1,0 +1,18 @@
+{
+  "general": {
+    "language": "Language",
+    "buttons": {
+      "join": "Join"
+    }
+  },
+  "rules": {
+    "last_round_winner": "Winner of last round",
+    "next_in_list": "Next player from the list"
+  },
+  "views": {
+    "name_select": {
+      "header": "Hi! What's your name?",
+      "input_name_placeholder": "Type your name"
+    }
+  }
+}

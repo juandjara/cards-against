@@ -1,0 +1,18 @@
+{
+  "general": {
+    "language": "Idioma",
+    "buttons": {
+      "join": "Entrar"
+    }
+  },
+  "rules": {
+    "last_round_winner": "El ganador de la ultima ronda",
+    "next_in_list": "El siguiente jugador de la lista"
+  },
+  "views": {
+    "name_select": {
+      "header": "Hola, ¿cómo te llamas?",
+      "input_name_placeholder": "Introduce tu nombre"
+    }
+  }
+}

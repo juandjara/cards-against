@@ -3,11 +3,12 @@ import Header from '../components/Header'
 import Alerts from '../components/Alerts'
 import useGlobalSlice from '../services/useGlobalSlice'
 import { navigate } from '@reach/router'
+import config from "../config";
 
-export default function Main ({ children }) {  
+export default function Main ({ children }) {
   const [socket] = useGlobalSlice('socket')
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
-  
+
   useEffect(() => {
     function onDisconnect () {
       if (currentUser.game) {
