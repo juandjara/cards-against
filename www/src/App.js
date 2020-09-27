@@ -50,6 +50,9 @@ function App() {
           localStorage.setItem(config.LANGUAGE_KEY, JSON.stringify(language))
           setTranslations(translation);
         }
+      }).catch(error => {
+        console.error('Error fetching translations:', error);
+        setTranslations({});
       })
     }
     // eslint-disable-next-line
