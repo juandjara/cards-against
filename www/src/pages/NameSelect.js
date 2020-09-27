@@ -110,7 +110,7 @@ export default function NameSelect () {
 
       fetch();
     }
-  }, [language])
+  }, [language, setTranslations])
 
   useEffect(() => {
     if (nameFromLS) {
