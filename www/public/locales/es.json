@@ -1,5 +1,6 @@
 {
   "general": {
+    "app_name": "Cartas contra la web",
     "language": "Idioma",
     "buttons": {
       "join": "Entrar"

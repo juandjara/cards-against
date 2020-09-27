@@ -1,5 +1,6 @@
 {
   "general": {
+    "app_name": "Cards against Websites",
     "language": "Language",
     "buttons": {
       "join": "Join"
