@@ -40,7 +40,7 @@ function App() {
   const languageFromLS = localStorage.getItem(config.LANGUAGE_KEY);
   let fallbackLanguage = config.availableLanguages[0];
   try {
-    fallbackLanguage = JSON.parse(languageFromLS);
+    fallbackLanguage = JSON.parse(languageFromLS) || fallbackLanguage;
   } catch (ignore) {}
 
   useEffect(() => {
