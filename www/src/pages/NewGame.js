@@ -181,7 +181,7 @@ export default function NewGame ({ navigate }) {
           {deck && (
             <button type="button" className="action" onClick={() => setDeckVisible(!deckVisible)}>
               {deckVisible ? <IconViewHidden /> : <IconViewVisible />}
-              <span>{deckVisible ? 'Ocultar' : 'Mostrar'} cartas</span>
+              <span><Localise node={deckVisible ? 'buttons.hide_cards' : 'buttons.show_cards'} /></span>
             </button>
           )}
         </footer>

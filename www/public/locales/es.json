@@ -2,16 +2,27 @@
   "general": {
     "app_name": "Cartas contra la web",
     "loading": "Cargando",
-    "language": "Idioma"
+    "language": "Idioma",
+    "cards": "Cartas",
+    "questions": "Preguntas",
+    "answers": "Respuestas",
+    "n_questions": "{{N}} Preguntas",
+    "n_answers": "{{N}} Respuestas",
   },
   "buttons": {
     "join": "Entrar",
     "new_game": "Crear partida",
     "new_deck": "Nuevo mazo",
+    "new_card": "Nueva carta",
     "edit": "Editar",
     "save": "Guardar",
+    "delete": "Eliminar",
     "cancel": "Cancelar",
-    "back": "Volver"
+    "back": "Volver",
+    "show": "Mostrar",
+    "hide": "Ocultar",
+    "show_cards": "Mostrar cartas",
+    "hide_cards": "Ocultar cartas"
   },
   "rules": {
     "last_round_winner": "El ganador de la ultima ronda",
@@ -46,6 +57,18 @@
       "no_games": "Ninguna partida comenzada",
       "deck_list": "Mazos",
       "no_decks": "Todavía no has guardado ningún mazo"
+    },
+    "deck_manager": {
+      "title": "Edición de mazo",
+      "name": "Nombre",
+      "name_placeholder": "Nombre del mazo",
+      "description": "Descripción",
+      "description_placeholder": "Descripción del mazo"
+    },
+    "card_form": {
+      "default_placeholder": "Texto de la carta",
+      "total_answers": "Nº de Respuestas",
+      "delete_confirm": "¿Seguro que quieres borrar esta carta?"
     }
   }
 }
