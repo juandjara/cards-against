@@ -12,6 +12,7 @@ import config from '../config'
 import IconAdd from '../components/icons/IconAdd'
 import IconViewVisible from '../components/icons/IconViewVisible'
 import IconViewHidden from '../components/icons/IconViewHidden'
+import Localise from "../components/Localise";
 
 const NewGameStyles = styled.form`
   max-width: 960px;
@@ -131,12 +132,12 @@ export default function NewGame ({ navigate }) {
   const [decksTree] = useDecks()
   const decks = Object.values(decksTree)
 
-  const rotationOptions = config.rotationOptions
+  const rotationOptions = config.rotationOptions.map(item => Object.assign({}, item, {label: <Localise node={item.label} />}))
   const deckOptions = [
-    { label: 'Mazos predefinidos', options: staticDecks.map(mapDeckOpt) },
-    { label: 'Mis mazos', options: decks.map(mapDeckOpt) }
+    { label: <Localise node="decks.groups.original" />, options: staticDecks.map(mapDeckOpt) },
+    { label: <Localise node="decks.groups.custom" />, options: decks.map(mapDeckOpt) }
   ]
-  
+
   const formIsValid = deck && rotation
 
   function handleSubmit (ev) {
@@ -153,9 +154,9 @@ export default function NewGame ({ navigate }) {
 
   return (
     <NewGameStyles onSubmit={handleSubmit} className="new-game">
-      <h2>Nueva partida</h2>
+      <h2><Localise node="views.new_game.title" /></h2>
       <div className="input-block">
-        <label>¿Quién será El Juez de las Cartas en cada ronda?</label>
+        <label><Localise node="views.new_game.choose_judge" /></label>
         <RadioGroup
           required
           name="rotation"
@@ -165,7 +166,7 @@ export default function NewGame ({ navigate }) {
         />
       </div>
       <div className="input-block">
-        <label id="deck-select-label">Mazo de cartas</label>
+        <label id="deck-select-label"><Localise node="views.new_game.choose_deck" /></label>
         <Select
           required
           value={deck}
@@ -175,7 +176,7 @@ export default function NewGame ({ navigate }) {
         <footer className="select-actions">
           <Link to="/decks/new" className="action">
             <IconAdd />
-            <span>Nuevo mazo</span>
+            <span><Localise node="buttons.new_deck" /></span>
           </Link>
           {deck && (
             <button type="button" className="action" onClick={() => setDeckVisible(!deckVisible)}>
@@ -191,10 +192,10 @@ export default function NewGame ({ navigate }) {
           editable={false} />
       </div>)}
       <div className="actions">
-        <Button disabled={!formIsValid} type="submit">Crear partida</Button>
-        <Button className="cancel-btn" 
-          onClick={() => window.history.back()} 
-          type="button">Cancelar</Button>
+        <Button disabled={!formIsValid} type="submit"><Localise node="buttons.new_game" /></Button>
+        <Button className="cancel-btn"
+          onClick={() => window.history.back()}
+          type="button"><Localise node="buttons.cancel" /></Button>
       </div>
     </NewGameStyles>
   )

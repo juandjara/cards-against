@@ -64,7 +64,7 @@ function App() {
   }, [])
 
   if(!translations) {
-    return <FullScreen className="fullscren"><Spinner /></FullScreen>;
+    return <FullScreen className="fullscreen"><Spinner /></FullScreen>;
   }
 
   return (

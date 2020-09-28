@@ -138,7 +138,7 @@ export default function NameSelect () {
             value={name}
             onChange={ev => setName(ev.target.value.trim())}
             placeholder={parseTranslation("views.name_select.input_name_placeholder", null, translations)} />
-          <Button type="submit"><Localise node="general.buttons.join" /></Button>
+          <Button type="submit"><Localise node="buttons.join" /></Button>
         </div>
         <div className="input-block">
           <label id="deck-select-label"><Localise node="general.language" /></label>

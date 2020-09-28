@@ -1,19 +1,51 @@
 {
   "general": {
     "app_name": "Cards against Websites",
-    "language": "Language",
-    "buttons": {
-      "join": "Join"
-    }
+    "loading": "Loading",
+    "language": "Language"
+  },
+  "buttons": {
+    "join": "Join",
+    "new_game": "New game",
+    "new_deck": "New deck",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back"
   },
   "rules": {
     "last_round_winner": "Winner of last round",
     "next_in_list": "Next player from the list"
   },
+  "decks": {
+    "groups": {
+      "original": "Standard Decks",
+      "custom": "My Decks"
+    }
+  },
   "views": {
     "name_select": {
       "header": "Hi! What's your name?",
       "input_name_placeholder": "Type your name"
+    },
+    "home": {
+      "join": "Join Game",
+      "create": "Create Game",
+      "code_input": "Game code"
+    },
+    "new_game": {
+      "title": "New Game",
+      "choose_judge": "Who is going to be The Judge each round?",
+      "choose_deck": "Deck to use"
+    },
+    "settings": {
+      "title": "Settings",
+      "player_name": "Player name",
+      "game_list": "Game",
+      "leave_game": "Leave game",
+      "no_games": "You are not currently playing",
+      "deck_list": "Decks",
+      "no_decks": "You have not any custom deck"
     }
   }
 }
