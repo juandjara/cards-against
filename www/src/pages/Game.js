@@ -386,7 +386,7 @@ export default function Game ({ navigate, gameId }) {
       <section className="top">
         <CardStyles className="card black">
           <span>{blackCard && blackCard.text}</span>
-          {card.answers > 1 && (<div className="answers">{card.answers}</div>)}
+          {blackCard.answers > 1 && (<div className="answers">{blackCard.answers}</div>)}
         </CardStyles>
         <div className="block players">
           <p className="label">Jugadores</p>
