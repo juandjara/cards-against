@@ -8,11 +8,13 @@ import Input from '../components/Input'
 import config from '../config'
 import Select from "react-select";
 import Localise, {fetchTranslation, parseTranslation} from "../components/Localise";
+import Loading from "../components/Loading";
 
 const NameSelectStyle = styled.div`
   height: 100vh;
   display: grid;
   grid-template-rows: auto 1fr; 
+
 
   .name-form {
     align-self: center;
@@ -114,7 +116,7 @@ export default function NameSelect () {
       <NameSelectStyle className="name-select">
         <Header />
         <div className="name-form">
-          <h2>Cargando ...</h2>
+          <Loading />
         </div>
       </NameSelectStyle>
     )

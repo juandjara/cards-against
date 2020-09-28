@@ -13,7 +13,7 @@ const SpinnerStyles = styled.div`
     flex-wrap: wrap;
     img {
         display: block;
-        flex: 0 0 150px;
+        flex: 0 1 150px;
     }
     
     .bounce {
@@ -34,9 +34,9 @@ const SpinnerStyles = styled.div`
     }
 `
 
-export default function Spinner() {
+export default function Spinner({className}) {
     return (
-        <SpinnerStyles className="spinner">
+        <SpinnerStyles className={`spinner ${className || ''}`}>
             <img src={spinner} alt="Spinner" className="bounce"/>
         </SpinnerStyles>
     )
