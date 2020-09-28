@@ -10,7 +10,7 @@ tenemos dos componentes:
 * un front-end hecho react y styled-components (carpeta www)
 * un back-end hecho con nodejs y socket.io (carpeta api)
 
-en ambas carpetas es necesario instalar las dependencias `node_modules` (con `npm install` o con `yarn`)
+en ambas carpetas es necesario instalar las dependencias `node_modules` (con `npm install` o con `yarn`). Esto solo es necesario hacerlo una vez.
 * para arrancar el backend con live-reload se usa el comando `npm run dev` en la carpeta `api`
 * para arrancar el frontend con live-reload se usa el comando `npm start` en la carpeta `www`
 
