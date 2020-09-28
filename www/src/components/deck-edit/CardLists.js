@@ -77,19 +77,6 @@ const CardListsStyle = styled.main`
       & + .card {
         margin-left: -12px;
       }
-
-      .answers {
-        position: absolute;
-        bottom: 12px;
-        right: 12px;
-        width: 24px;
-        line-height: 24px;
-        text-align: center;
-        border-radius: 12px;
-        font-size: 14px;
-        color: var(--colorTop);
-        background: white;
-      }
     }
   }
 `
