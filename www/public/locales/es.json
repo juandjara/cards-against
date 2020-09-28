@@ -7,7 +7,7 @@
     "questions": "Preguntas",
     "answers": "Respuestas",
     "n_questions": "{{N}} Preguntas",
-    "n_answers": "{{N}} Respuestas",
+    "n_answers": "{{N}} Respuestas"
   },
   "buttons": {
     "join": "Entrar",
