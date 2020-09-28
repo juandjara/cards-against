@@ -385,7 +385,8 @@ export default function Game ({ navigate, gameId }) {
       <PlayerModal player={selectedPlayerModal} onClose={() => setSelectedPlayerModal(null)} />
       <section className="top">
         <CardStyles className="card black">
-          {blackCard && blackCard.text}
+          <span>{blackCard && blackCard.text}</span>
+          {card.answers > 1 && (<div className="answers">{card.answers}</div>)}
         </CardStyles>
         <div className="block players">
           <p className="label">Jugadores</p>
