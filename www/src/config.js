@@ -7,8 +7,8 @@ export default {
   TUTORIAL_KEY: 'cards-against-tutorial',
   LANGUAGE_KEY: 'cards-against-language',
   rotationOptions: [
-    { value: 'winner', label: 'rules.last_round_winner' },
-    { value: 'next-in-list', label: 'rules.next_in_list' }
+    { value: 'next-in-list', label: 'rules.next_in_list' },
+    { value: 'winner', label: 'rules.last_round_winner' }
   ],
   availableLanguages: [
     {value: 'es', label: 'Español'},
