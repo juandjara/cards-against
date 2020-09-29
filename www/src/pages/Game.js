@@ -62,6 +62,7 @@ const GameStyles = styled.div`
     overflow: auto;
 
     .card, .card-flip {
+      flex: 0 0 auto;
       margin-top: 16px;
       margin-bottom: 8px;
 
@@ -79,7 +80,6 @@ const GameStyles = styled.div`
 
     .players {
       flex-grow: 1;
-      flex-basis: 160px;
       margin-left: 16px;
       
       .label {
@@ -123,8 +123,6 @@ const GameStyles = styled.div`
       font-weight: normal;
       margin: 16px auto 0 auto;
       padding: 12px;
-      width: 160px;
-      height: 160px;
 
       strong {
         font-size: 32px;
@@ -137,8 +135,7 @@ const GameStyles = styled.div`
         position: absolute;
         top: -2px;
         z-index: -1;
-        width: 160px;
-        height: 160px;
+        box-shadow: none;
       }
     }
 
@@ -420,18 +417,12 @@ export default function Game ({ navigate, gameId }) {
             {cardsInGame.map(c => {
               return (
                 <CardFlip key={c.id} className="card-flip slide-in" as="li" rotated={!c.hidden}>
-                  <CardStyles 
-                    draggable={playerIsReader}
-                    onDragStart={ev => onDragStart(ev, c)}
-                    onDragEnd={onDragEnd}
+                  <CardStyles
                     onClick={() => revealCard(c.owner)}
                     className={classnames('card-flip-elem card-flip-front', { selectable: c.hidden && playerIsReader })}>
                     <p>¿?</p>
                   </CardStyles>
                   <CardStyles
-                    draggable={playerIsReader}
-                    onDragStart={ev => onDragStart(ev, c)}
-                    onDragEnd={onDragEnd}
                     onClick={() => showCardPair(c)}
                     className="card-flip-elem card-flip-back">
                     <p>{c.text}</p>
