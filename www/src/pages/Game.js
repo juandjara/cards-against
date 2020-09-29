@@ -137,6 +137,8 @@ const GameStyles = styled.div`
         position: absolute;
         top: -2px;
         z-index: -1;
+        width: 160px;
+        height: 160px;
       }
     }
 
@@ -183,17 +185,9 @@ const GameStyles = styled.div`
   }
 
   @media (max-width: 45rem) {
-    .player {
-      max-width: none;
-    }
-
     .card-list {
       justify-content: flex-start;
       padding: 0 8px;
-    }
-
-    .player-hand {
-      max-height: 200px;
     }
   }
 
@@ -352,14 +346,6 @@ export default function Game ({ navigate, gameId }) {
     closeCardPair()
   }
 
-  if (loading) {
-    return (
-      <GameStyles className="game">
-        <h2 className="heading">Cargando...</h2>
-      </GameStyles>
-    )
-  }
-
   if (!loading && !game) {
     return (
       <GameStyles className="game">
@@ -368,6 +354,14 @@ export default function Game ({ navigate, gameId }) {
           <IconArrowLeft width="20" height="20" />
           <span>Volver al men&uacute; principal</span>
         </Link>
+      </GameStyles>
+    )
+  }
+
+  if (loading || !blackCard) {
+    return (
+      <GameStyles className="game">
+        <h2 className="heading">Cargando...</h2>
       </GameStyles>
     )
   }
@@ -385,7 +379,7 @@ export default function Game ({ navigate, gameId }) {
       <PlayerModal player={selectedPlayerModal} onClose={() => setSelectedPlayerModal(null)} />
       <section className="top">
         <CardStyles className="card black">
-          <span>{blackCard && blackCard.text}</span>
+          <span>{blackCard.text}</span>
           {blackCard.answers > 1 && (<div className="answers">{blackCard.answers}</div>)}
         </CardStyles>
         <div className="block players">
@@ -459,12 +453,13 @@ export default function Game ({ navigate, gameId }) {
       <section className={classnames('player-hand', { disabled: disableHand })}>
         <header className="heading-small center">
           <p className="title">Cartas en tu mano</p>
-          {playerIsReader && <p className="subtitle">
-            En esta ronda no envias cartas, eres quien las juzga
-          </p>}
-          {cardAlreadySent && <p className="subtitle">
-            Ya has enviado tus cartas esta ronda
-          </p>}
+          <p className="subtitle">
+            {playerIsReader
+              ? 'En esta ronda no envias cartas, eres quien las juzga'
+              : cardAlreadySent
+                ? 'Cartas enviadas'
+                : `Escoge ${blackCard.answers} carta${blackCard.answers === 1 ? '' : 's'}`}
+          </p>
         </header>
         <ul className="card-list">
           {playerData.cards.map(c => (

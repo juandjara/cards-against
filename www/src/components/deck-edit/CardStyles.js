@@ -8,7 +8,6 @@ const CardStyles = styled.div`
   width: 180px;
   height: 180px;
   padding: 12px 16px;
-  padding-bottom: 24px;
   background-color: white;
   border: 2px solid #333;
   border-radius: 16px;
