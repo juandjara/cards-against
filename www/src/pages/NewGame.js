@@ -104,8 +104,8 @@ function processStaticDeck (deck) {
     name: deck.name,
     description: deck.description,
     cards: [
-      ...deck.blackCards.map((c, i) => ({ answers: c.pick, text: decodeCardText(c.text), id: i, type: 'black' })),
-      ...deck.whiteCards.map((c, i) => ({ text: decodeCardText(c), id: i, type: 'white' }))
+      ...deck.blackCards.map((c, i) => ({ answers: c.pick, text: decodeCardText(c.text), id: String(i), type: 'black' })),
+      ...deck.whiteCards.map((c, i) => ({ text: decodeCardText(c), id: String(i), type: 'white' }))
     ]
   }
 }

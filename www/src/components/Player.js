@@ -9,34 +9,27 @@ const PlayerStyles = styled.div`
   border-radius: 16px;
   padding: 6px 8px 6px 12px;
   margin: 4px 12px 8px 0;
-  max-width: 160px;
+  max-width: 180px;
   text-overflow: ellipsis;
   overflow: hidden;
   box-shadow: 0 2px 4px 0px rgba(0,0,0,0.2);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: transform 0.25s, box-shadow 0.25s;
+  transition: box-shadow 0.25s;
 
-  p {
-    margin-right: 8px;
-    display: flex;
-    align-items: center;
+  .name {
+    flex-grow: 1;
+  }
 
-    .badge {
-      margin-left: 8px;
-      color: var(--colorVeryLow);
-      background-color: var(--colorMedium);
+  .badge {
+    margin-left: 8px;
+    font-weight: 600;
+    text-align: center;
+  }
 
-      border-radius: .5em;
-      padding: .25em .4em;
-      font-size: 75%;
-      font-weight: bold;
-      line-height: 1;
-      text-align: center;
-      vertical-align: baseline;
-      white-space: nowrap;
-    }
+  svg {
+    margin-left: 4px;
   }
 
   &.selectable {
@@ -53,10 +46,8 @@ export default function Player ({ as, player, readerId, selectable, onClick })  
       tabIndex={selectable ? '0' : null}
       title={selectable ? 'Pulsa para ver los puntos de este jugador' : null}
       className={classnames('player', { selectable })}>
-      <p>
-        <span>{player.name}</span>
-        {selectable && <span className="badge">{player.wins.length}</span>}
-      </p>
+      <p className="name">{player.name}</p>
+      <p className="badge">{player.wins.length}</p>
       {player.id === readerId ? <BlackIconCards /> : <WhiteIconCards />}
     </PlayerStyles>
   )  

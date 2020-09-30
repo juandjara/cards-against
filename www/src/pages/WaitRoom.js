@@ -63,6 +63,7 @@ export default function WaitRoom ({ navigate, gameId }) {
   const [game, setGame] = useState(null)
   const [loading, setLoading] = useState(true)
   const rotation = game && config.rotationOptions.find(opt => opt.value === game.rotation)
+  const playerIsReader = game && game.round.reader === currentUser.id
 
   function startGame (replace = false) {
     navigate(`/game/${gameId}`, { replace })
@@ -122,7 +123,9 @@ export default function WaitRoom ({ navigate, gameId }) {
           ))}
         </ul>
       </section>
-      <Button className="big" onClick={() => startGame(false)}>Comenzar</Button>
+      {playerIsReader && (
+        <Button className="big" onClick={() => startGame(false)}>Comenzar</Button>
+      )}
     </WaitRoomStyles>
   )
 }
