@@ -114,8 +114,8 @@ class Game {
 
   playWhiteCard (cardId, playerId) {
     const player = this.players.find(p => p.id === playerId)
-    const cardIndex = player.cards.findIndex(c => c.id === cardId)
-    const card = player.cards.splice(cardIndex, 1)[0]
+    player.cards = player.cards.filter(c => c.id !== cardId)
+    const card = this.deck.cards.find(c => c.id === cardId)
     card.hidden = true
     this.round.cards.white[player.id] = card
     return this
