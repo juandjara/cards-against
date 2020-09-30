@@ -62,6 +62,7 @@ const GameStyles = styled.div`
     overflow: auto;
 
     .card, .card-flip {
+      flex: 0 0 auto;
       margin-top: 16px;
       margin-bottom: 8px;
 
@@ -79,7 +80,6 @@ const GameStyles = styled.div`
 
     .players {
       flex-grow: 1;
-      flex-basis: 160px;
       margin-left: 16px;
       
       .label {
@@ -123,8 +123,6 @@ const GameStyles = styled.div`
       font-weight: normal;
       margin: 16px auto 0 auto;
       padding: 12px;
-      width: 160px;
-      height: 160px;
 
       strong {
         font-size: 32px;
@@ -137,6 +135,7 @@ const GameStyles = styled.div`
         position: absolute;
         top: -2px;
         z-index: -1;
+        box-shadow: none;
       }
     }
 
@@ -183,17 +182,9 @@ const GameStyles = styled.div`
   }
 
   @media (max-width: 45rem) {
-    .player {
-      max-width: none;
-    }
-
     .card-list {
       justify-content: flex-start;
       padding: 0 8px;
-    }
-
-    .player-hand {
-      max-height: 200px;
     }
   }
 
@@ -352,14 +343,6 @@ export default function Game ({ navigate, gameId }) {
     closeCardPair()
   }
 
-  if (loading) {
-    return (
-      <GameStyles className="game">
-        <h2 className="heading">Cargando...</h2>
-      </GameStyles>
-    )
-  }
-
   if (!loading && !game) {
     return (
       <GameStyles className="game">
@@ -368,6 +351,14 @@ export default function Game ({ navigate, gameId }) {
           <IconArrowLeft width="20" height="20" />
           <span>Volver al men&uacute; principal</span>
         </Link>
+      </GameStyles>
+    )
+  }
+
+  if (loading || !blackCard) {
+    return (
+      <GameStyles className="game">
+        <h2 className="heading">Cargando...</h2>
       </GameStyles>
     )
   }
@@ -385,7 +376,8 @@ export default function Game ({ navigate, gameId }) {
       <PlayerModal player={selectedPlayerModal} onClose={() => setSelectedPlayerModal(null)} />
       <section className="top">
         <CardStyles className="card black">
-          {blackCard && blackCard.text}
+          <span>{blackCard.text}</span>
+          {blackCard.answers > 1 && (<div className="answers">{blackCard.answers}</div>)}
         </CardStyles>
         <div className="block players">
           <p className="label">Jugadores</p>
@@ -425,18 +417,12 @@ export default function Game ({ navigate, gameId }) {
             {cardsInGame.map(c => {
               return (
                 <CardFlip key={c.id} className="card-flip slide-in" as="li" rotated={!c.hidden}>
-                  <CardStyles 
-                    draggable={playerIsReader}
-                    onDragStart={ev => onDragStart(ev, c)}
-                    onDragEnd={onDragEnd}
+                  <CardStyles
                     onClick={() => revealCard(c.owner)}
                     className={classnames('card-flip-elem card-flip-front', { selectable: c.hidden && playerIsReader })}>
                     <p>¿?</p>
                   </CardStyles>
                   <CardStyles
-                    draggable={playerIsReader}
-                    onDragStart={ev => onDragStart(ev, c)}
-                    onDragEnd={onDragEnd}
                     onClick={() => showCardPair(c)}
                     className="card-flip-elem card-flip-back">
                     <p>{c.text}</p>
@@ -458,12 +444,13 @@ export default function Game ({ navigate, gameId }) {
       <section className={classnames('player-hand', { disabled: disableHand })}>
         <header className="heading-small center">
           <p className="title">Cartas en tu mano</p>
-          {playerIsReader && <p className="subtitle">
-            En esta ronda no envias cartas, eres quien las juzga
-          </p>}
-          {cardAlreadySent && <p className="subtitle">
-            Ya has enviado tus cartas esta ronda
-          </p>}
+          <p className="subtitle">
+            {playerIsReader
+              ? 'En esta ronda no envias cartas, eres quien las juzga'
+              : cardAlreadySent
+                ? 'Cartas enviadas'
+                : `Escoge ${blackCard.answers} carta${blackCard.answers === 1 ? '' : 's'}`}
+          </p>
         </header>
         <ul className="card-list">
           {playerData.cards.map(c => (
