@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import InputStyles from '../Input'
 import Button from '../Button'
 import styled from 'styled-components'
+import Localise, {parseTranslation} from "../Localise";
+import useGlobalSlice from "../../services/useGlobalSlice";
 
 const DeckFormStyles = styled.form`
   label {
@@ -39,6 +41,7 @@ const DeckFormStyles = styled.form`
 export default function NewDeckForm ({ deck = {}, onSubmit }) {
   const [name, setName] = useState(deck.name || '')
   const [description, setDescription] = useState(deck.description || '')
+  const [translations] = useGlobalSlice('translations')
   function handleSubmit (ev) {
     ev.preventDefault()
     onSubmit({ name, description })
@@ -46,26 +49,26 @@ export default function NewDeckForm ({ deck = {}, onSubmit }) {
 
   return (
     <DeckFormStyles className="new-deck-form" onSubmit={handleSubmit}>
-      <h2>Edición de mazo</h2>
-      <label htmlFor="deckName">Nombre</label>
-      <InputStyles 
+      <h2><Localise node="views.deck_manager.title" /></h2>
+      <label htmlFor="deckName"><Localise node="views.deck_manager.name" /></label>
+      <InputStyles
         required
         type="text"
         name="deckName"
         value={name}
         onChange={ev => setName(ev.target.value)}
-        placeholder="Nombre del mazo" />
-      <label htmlFor="deckDescription">Descripci&oacute;n</label>
-      <InputStyles 
+        placeholder={parseTranslation("views.deck_manager.name_placeholder", undefined, translations)} />
+      <label htmlFor="deckDescription"><Localise node="views.deck_manager.description" /></label>
+      <InputStyles
         as="textarea"
         name="deckDescription"
         value={description}
         onChange={ev => setDescription(ev.target.value)}
-        placeholder="Descripcion del mazo" />
-      <Button>Guardar</Button>
-      <Button className="cancel-btn" 
-        onClick={() => window.history.back()} 
-        type="button">Cancelar</Button>
+        placeholder={parseTranslation("views.deck_manager.description_placeholder", undefined, translations)} />
+      <Button><Localise node="buttons.save" /></Button>
+      <Button className="cancel-btn"
+        onClick={() => window.history.back()}
+        type="button"><Localise node="buttons.cancel" /></Button>
     </DeckFormStyles>
   )
 }

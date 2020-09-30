@@ -19,6 +19,7 @@ import { polyfill } from 'mobile-drag-drop'
 import { scrollBehaviourDragImageTranslateOverride } from 'mobile-drag-drop/scroll-behaviour'
 import 'mobile-drag-drop/default.css'
 import PlayerModal from '../components/PlayerModal'
+import Loading from "../components/Loading";
 
 polyfill({
   dragImageTranslateOverride: scrollBehaviourDragImageTranslateOverride,
@@ -218,7 +219,7 @@ export default function Game ({ navigate, gameId }) {
       return { owner: key, ...(value || {}) }
     })
     .filter(c => c.owner !== game.round.reader)
-  
+
   const numCardsReady = cardsInGame.filter(c => c.id).length
   const allCardsReady = cardsInGame.length && cardsInGame.length === numCardsReady
   const cardAlreadySent = cardsInGame.some(c => c.id && c.owner === currentUser.id)
@@ -291,7 +292,7 @@ export default function Game ({ navigate, gameId }) {
     ev.dataTransfer.dropEffect = 'move'
     return false
   }
-  
+
   function onDrop (ev) {
     ev.currentTarget.classList.remove('drag')
     const cardId = ev.dataTransfer.getData('text/plain')
@@ -358,7 +359,7 @@ export default function Game ({ navigate, gameId }) {
   if (loading || !blackCard) {
     return (
       <GameStyles className="game">
-        <h2 className="heading">Cargando...</h2>
+        <Loading className="heading" />
       </GameStyles>
     )
   }

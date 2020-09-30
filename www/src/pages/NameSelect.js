@@ -6,11 +6,15 @@ import Header from '../components/Header'
 import Button from '../components/Button'
 import Input from '../components/Input'
 import config from '../config'
+import Select from "react-select";
+import Localise, {fetchTranslation, parseTranslation} from "../components/Localise";
+import Loading from "../components/Loading";
 
 const NameSelectStyle = styled.div`
   height: 100vh;
   display: grid;
   grid-template-rows: auto 1fr; 
+
 
   .name-form {
     align-self: center;
@@ -33,6 +37,10 @@ const NameSelectStyle = styled.div`
       justify-content: center;
       margin: 12px 0;
     }
+    
+    .input-block {
+      min-width: 10%;
+    }
 
     input {
       margin-right: -4px;
@@ -46,15 +54,22 @@ const NameSelectStyle = styled.div`
   }
 `
 
+
 export default function NameSelect () {
   /* eslint-disable no-unused-vars */
   const [socket, setSocket] = useGlobalSlice('socket')
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
+  const [language, setLanguage] = useGlobalSlice('language')
+  const [translations, setTranslations] = useGlobalSlice('translations')
+
   /* eslint-enable no-unused-vars */
   const nameFromLS = localStorage.getItem(config.NAME_KEY) || ''
+
   const [name, setName] = useState(nameFromLS)
   const [loading, setLoading] = useState(false)
   const inputRef = useRef()
+
+  const {availableLanguages} = config
 
   function handleSubmit (ev) {
     ev.preventDefault()
@@ -75,6 +90,18 @@ export default function NameSelect () {
   }
 
   useEffect(() => {
+    if(language) {
+      fetchTranslation(language.value).then(translation => {
+        if(translation) {
+          localStorage.setItem(config.LANGUAGE_KEY, JSON.stringify(language))
+          setTranslations(translation);
+        }
+      })
+    }
+    // eslint-disable-next-line
+  }, [language])
+
+  useEffect(() => {
     if (nameFromLS) {
       connect(nameFromLS)
     }
@@ -89,7 +116,7 @@ export default function NameSelect () {
       <NameSelectStyle className="name-select">
         <Header />
         <div className="name-form">
-          <h2>Cargando ...</h2>
+          <Loading />
         </div>
       </NameSelectStyle>
     )
@@ -103,17 +130,26 @@ export default function NameSelect () {
     <NameSelectStyle className="name-select">
       <Header />
       <form className="name-form" onSubmit={handleSubmit}>
-        <h2>Hola, ¿Como te llamas?</h2>
+        <h2><Localise node="views.name_select.header" /></h2>
         <div className="input-group">
-          <Input 
+          <Input
             ref={inputRef}
             required
             type="text"
             name="name"
             value={name}
             onChange={ev => setName(ev.target.value.trim())}
-            placeholder="Introduce tu nombre" />
-          <Button type="submit">Entrar</Button>
+            placeholder={parseTranslation("views.name_select.input_name_placeholder", null, translations)} />
+          <Button type="submit"><Localise node="buttons.join" /></Button>
+        </div>
+        <div className="input-block">
+          <label id="deck-select-label"><Localise node="general.language" /></label>
+          <Select
+              required
+              value={language}
+              onChange={setLanguage}
+              className="select-container"
+              options={availableLanguages} />
         </div>
       </form>
     </NameSelectStyle>

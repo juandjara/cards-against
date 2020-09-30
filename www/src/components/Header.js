@@ -4,6 +4,7 @@ import { Link } from '@reach/router'
 import useGlobalSlice from '../services/useGlobalSlice'
 import IconCog from './icons/IconCog'
 import IconArrowLeft from './icons/IconArrowLeft'
+import Localise from "./Localise";
 
 const HeaderStyles = styled.header`
   border-bottom: 1px solid var(--colorModerate);
@@ -69,7 +70,7 @@ export default function Header () {
 
   return (
     <HeaderStyles>
-      <h1>Cartas contra la web</h1>
+      <h1><Localise node="general.app_name" /></h1>
       {currentUser && (
         <div className="right">
           <Link to="/" className="link home" title="Menu principal" aria-label="Menu principal">

@@ -8,6 +8,7 @@ import CardStyles from '../components/deck-edit/CardStyles'
 import InputStyles from '../components/Input'
 import CardFlip from '../components/CardFlip'
 import bg from '../assets/humaaans.png';
+import Localise from "../components/Localise";
 
 const HomeStyles = styled.div`
   display: flex;
@@ -161,16 +162,16 @@ export default function Home ({ navigate }) {
         <div className="btn-group">
           <CardFlip rotated={isRotated}>
             <CardStyles as="button"
-              onClick={() => setIsRotated(true)} 
+              onClick={() => setIsRotated(true)}
               className="card-flip-elem card-flip-front card white scale">
-              Unirse a una partida
+              <Localise node="views.home.join" />
             </CardStyles>
             <CardStyles as="form"
               onSubmit={enterGame}
               className="card-flip-elem card-flip-back card white">
-              <label>Introduce el código</label>
+              <label><Localise node="views.home.code_input" /></label>
               <div className="input-group">
-                <InputStyles 
+                <InputStyles
                   type="text"
                   value={code}
                   maxLength="4"
@@ -184,7 +185,7 @@ export default function Home ({ navigate }) {
           <CardStyles as="button"
             onClick={() => navigate('/newgame')}
             className="black scale">
-            Crear partida
+            <Localise node="views.home.create" />
           </CardStyles>
         </div>
       )}
