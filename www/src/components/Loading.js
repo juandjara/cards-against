@@ -22,7 +22,7 @@ const LoadingStyles = styled.div`
 
 
 export default function Loading({className}) {
-  const [getTranslation] = useTranslations()
+  const {getTranslation} = useTranslations()
   return (
     <LoadingStyles className={`loading ${className || ''}`}>
       <Spinner className="icon"/>

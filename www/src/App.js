@@ -32,7 +32,7 @@ height: 100%;
 `
 
 function App() {
-  const [translations] = useTranslations();
+  const {translations} = useTranslations()
 
   if (!translations) {
     return <FullScreen className="fullscreen"><Spinner/></FullScreen>;

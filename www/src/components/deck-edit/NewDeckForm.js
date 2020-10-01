@@ -40,7 +40,7 @@ const DeckFormStyles = styled.form`
 export default function NewDeckForm ({ deck = {}, onSubmit }) {
   const [name, setName] = useState(deck.name || '')
   const [description, setDescription] = useState(deck.description || '')
-  const [getTranslation] = useTranslations()
+  const {getTranslation} = useTranslations()
   function handleSubmit (ev) {
     ev.preventDefault()
     onSubmit({ name, description })

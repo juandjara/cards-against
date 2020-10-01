@@ -130,7 +130,7 @@ export default function NewGame({navigate}) {
   const [deck, setDeck] = useState()
   const [deckVisible, setDeckVisible] = useState(false)
   const [decksTree] = useDecks()
-  const [getTranslation] = useTranslations()
+  const {getTranslation} = useTranslations()
   const decks = Object.values(decksTree)
 
   const rotationOptions = config.rotationOptions.map(item => ({...item, label: getTranslation("item.label")}));

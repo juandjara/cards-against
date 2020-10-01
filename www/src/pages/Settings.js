@@ -183,7 +183,7 @@ export default function Settings () {
   }))
   const [socket] = useGlobalSlice('socket')
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
-  const [language, setLanguage, getTranslation] = useTranslations()
+  const {language, setLanguage, getTranslation} = useTranslations()
   const [username, setUsername] = useState(currentUser.name)
   const [editMode, setEditMode] = useState(false)
 

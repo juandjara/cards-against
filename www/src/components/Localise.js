@@ -1,10 +1,9 @@
-import {useEffect} from 'react';
-import useGlobalSlice from '../services/useGlobalSlice'
+import {useState, useEffect} from 'react';
 import config from "../config";
 
 const nodeReducer = (object, key) => object[key] || '';
 
-const getTranslation = (nodeString, translations) => {
+const getTranslationValue = (nodeString, translations) => {
   const node = nodeString.split('.');
   return (
     (translations && node.reduce(nodeReducer, translations)) ||
@@ -24,7 +23,7 @@ const replaceVariables = (translation, variables) => {
 };
 
 const parseTranslation = (nodeString, variables, translations) => {
-  let translation = getTranslation(nodeString, translations);
+  let translation = getTranslationValue(nodeString, translations);
   translation = replaceVariables(translation, variables);
   return translation;
 };
@@ -46,15 +45,16 @@ function getFallbackLanguage() {
 
   try {
     const languageFromLS = localStorage.getItem(config.LANGUAGE_KEY);
-    return  JSON.parse(languageFromLS) || fallbackLanguage;
+    return JSON.parse(languageFromLS) || fallbackLanguage;
   } catch (ignore) {
     return fallbackLanguage;
   }
 }
 
 export function useTranslations() {
-  const [translations, setTranslations] = useGlobalSlice('translations')
-  const [language, setLanguage] = useGlobalSlice('language')
+  const [translations, setTranslations] = useState({notloaded: true})
+  const fallbackLanguage = getFallbackLanguage();
+  const [language, setLanguage] = useState(fallbackLanguage);
 
   async function updateLanguage(language) {
     try {
@@ -68,20 +68,15 @@ export function useTranslations() {
   }
 
   function getTranslation(nodeString, variables) {
-    return parseTranslation(nodeString, variables, translations())
+    return parseTranslation(nodeString, variables, translations)
   }
 
   useEffect(() => {
     if (language) {
       updateLanguage(language)
     }
-    // eslint-disable-next-line
   }, [language])
 
-  useEffect(() => {
-    setLanguage(getFallbackLanguage());
-    // eslint-disable-next-line
-  }, [])
 
-  return [language, setLanguage, translations, getTranslation]
+  return {language, setLanguage, translations, getTranslation}
 }

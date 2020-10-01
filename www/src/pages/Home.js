@@ -123,7 +123,7 @@ export default function Home ({ navigate }) {
   const [isRotated, setIsRotated] = useState(false)
   const [code, setCode] = useState('')
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
-  const [getTranslation] = useTranslations()
+  const {getTranslation} = useTranslations()
 
   function goTo (id) {
     navigate(`/config/${id}`)

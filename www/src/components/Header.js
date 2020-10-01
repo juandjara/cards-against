@@ -67,11 +67,11 @@ const HeaderStyles = styled.header`
 
 export default function Header () {
   const [currentUser] = useGlobalSlice('currentUser')
-  const [getTranslation] = useTranslations()
+  const {getTranslation} = useTranslations()
 
   return (
     <HeaderStyles>
-      <h1>  {getTranslation("general.app_name")}</h1>
+      <h1>{getTranslation("general.app_name")}</h1>
       {currentUser && (
         <div className="right">
           <Link to="/" className="link home" title="Menu principal" aria-label="Menu principal">

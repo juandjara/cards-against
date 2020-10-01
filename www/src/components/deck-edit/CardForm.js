@@ -102,7 +102,7 @@ export default function CardForm ({
 }) {
   const [text, setText] = useState(card.text)
   const [answers, setAnswers] = useState(card.answers || 1)
-  const [getTranslation] = useTranslations()
+  const {getTranslation} = useTranslations()
 
   const inputRef = useRef()
 

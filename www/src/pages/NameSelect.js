@@ -59,7 +59,7 @@ export default function NameSelect () {
   /* eslint-disable no-unused-vars */
   const [socket, setSocket] = useGlobalSlice('socket')
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
-  const [language, setLanguage, getTranslation] = useTranslations()
+  const {language, setLanguage, getTranslation} = useTranslations()
 
   /* eslint-enable no-unused-vars */
   const nameFromLS = localStorage.getItem(config.NAME_KEY) || ''

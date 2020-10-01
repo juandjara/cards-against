@@ -210,7 +210,7 @@ export default function Game ({ navigate, gameId }) {
   const [activeSendBtn, setActiveSendBtn] = useState(null)
   const [cardPair, setCardPair] = useState(EMPTY_PAIR_DATA)
   const [selectedPlayerModal, setSelectedPlayerModal] = useState(null)
-  const [getTranslation] = useTranslations()
+  const {getTranslation} = useTranslations()
 
   const playerData = (game && game.players.find(p => p.id === currentUser.id)) || { cards: [] }
   const blackCard = game && game.round.cards.black

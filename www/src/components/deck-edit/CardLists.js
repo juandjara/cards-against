@@ -92,7 +92,7 @@ export default function CardLists ({
   const whiteCards = cards.filter(c => c.type === 'white')
   const blackCards = cards.filter(c => c.type === 'black')
   const [selectedCard, setSelectedCard] = useState(null)
-  const [getTranslation] = useTranslations()
+  const {getTranslation} = useTranslations()
 
   function handleSave (card) {
     if (card.id) {
