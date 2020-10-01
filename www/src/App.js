@@ -37,6 +37,17 @@ function App() {
   const [translations, setTranslations] = useGlobalSlice('translations')
   const [language, setLanguage] = useGlobalSlice('language')
 
+  async function updateLanguage() {
+    try {
+      const translation = await fetchTranslation(language.value);
+      localStorage.setItem(config.LANGUAGE_KEY, JSON.stringify(language))
+      setTranslations(translation);
+    } catch (error) {
+      console.error('Error fetching translations:', error);
+      setTranslations({});
+    }
+  }
+
   const languageFromLS = localStorage.getItem(config.LANGUAGE_KEY);
   let fallbackLanguage = config.availableLanguages[0];
   try {
@@ -46,17 +57,6 @@ function App() {
 
   useEffect(() => {
     if (language) {
-      const updateLanguage = async () => {
-        try {
-          const translation = await fetchTranslation(language.value);
-          localStorage.setItem(config.LANGUAGE_KEY, JSON.stringify(language))
-          setTranslations(translation);
-        } catch (error) {
-          console.error('Error fetching translations:', error);
-          setTranslations({});
-        }
-      }
-
       updateLanguage()
     }
     // eslint-disable-next-line
