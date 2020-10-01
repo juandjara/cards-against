@@ -133,7 +133,7 @@ export default function NewGame({navigate}) {
   const {getTranslation} = useTranslations()
   const decks = Object.values(decksTree)
 
-  const rotationOptions = config.rotationOptions.map(item => ({...item, label: getTranslation("item.label")}));
+  const rotationOptions = config.rotationOptions.map(item => ({...item, label: getTranslation(item.label)}));
   const deckOptions = [
     {label: getTranslation("decks.groups.original"), options: staticDecks.map(mapDeckOpt)},
     {label: getTranslation("decks.groups.custom"), options: decks.map(mapDeckOpt)}
