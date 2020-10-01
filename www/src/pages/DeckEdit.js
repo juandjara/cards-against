@@ -20,7 +20,9 @@ export default function DeckEdit ({ deckid }) {
 
   function editDeck ({ name, description }) {
     setDecks({ ...decks, [id]: { id, name, description, cards: deck.cards || [] } })
-    navigate(`/decks/${id}`)
+    if(deckIsNew) {
+      navigate(`/decks/${id}`, { replace: true })
+    }
   }
   function addCard (newCard) {
     newCard = { ...newCard, id: uuid(), created_at: Date.now() }
