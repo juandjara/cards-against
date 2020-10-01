@@ -204,15 +204,15 @@ export default function Settings () {
     <SettingsStyles className="deck-list">
       <button onClick={() => window.history.back()} className="button-link back">
         <IconArrowLeft width="20" height="20" />
-        <span>  {getTranslation("buttons.back")}</span>
+        <span>{getTranslation("buttons.back")}</span>
       </button>
-      <h2>  {getTranslation("views.settings.title")}</h2>
+      <h2>{getTranslation("views.settings.title")}</h2>
       <section>
-        <h3>  {getTranslation("views.settings.player_name")}</h3>
+        <h3>{getTranslation("views.settings.player_name")}</h3>
         {editMode ? (
           <div className="edit-username">
             <Input value={username} onChange={ev => setUsername(ev.target.value)} />
-            <Button onClick={editUsername}>  {getTranslation("buttons.save")}</Button>
+            <Button onClick={editUsername}>{getTranslation("buttons.save")}</Button>
             <Button onClick={() => setEditMode(false)} className="cancel-btn">  {getTranslation("buttons.cancel")}</Button>
           </div>
         ) : (
@@ -234,26 +234,26 @@ export default function Settings () {
             options={availableLanguages} />
       </section>
       <section>
-        <h3>  {getTranslation("views.settings.game_list")}</h3>
+        <h3>{getTranslation("views.settings.game_list")}</h3>
         {currentUser.game ? (
           <div className="game-id-wrapper">
             <p className="game-id">{currentUser.game}</p>
             <button className="button-link" onClick={leaveGame}>
               <IconDoorExit />
-              <span>  {getTranslation("views.settings.leave_game")}</span>
+              <span>{getTranslation("views.settings.leave_game")}</span>
             </button>
           </div>
         ) : (
-          <p>  {getTranslation("views.settings.no_games")}</p>
+          <p>{getTranslation("views.settings.no_games")}</p>
         )}
       </section>
       <section>
-        <h3>  {getTranslation("views.settings.deck_list")}</h3>
+        <h3>{getTranslation("views.settings.deck_list")}</h3>
         <Link to="/decks/new">
-          <Button>  {getTranslation("buttons.new_deck")}</Button>
+          <Button>{getTranslation("buttons.new_deck")}</Button>
         </Link>
         {decks.length === 0 ? (
-          <p className="no-data">  {getTranslation("views.settings.no_decks")}</p>
+          <p className="no-data">{getTranslation("views.settings.no_decks")}</p>
         ) : (
           <ul>
             {decks.map(d => (

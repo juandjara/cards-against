@@ -93,8 +93,6 @@ const CardFormStyle = styled.form`
   }
 `
 
-
-
 export default function CardForm ({
   card, className,
   onSave, onCancel, onRemove,

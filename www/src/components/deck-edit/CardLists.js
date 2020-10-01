@@ -140,9 +140,9 @@ export default function CardLists ({
       <section>
         <header>
           <BlackIconCards />
-          <span>  {getTranslation("general.n_questions", {N: blackCards.length})}</span>
+          <span>{getTranslation("general.n_questions", {N: blackCards.length})}</span>
         </header>
-        {editable && (<Button type="button" onClick={() => setSelectedCard({ type: 'black', text: '' })}>  {getTranslation("buttons.new_card")}</Button>)}
+        {editable && (<Button type="button" onClick={() => setSelectedCard({ type: 'black', text: '' })}>{getTranslation("buttons.new_card")}</Button>)}
         <ul>
           {blackCards.map(card => (
             <CardStyles
@@ -159,7 +159,7 @@ export default function CardLists ({
       <section>
         <header>
           <WhiteIconCards />
-          <span>  {getTranslation("general.n_answers", {N: whiteCards.length})}</span>
+          <span>{getTranslation("general.n_answers", {N: whiteCards.length})}</span>
         </header>
         {editable && (<Button type="button" onClick={() => setSelectedCard({ type: 'white', text: '' })}>  {getTranslation("buttons.new_card")}</Button>)}
         <ul>

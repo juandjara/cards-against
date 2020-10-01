@@ -15,7 +15,6 @@ const NameSelectStyle = styled.div`
   display: grid;
   grid-template-rows: auto 1fr; 
 
-
   .name-form {
     align-self: center;
     padding: 1rem;
@@ -54,7 +53,6 @@ const NameSelectStyle = styled.div`
   }
 `
 
-
 export default function NameSelect () {
   /* eslint-disable no-unused-vars */
   const [socket, setSocket] = useGlobalSlice('socket')
@@ -63,7 +61,6 @@ export default function NameSelect () {
 
   /* eslint-enable no-unused-vars */
   const nameFromLS = localStorage.getItem(config.NAME_KEY) || ''
-
   const [name, setName] = useState(nameFromLS)
   const [loading, setLoading] = useState(false)
   const inputRef = useRef()

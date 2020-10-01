@@ -64,10 +64,10 @@ export default function NewDeckForm ({ deck = {}, onSubmit }) {
         value={description}
         onChange={ev => setDescription(ev.target.value)}
         placeholder={getTranslation("views.deck_manager.description_placeholder", undefined)} />
-      <Button>  {getTranslation("buttons.save")}</Button>
+      <Button>{getTranslation("buttons.save")}</Button>
       <Button className="cancel-btn"
         onClick={() => window.history.back()}
-        type="button">  {getTranslation("buttons.cancel")}</Button>
+        type="button">{getTranslation("buttons.cancel")}</Button>
     </DeckFormStyles>
   )
 }
