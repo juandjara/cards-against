@@ -25,7 +25,8 @@
     "send": "Enviar",
     "show_cards": "Mostrar cartas",
     "hide_cards": "Ocultar cartas",
-    "back_to_main": "Volver al menú principal"
+    "back_to_main": "Volver al menú principal",
+    "select": "Seleccionar..."
   },
   "rules": {
     "last_round_winner": "El ganador de la ultima ronda",

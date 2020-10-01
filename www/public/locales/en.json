@@ -25,7 +25,8 @@
     "send": "Send",
     "show_cards": "Show cards",
     "hide_cards": "Hide cards",
-    "back_to_main": "Go back to main menu"
+    "back_to_main": "Go back to main menu",
+    "select": "Select..."
   },
   "rules": {
     "last_round_winner": "Winner of last round",

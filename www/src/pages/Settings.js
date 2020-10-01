@@ -229,6 +229,7 @@ export default function Settings () {
             required
             value={language}
             onChange={setLanguage}
+            placeholder={getTranslation("buttons.select")}
             className="select-container"
             options={availableLanguages} />
       </section>

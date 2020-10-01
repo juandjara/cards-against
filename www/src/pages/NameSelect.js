@@ -134,6 +134,7 @@ export default function NameSelect () {
               required
               value={language}
               onChange={setLanguage}
+              placeholder={getTranslation("buttons.select")}
               className="select-container"
               options={availableLanguages} />
         </div>

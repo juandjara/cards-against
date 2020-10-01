@@ -172,6 +172,7 @@ export default function NewGame({navigate}) {
           required
           value={deck}
           onChange={setDeck}
+          placeholder={getTranslation("buttons.select")}
           className="select-container"
           options={deckOptions}/>
         <footer className="select-actions">
