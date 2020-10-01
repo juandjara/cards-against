@@ -104,8 +104,8 @@ function processStaticDeck(deck) {
     name: deck.name,
     description: deck.description,
     cards: [
-      ...deck.blackCards.map((c, i) => ({ answers: c.pick, text: decodeCardText(c.text), id: String(i), type: 'black' })),
-      ...deck.whiteCards.map((c, i) => ({ text: decodeCardText(c), id: String(i), type: 'white' }))
+      ...deck.blackCards.map((c, i) => ({answers: c.pick, text: decodeCardText(c.text), id: String(i), type: 'black'})),
+      ...deck.whiteCards.map((c, i) => ({text: decodeCardText(c), id: String(i), type: 'white'}))
     ]
   }
 }
@@ -194,8 +194,8 @@ export default function NewGame({navigate}) {
       <div className="actions">
         <Button disabled={!formIsValid} type="submit"><Localise node="buttons.new_game"/></Button>
         <Button className="cancel-btn"
-                onClick={() => window.history.back()}
-                type="button"><Localise node="buttons.cancel"/></Button>
+          onClick={() => window.history.back()}
+          type="button"><Localise node="buttons.cancel"/></Button>
       </div>
     </NewGameStyles>
   )
