@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { Router } from '@reach/router'
+import {Router} from '@reach/router'
 import PrivateRoute from './components/PrivateRoute'
 import Main from './pages/Main'
 import Home from './pages/Home'
@@ -41,7 +41,8 @@ function App() {
   let fallbackLanguage = config.availableLanguages[0];
   try {
     fallbackLanguage = JSON.parse(languageFromLS) || fallbackLanguage;
-  } catch (ignore) {}
+  } catch (ignore) {
+  }
 
   useEffect(() => {
     if(language) {
@@ -63,19 +64,19 @@ function App() {
     // eslint-disable-next-line
   }, [])
 
-  if(!translations) {
-    return <FullScreen className="fullscreen"><Spinner /></FullScreen>;
+  if (!translations) {
+    return <FullScreen className="fullscreen"><Spinner/></FullScreen>;
   }
 
   return (
     <StyledRoot className="router">
       <PrivateRoute as={Main} path="/">
-        <Home default />
-        <Settings path="settings" />
-        <DeckEdit path="decks/:deckid" />
-        <NewGame path="newgame" />
-        <WaitRoom path="wait/:gameId" />
-        <Game path="game/:gameId" />
+        <Home default/>
+        <Settings path="settings"/>
+        <DeckEdit path="decks/:deckid"/>
+        <NewGame path="newgame"/>
+        <WaitRoom path="wait/:gameId"/>
+        <Game path="game/:gameId"/>
       </PrivateRoute>
     </StyledRoot>
   );

@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import styled from 'styled-components'
 import RadioGroup from '../components/RadioGroup'
 import CardLists from '../components/deck-edit/CardLists'
 import Select from 'react-select'
-import { Link } from '@reach/router'
+import {Link} from '@reach/router'
 import useDecks from '../services/useDecks'
 import Button from '../components/Button'
 import useGlobalSlice from '../services/useGlobalSlice'
@@ -92,20 +92,20 @@ const NewGameStyles = styled.form`
   }
 `
 
-function decodeCardText (text) {
+function decodeCardText(text) {
   const el = document.createElement('textarea')
   el.innerHTML = text
   return el.value
 }
 
-function processStaticDeck (deck) {
+function processStaticDeck(deck) {
   return {
     id: deck.id,
     name: deck.name,
     description: deck.description,
     cards: [
-      ...deck.blackCards.map((c, i) => ({ answers: c.pick, text: decodeCardText(c.text), id: i, type: 'black' })),
-      ...deck.whiteCards.map((c, i) => ({ text: decodeCardText(c), id: i, type: 'white' }))
+      ...deck.blackCards.map((c, i) => ({answers: c.pick, text: decodeCardText(c.text), id: i, type: 'black'})),
+      ...deck.whiteCards.map((c, i) => ({text: decodeCardText(c), id: i, type: 'white'}))
     ]
   }
 }
@@ -116,7 +116,7 @@ const staticDecks = jsonContext.keys().map(key => {
   return processStaticDeck(json)
 })
 
-function mapDeckOpt (deck) {
+function mapDeckOpt(deck) {
   return {
     ...deck,
     label: deck.name,
@@ -124,7 +124,7 @@ function mapDeckOpt (deck) {
   }
 }
 
-export default function NewGame ({ navigate }) {
+export default function NewGame({navigate}) {
   const [socket] = useGlobalSlice('socket')
   const [rotation, setRotation] = useState('winner')
   const [deck, setDeck] = useState()
@@ -134,17 +134,17 @@ export default function NewGame ({ navigate }) {
 
   const rotationOptions = config.rotationOptions.map(item => Object.assign({}, item, {label: <Localise node={item.label} />}))
   const deckOptions = [
-    { label: <Localise node="decks.groups.original" />, options: staticDecks.map(mapDeckOpt) },
-    { label: <Localise node="decks.groups.custom" />, options: decks.map(mapDeckOpt) }
+    {label: <Localise node="decks.groups.original"/>, options: staticDecks.map(mapDeckOpt)},
+    {label: <Localise node="decks.groups.custom"/>, options: decks.map(mapDeckOpt)}
   ]
 
   const formIsValid = deck && rotation
 
-  function handleSubmit (ev) {
+  function handleSubmit(ev) {
     ev.preventDefault()
     socket.emit('game:new')
     socket.once('game:new', game => {
-      socket.emit('game:edit', { ...game, rotation, deck })
+      socket.emit('game:edit', {...game, rotation, deck})
       navigate(`/wait/${game.id}`)
     })
   }
@@ -154,9 +154,9 @@ export default function NewGame ({ navigate }) {
 
   return (
     <NewGameStyles onSubmit={handleSubmit} className="new-game">
-      <h2><Localise node="views.new_game.title" /></h2>
+      <h2><Localise node="views.new_game.title"/></h2>
       <div className="input-block">
-        <label><Localise node="views.new_game.choose_judge" /></label>
+        <label><Localise node="views.new_game.choose_judge"/></label>
         <RadioGroup
           required
           name="rotation"
@@ -166,22 +166,22 @@ export default function NewGame ({ navigate }) {
         />
       </div>
       <div className="input-block">
-        <label id="deck-select-label"><Localise node="views.new_game.choose_deck" /></label>
+        <label id="deck-select-label"><Localise node="views.new_game.choose_deck"/></label>
         <Select
           required
           value={deck}
           onChange={setDeck}
           className="select-container"
-          options={deckOptions} />
+          options={deckOptions}/>
         <footer className="select-actions">
           <Link to="/decks/new" className="action">
-            <IconAdd />
-            <span><Localise node="buttons.new_deck" /></span>
+            <IconAdd/>
+            <span><Localise node="buttons.new_deck"/></span>
           </Link>
           {deck && (
             <button type="button" className="action" onClick={() => setDeckVisible(!deckVisible)}>
-              {deckVisible ? <IconViewHidden /> : <IconViewVisible />}
-              <span><Localise node={deckVisible ? 'buttons.hide_cards' : 'buttons.show_cards'} /></span>
+              {deckVisible ? <IconViewHidden/> : <IconViewVisible/>}
+              <span><Localise node={deckVisible ? 'buttons.hide_cards' : 'buttons.show_cards'}/></span>
             </button>
           )}
         </footer>
@@ -189,13 +189,13 @@ export default function NewGame ({ navigate }) {
       {deckVisible && (<div className="input-block">
         <CardLists
           cards={deck.cards.sort((a, b) => (b.created_at || 0) - (a.created_at || 0))}
-          editable={false} />
+          editable={false}/>
       </div>)}
       <div className="actions">
-        <Button disabled={!formIsValid} type="submit"><Localise node="buttons.new_game" /></Button>
+        <Button disabled={!formIsValid} type="submit"><Localise node="buttons.new_game"/></Button>
         <Button className="cancel-btn"
-          onClick={() => window.history.back()}
-          type="button"><Localise node="buttons.cancel" /></Button>
+                onClick={() => window.history.back()}
+                type="button"><Localise node="buttons.cancel"/></Button>
       </div>
     </NewGameStyles>
   )
