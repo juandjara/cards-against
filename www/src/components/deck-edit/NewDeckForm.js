@@ -41,7 +41,7 @@ export default function NewDeckForm ({ deck = {}, onSubmit }) {
   const [description, setDescription] = useState(deck.description || '')
   function handleSubmit (ev) {
     ev.preventDefault()
-    onSubmit({ name, description, redirect: false })
+    onSubmit({ name, description })
   }
 
   return (
