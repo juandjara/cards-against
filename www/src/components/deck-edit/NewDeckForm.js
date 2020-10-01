@@ -48,7 +48,7 @@ export default function NewDeckForm ({ deck = {}, onSubmit }) {
     <DeckFormStyles className="new-deck-form" onSubmit={handleSubmit}>
       <h2>Edición de mazo</h2>
       <label htmlFor="deckName">Nombre</label>
-      <InputStyles 
+      <InputStyles
         required
         type="text"
         name="deckName"
@@ -56,15 +56,15 @@ export default function NewDeckForm ({ deck = {}, onSubmit }) {
         onChange={ev => setName(ev.target.value)}
         placeholder="Nombre del mazo" />
       <label htmlFor="deckDescription">Descripci&oacute;n</label>
-      <InputStyles 
+      <InputStyles
         as="textarea"
         name="deckDescription"
         value={description}
         onChange={ev => setDescription(ev.target.value)}
         placeholder="Descripcion del mazo" />
       <Button>Guardar</Button>
-      <Button className="cancel-btn" 
-        onClick={() => window.history.back()} 
+      <Button className="cancel-btn"
+        onClick={() => window.history.back()}
         type="button">Cancelar</Button>
     </DeckFormStyles>
   )
