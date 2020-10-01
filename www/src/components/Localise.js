@@ -32,13 +32,18 @@ const parseTranslation = (nodeString, variables, translations) => {
 const languages = {}
 export async function fetchTranslation(langCode = 'es') {
   if(langCode in languages) return languages[langCode];
-  let response = await fetch(`${process.env.PUBLIC_URL}/locales/${langCode}.json`)
-  if (response) {
-    const translations = await response.json();
-    languages[langCode] = translations;
-    return translations;
+  if(!languages.fetching){
+    let ret = {};
+    languages.fetching = true;
+    let response = await fetch(`${process.env.PUBLIC_URL}/locales/${langCode}.json`)
+    if (response) {
+      const translations = await response.json();
+      languages[langCode] = translations;
+      ret = translations;
+    }
+    delete languages.fetching;
+    return ret;
   }
-  return {}
 }
 
 function getLanguage(langCode) {
@@ -71,6 +76,7 @@ export function useTranslations() {
       console.error('Error fetching translations:', error);
       setTranslations({});
     }
+    // eslint-disable-next-line
   }, [])
 
   const getTranslation = useCallback((nodeString, variables) => {
