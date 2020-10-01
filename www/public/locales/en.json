@@ -7,7 +7,8 @@
     "questions": "Questions",
     "answers": "Answers",
     "n_questions": "{{N}} Questions",
-    "n_answers": "{{N}} Answers"
+    "n_answers": "{{N}} Answers",
+    "players": "Players"
   },
   "buttons": {
     "join": "Join",
@@ -21,8 +22,10 @@
     "back": "Back",
     "show": "Show",
     "hide": "Hide",
+    "send": "Send",
     "show_cards": "Show cards",
-    "hide_cards": "Hide cards"
+    "hide_cards": "Hide cards",
+    "back_to_main": "Go back to main menu"
   },
   "rules": {
     "last_round_winner": "Winner of last round",
@@ -69,6 +72,23 @@
       "default_placeholder": "Card text",
       "total_answers": "# Answers",
       "delete_confirm": "Are you sure you want to delete this card?"
+    },
+    "game": {
+      "no_match_code": "There is no active match with the code <strong>{{code}}</strong>",
+      "ingame_cards": "Cards In Game",
+      "phase_judge": "<strong>Judge</strong>, show the cards and choose the funniest",
+      "phase_play": "<strong>Players</strong>, send your answers",
+      "card_counter": "<strong>{{ready}} / {{total}}</strong> sent cards",
+      "your_hand": "Your hand",
+      "not_playing": "You are the Judge, it's not your turn to send cards",
+      "choose_cards": {
+        "singular": "Choose {{count}} card",
+        "plural": "Choose {{count}} cards"
+      },
+      "sent_cards": {
+        "singular": "Card sent",
+        "plural": "Cards sent"
+      }
     }
   }
 }

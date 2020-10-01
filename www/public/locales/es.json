@@ -74,7 +74,7 @@
       "delete_confirm": "¿Seguro que quieres borrar esta carta?"
     },
     "game": {
-      "no_match_code": "No hay ninguna partida activa con el código <strong>{{code}}",
+      "no_match_code": "No hay ninguna partida activa con el código <strong>{{code}}</strong>",
       "ingame_cards": "Cartas en juego",
       "phase_judge": "<strong>Juez</strong>, revela las cartas y haz tu elección",
       "phase_play": "<strong>Jugadores</strong>, enviad vuestras cartas",
