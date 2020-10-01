@@ -77,19 +77,6 @@ const CardListsStyle = styled.main`
       & + .card {
         margin-left: -12px;
       }
-
-      .answers {
-        position: absolute;
-        bottom: 12px;
-        right: 12px;
-        width: 24px;
-        line-height: 24px;
-        text-align: center;
-        border-radius: 12px;
-        font-size: 14px;
-        color: var(--colorTop);
-        background: white;
-      }
     }
   }
 `
@@ -159,7 +146,7 @@ export default function CardLists ({
             <CardStyles
               key={card.id}
               as="li"
-              className="card black selectable"
+              className={classnames('card black', { selectable: editable })}
               onClick={() => setSelectedCard(card)}>
               <span>{card.text}</span>
               {card.answers > 1 && (<div className="answers">{card.answers}</div>)}
@@ -178,7 +165,7 @@ export default function CardLists ({
             <CardStyles 
               key={card.id}
               as="li"
-              className="card white selectable"
+              className={classnames('card white', { selectable: editable })}
               onClick={() => setSelectedCard(card)}>
               {card.text}
             </CardStyles>

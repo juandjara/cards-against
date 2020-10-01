@@ -8,7 +8,6 @@ const CardStyles = styled.div`
   width: 180px;
   height: 180px;
   padding: 12px 16px;
-  padding-bottom: 24px;
   background-color: white;
   border: 2px solid #333;
   border-radius: 16px;
@@ -45,6 +44,19 @@ const CardStyles = styled.div`
       transform: scale(1.05);
       z-index: 1;
     }
+  }
+
+  .answers {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 24px;
+    line-height: 24px;
+    text-align: center;
+    border-radius: 12px;
+    font-size: 14px;
+    color: var(--colorTop);
+    background: white;
   }
 `
 
