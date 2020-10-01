@@ -45,16 +45,19 @@ function App() {
   }
 
   useEffect(() => {
-    if(language) {
-      fetchTranslation(language.value).then(translation => {
-        if(translation) {
+    if (language) {
+      const updateLanguage = async () => {
+        try {
+          const translation = await fetchTranslation(language.value);
           localStorage.setItem(config.LANGUAGE_KEY, JSON.stringify(language))
           setTranslations(translation);
+        } catch (error) {
+          console.error('Error fetching translations:', error);
+          setTranslations({});
         }
-      }).catch(error => {
-        console.error('Error fetching translations:', error);
-        setTranslations({});
-      })
+      }
+
+      updateLanguage()
     }
     // eslint-disable-next-line
   }, [language])
