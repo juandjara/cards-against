@@ -5,8 +5,13 @@ export default {
   NAME_KEY: 'cards-against-username',
   DATA_KEY: 'cards-against-data',
   TUTORIAL_KEY: 'cards-against-tutorial',
+  LANGUAGE_KEY: 'cards-against-language',
   rotationOptions: [
-    { value: 'winner', label: 'El ganador de la ultima ronda' },
-    { value: 'next-in-list', label: 'El siguiente jugador de la lista' }
+    { value: 'next-in-list', label: 'rules.next_in_list' },
+    { value: 'winner', label: 'rules.last_round_winner' }
+  ],
+  availableLanguages: [
+    {value: 'es', label: 'Español'},
+    {value: 'en', label: 'English'},
   ]
 }
