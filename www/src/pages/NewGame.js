@@ -132,7 +132,7 @@ export default function NewGame({navigate}) {
   const [decksTree] = useDecks()
   const decks = Object.values(decksTree)
 
-  const rotationOptions = config.rotationOptions.map(item => Object.assign({}, item, {label: <Localise node={item.label} />}))
+  const rotationOptions = config.rotationOptions.map(item => ({...item, label: <Localise node={item.label}/>}));
   const deckOptions = [
     {label: <Localise node="decks.groups.original"/>, options: staticDecks.map(mapDeckOpt)},
     {label: <Localise node="decks.groups.custom"/>, options: decks.map(mapDeckOpt)}
