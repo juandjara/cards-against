@@ -349,7 +349,7 @@ export default function Game ({ navigate, gameId }) {
   if (!loading && !game) {
     return (
       <GameStyles className="game">
-        <h2 className="heading center" dangerouslySetInnerHTML={{__html: getTranslation("views.game.no_match_code", {code: gameId})}}/>
+        <h2 className="heading center" dangerouslySetInnerHTML={{__html: getTranslation("error.no_game_code", {code: gameId})}}/>
         <Link to="/" className="back">
           <IconArrowLeft width="20" height="20" />
           <span>{getTranslation("buttons.back_to_main")}</span>

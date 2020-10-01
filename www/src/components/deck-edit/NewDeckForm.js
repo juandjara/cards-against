@@ -49,7 +49,7 @@ export default function NewDeckForm ({ deck = {}, onSubmit }) {
   return (
     <DeckFormStyles className="new-deck-form" onSubmit={handleSubmit}>
       <h2>  {getTranslation("views.deck_manager.title")}</h2>
-      <label htmlFor="deckName">  {getTranslation("views.deck_manager.name")}</label>
+      <label htmlFor="deckName">{getTranslation("views.deck_manager.name")}</label>
       <InputStyles
         required
         type="text"
@@ -57,7 +57,7 @@ export default function NewDeckForm ({ deck = {}, onSubmit }) {
         value={name}
         onChange={ev => setName(ev.target.value)}
         placeholder={getTranslation("views.deck_manager.name_placeholder", undefined)} />
-      <label htmlFor="deckDescription">  {getTranslation("views.deck_manager.description")}</label>
+      <label htmlFor="deckDescription">{getTranslation("views.deck_manager.description")}</label>
       <InputStyles
         as="textarea"
         name="deckDescription"

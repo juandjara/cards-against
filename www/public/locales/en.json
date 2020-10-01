@@ -26,7 +26,11 @@
     "show_cards": "Show cards",
     "hide_cards": "Hide cards",
     "back_to_main": "Go back to main menu",
-    "select": "Select..."
+    "select": "Select...",
+    "start": "Start"
+  },
+  "error": {
+    "no_game_code": "There is no active match with the code <strong>{{code}}</strong>"
   },
   "rules": {
     "last_round_winner": "Winner of last round",
@@ -74,12 +78,17 @@
       "total_answers": "# Answers",
       "delete_confirm": "Are you sure you want to delete this card?"
     },
+    "wait_room": {
+      "title": "Waiting Room",
+      "game_code": "Game code",
+      "chosen_deck": "Chosen deck",
+      "player_rotation": "Judge rotation"
+    },
     "game": {
-      "no_match_code": "There is no active match with the code <strong>{{code}}</strong>",
       "ingame_cards": "Cards In Game",
       "phase_judge": "<strong>Judge</strong>, show the cards and choose the funniest",
       "phase_play": "<strong>Players</strong>, send your answers",
-      "card_counter": "<strong>{{ready}} / {{total}}</strong> sent cards",
+      "card_counter": "{{ready}} / {{total}}",
       "your_hand": "Your hand",
       "not_playing": "You are the Judge, it's not your turn to send cards",
       "choose_cards": {

@@ -26,7 +26,11 @@
     "show_cards": "Mostrar cartas",
     "hide_cards": "Ocultar cartas",
     "back_to_main": "Volver al menú principal",
-    "select": "Seleccionar..."
+    "select": "Seleccionar...",
+    "start": "Empezar"
+  },
+  "error": {
+    "no_game_code": "No hay ninguna partida activa con el código <strong>{{code}}</strong>"
   },
   "rules": {
     "last_round_winner": "El ganador de la ultima ronda",
@@ -74,8 +78,13 @@
       "total_answers": "Nº de Respuestas",
       "delete_confirm": "¿Seguro que quieres borrar esta carta?"
     },
+    "wait_room": {
+      "title": "Sala de espera",
+      "game_code": "Código de la partida",
+      "chosen_deck": "Mazo de cartas",
+      "player_rotation": "Rotación del Juez"
+    },
     "game": {
-      "no_match_code": "No hay ninguna partida activa con el código <strong>{{code}}</strong>",
       "ingame_cards": "Cartas en juego",
       "phase_judge": "<strong>Juez</strong>, revela las cartas y haz tu elección",
       "phase_play": "<strong>Jugadores</strong>, enviad vuestras cartas",
