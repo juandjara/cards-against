@@ -406,11 +406,11 @@ export default function Game ({ navigate, gameId }) {
           <p className="subtitle">
             {allCardsReady ? (
               <>
-                <IconBlackCards/> {getTranslation("views.game.phase_judge")}
+                <IconBlackCards/> <span dangerouslySetInnerHTML={{__html: getTranslation("views.game.phase_judge")}}/>
               </>
             ) : (
               <>
-                <IconWhiteCards /> {getTranslation("views.game.phase_play")}
+                <IconWhiteCards /> <span dangerouslySetInnerHTML={{__html: getTranslation("views.game.phase_play")}}/>
               </>
             )}
           </p>
@@ -436,7 +436,8 @@ export default function Game ({ navigate, gameId }) {
           </ul>
         ) : (
           <CardStyles className="card card-counter">
-            <span dangerouslySetInnerHTML={{__html: getTranslation("views.game.card_counter", {ready: numCardsReady, total: cardsInGame.length})}}></span>
+            <div>{getTranslation("views.game.sent_cards.plural")}</div>
+            <strong>{getTranslation("views.game.card_counter", {ready: numCardsReady, total: cardsInGame.length})}</strong>
             {cardsInGame.filter(c => c.id).map(c => (
               <CardStyles key={c.id} className="card hidden-card slide-in"></CardStyles>
             ))}

@@ -79,7 +79,7 @@
       "ingame_cards": "Cartas en juego",
       "phase_judge": "<strong>Juez</strong>, revela las cartas y haz tu elección",
       "phase_play": "<strong>Jugadores</strong>, enviad vuestras cartas",
-      "card_counter": "<strong>{{ready}} / {{total}}</strong> cartas enviadas",
+      "card_counter": "{{ready}} / {{total}}",
       "your_hand": "Cartas en tu mano",
       "not_playing": "En esta ronda no envias cartas, eres quien las juzga",
       "choose_cards": {
