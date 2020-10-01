@@ -1,5 +1,6 @@
-import {useState, useEffect} from 'react';
+import {useCallback, useEffect} from 'react';
 import config from "../config";
+import useGlobalSlice from "../services/useGlobalSlice";
 
 const nodeReducer = (object, key) => object[key] || '';
 
@@ -28,9 +29,15 @@ const parseTranslation = (nodeString, variables, translations) => {
   return translation;
 };
 
+const languages = {}
 export async function fetchTranslation(langCode = 'es') {
+  if(langCode in languages) return languages[langCode];
   let response = await fetch(`${process.env.PUBLIC_URL}/locales/${langCode}.json`)
-  if (response) return await response.json();
+  if (response) {
+    const translations = await response.json();
+    languages[langCode] = translations;
+    return translations;
+  }
   return {}
 }
 
@@ -52,31 +59,33 @@ function getFallbackLanguage() {
 }
 
 export function useTranslations() {
-  const [translations, setTranslations] = useState({notloaded: true})
-  const fallbackLanguage = getFallbackLanguage();
-  const [language, setLanguage] = useState(fallbackLanguage);
+  const [translations, setTranslations] = useGlobalSlice('translations')
+  const [language, setLanguage] = useGlobalSlice('language');
 
-  async function updateLanguage(language) {
+  const updateLanguage = useCallback(async newLanguage => {
     try {
-      const translation = await fetchTranslation(language.value);
-      localStorage.setItem(config.LANGUAGE_KEY, JSON.stringify(language))
+      const translation = await fetchTranslation(newLanguage.value);
+      localStorage.setItem(config.LANGUAGE_KEY, JSON.stringify(newLanguage))
       setTranslations(translation);
     } catch (error) {
       console.error('Error fetching translations:', error);
       setTranslations({});
     }
-  }
+  }, [])
 
-  function getTranslation(nodeString, variables) {
+  const getTranslation = useCallback((nodeString, variables) => {
     return parseTranslation(nodeString, variables, translations)
-  }
+  }, [translations])
 
   useEffect(() => {
     if (language) {
       updateLanguage(language)
+    } else {
+      const fallbackLanguage = getFallbackLanguage();
+      updateLanguage(fallbackLanguage)
     }
-  }, [language])
+  }, [updateLanguage, language])
 
 
-  return {language, setLanguage, translations, getTranslation}
+  return {language: language || getFallbackLanguage(), setLanguage, translations, getTranslation}
 }
