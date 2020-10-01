@@ -126,7 +126,7 @@ function mapDeckOpt(deck) {
 
 export default function NewGame({navigate}) {
   const [socket] = useGlobalSlice('socket')
-  const [rotation, setRotation] = useState('winner')
+  const [rotation, setRotation] = useState('next-in-list')
   const [deck, setDeck] = useState()
   const [deckVisible, setDeckVisible] = useState(false)
   const [decksTree] = useDecks()
