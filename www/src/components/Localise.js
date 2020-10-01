@@ -31,7 +31,7 @@ const parseTranslation = (nodeString, variables, translations) => {
 
 const languages = {}
 export async function fetchTranslation(langCode) {
-  if(!langCode || typeof langCode !== 'string' || langCode.length !== 2) throw 'langCode has to be a 2-digit code'
+  if(!langCode || typeof langCode !== 'string' || langCode.length !== 2) throw new Error('langCode has to be a 2-digit code')
   if(langCode in languages) return languages[langCode];
   if(!languages.fetching){
     let ret = {};
