@@ -5,8 +5,6 @@ import Input from '../Input'
 import IconClose from '../icons/IconClose'
 import WhiteIconCards from '../icons/IconWhiteCards'
 import CardStyles from './CardStyles'
-import useGlobalSlice from "../../services/useGlobalSlice";
-import Localise, {parseTranslation} from "../Localise";
 
 const CardFormStyle = styled.form`
   padding: 16px 12px;
@@ -94,19 +92,14 @@ const CardFormStyle = styled.form`
   }
 `
 
-
-
-export default function CardForm ({
+export default function CardForm ({ 
   card, className,
   onSave, onCancel, onRemove,
-  placeholder
+  placeholder = 'Texto de la carta'
 }) {
   const [text, setText] = useState(card.text)
   const [answers, setAnswers] = useState(card.answers || 1)
-  const [translations] = useGlobalSlice('translations')
   const inputRef = useRef()
-
-  if(!placeholder) placeholder = parseTranslation("views.card_form.default_placeholder", undefined, translations)
 
   useEffect(() => {
     if (inputRef.current) {
@@ -141,15 +134,15 @@ export default function CardForm ({
             <Input type="number" min="1" value={answers} onChange={ev => setAnswers(ev.target.value)} />
             <WhiteIconCards />
           </div>
-          <p><Localise node="views.card_form.total_answers"/></p>
+          <p>Nº de respuestas</p>
         </div>)}
       </div>
       <div className="actions">
         <Button className="save-btn" type="submit" disabled={!text} onClick={handleSubmit}>
-          <span><Localise node="buttons.save" /></span>
+          <span>Guardar</span>
         </Button>
         {card.id && (<Button type="button" className="delete-btn" onClick={onRemove}>
-          <span><Localise node="buttons.delete" /></span>
+          <span>Eliminar</span>
         </Button>)}
       </div>
     </CardFormStyle>

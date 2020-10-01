@@ -40,7 +40,7 @@ const WaitRoomStyles = styled.div`
 function Loading () {
   return (
     <WaitRoomStyles className="wait-room loading">
-      <Loading className="center" />
+      <h2 className="center">Cargando...</h2>
     </WaitRoomStyles>
   )
 }

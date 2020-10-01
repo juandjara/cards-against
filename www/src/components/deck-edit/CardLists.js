@@ -7,8 +7,6 @@ import Button from '../Button'
 import CardForm from './CardForm'
 import CardStyles from './CardStyles'
 import classnames from 'classnames'
-import Localise, {parseTranslation} from "../Localise";
-import useGlobalSlice from "../../services/useGlobalSlice";
 
 const PortalStyles = styled.div`
   position: fixed;
@@ -93,7 +91,6 @@ export default function CardLists ({
   const whiteCards = cards.filter(c => c.type === 'white')
   const blackCards = cards.filter(c => c.type === 'black')
   const [selectedCard, setSelectedCard] = useState(null)
-  const [translations] = useGlobalSlice('translations')
 
   function handleSave (card) {
     if (card.id) {
@@ -109,7 +106,7 @@ export default function CardLists ({
   }
 
   function handleRemove () {
-    const confirmation = window.confirm(parseTranslation("views.card_form.delete_confirm", undefined, translations))
+    const confirmation = window.confirm('¿Seguro que quieres borrar esta carta?')
     if (!confirmation) {
       return
     }
@@ -141,9 +138,9 @@ export default function CardLists ({
       <section>
         <header>
           <BlackIconCards />
-          <span><Localise node="general.n_questions" variables={{N: blackCards.length}} /></span>
+          <span>{blackCards.length} Preguntas</span>
         </header>
-        {editable && (<Button type="button" onClick={() => setSelectedCard({ type: 'black', text: '' })}><Localise node="buttons.new_card" /></Button>)}
+        {editable && (<Button type="button" onClick={() => setSelectedCard({ type: 'black', text: '' })}>Nueva carta</Button>)}
         <ul>
           {blackCards.map(card => (
             <CardStyles
@@ -160,12 +157,12 @@ export default function CardLists ({
       <section>
         <header>
           <WhiteIconCards />
-          <span><Localise node="general.n_answers" variables={{N: whiteCards.length}} /></span>
+          <span>{whiteCards.length} Respuestas</span>
         </header>
-        {editable && (<Button type="button" onClick={() => setSelectedCard({ type: 'white', text: '' })}><Localise node="buttons.new_card" /></Button>)}
+        {editable && (<Button type="button" onClick={() => setSelectedCard({ type: 'white', text: '' })}>Nueva carta</Button>)}
         <ul>
           {whiteCards.map(card => (
-            <CardStyles
+            <CardStyles 
               key={card.id}
               as="li"
               className={classnames('card white', { selectable: editable })}
