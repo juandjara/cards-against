@@ -4,7 +4,7 @@ import { Link } from '@reach/router'
 import useGlobalSlice from '../services/useGlobalSlice'
 import IconCog from './icons/IconCog'
 import IconArrowLeft from './icons/IconArrowLeft'
-import Localise from "./Localise";
+import {useTranslations} from "./Localise";
 
 const HeaderStyles = styled.header`
   border-bottom: 1px solid var(--colorModerate);
@@ -67,10 +67,11 @@ const HeaderStyles = styled.header`
 
 export default function Header () {
   const [currentUser] = useGlobalSlice('currentUser')
+  const [getTranslation] = useTranslations()
 
   return (
     <HeaderStyles>
-      <h1><Localise node="general.app_name" /></h1>
+      <h1>  {getTranslation("general.app_name")}</h1>
       {currentUser && (
         <div className="right">
           <Link to="/" className="link home" title="Menu principal" aria-label="Menu principal">

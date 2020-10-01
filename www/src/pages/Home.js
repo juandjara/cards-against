@@ -8,7 +8,7 @@ import CardStyles from '../components/deck-edit/CardStyles'
 import InputStyles from '../components/Input'
 import CardFlip from '../components/CardFlip'
 import bg from '../assets/humaaans.png';
-import Localise from "../components/Localise";
+import {useTranslations} from "../components/Localise";
 
 const HomeStyles = styled.div`
   display: flex;
@@ -123,6 +123,7 @@ export default function Home ({ navigate }) {
   const [isRotated, setIsRotated] = useState(false)
   const [code, setCode] = useState('')
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
+  const [getTranslation] = useTranslations()
 
   function goTo (id) {
     navigate(`/config/${id}`)
@@ -164,12 +165,12 @@ export default function Home ({ navigate }) {
             <CardStyles as="button"
               onClick={() => setIsRotated(true)}
               className="card-flip-elem card-flip-front card white scale">
-              <Localise node="views.home.join" />
+                {getTranslation("views.home.join")}
             </CardStyles>
             <CardStyles as="form"
               onSubmit={enterGame}
               className="card-flip-elem card-flip-back card white">
-              <label><Localise node="views.home.code_input" /></label>
+              <label>{getTranslation("views.home.code_input")}</label>
               <div className="input-group">
                 <InputStyles
                   type="text"
@@ -185,7 +186,7 @@ export default function Home ({ navigate }) {
           <CardStyles as="button"
             onClick={() => navigate('/newgame')}
             className="black scale">
-            <Localise node="views.home.create" />
+              {getTranslation("views.home.create")}
           </CardStyles>
         </div>
       )}

@@ -1,6 +1,6 @@
 import React from 'react'
 import Spinner from "./Spinner";
-import Localise from "./Localise";
+import {useTranslations} from "./Localise";
 import styled from "styled-components";
 
 const LoadingStyles = styled.div`
@@ -22,10 +22,11 @@ const LoadingStyles = styled.div`
 
 
 export default function Loading({className}) {
+  const [getTranslation] = useTranslations()
   return (
     <LoadingStyles className={`loading ${className || ''}`}>
       <Spinner className="icon"/>
-      <h2><Localise node="general.loading"/></h2>
+      <h2>{getTranslation("general.loading")}</h2>
     </LoadingStyles>
   )
 }

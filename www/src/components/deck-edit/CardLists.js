@@ -7,8 +7,7 @@ import Button from '../Button'
 import CardForm from './CardForm'
 import CardStyles from './CardStyles'
 import classnames from 'classnames'
-import Localise, {parseTranslation} from "../Localise";
-import useGlobalSlice from "../../services/useGlobalSlice";
+import {useTranslations} from "../Localise";
 
 const PortalStyles = styled.div`
   position: fixed;
@@ -93,7 +92,7 @@ export default function CardLists ({
   const whiteCards = cards.filter(c => c.type === 'white')
   const blackCards = cards.filter(c => c.type === 'black')
   const [selectedCard, setSelectedCard] = useState(null)
-  const [translations] = useGlobalSlice('translations')
+  const [getTranslation] = useTranslations()
 
   function handleSave (card) {
     if (card.id) {
@@ -109,7 +108,7 @@ export default function CardLists ({
   }
 
   function handleRemove () {
-    const confirmation = window.confirm(parseTranslation("views.card_form.delete_confirm", undefined, translations))
+    const confirmation = window.confirm(getTranslation("views.card_form.delete_confirm", undefined))
     if (!confirmation) {
       return
     }
@@ -141,9 +140,9 @@ export default function CardLists ({
       <section>
         <header>
           <BlackIconCards />
-          <span><Localise node="general.n_questions" variables={{N: blackCards.length}} /></span>
+          <span>  {getTranslation("general.n_questions", {N: blackCards.length})}</span>
         </header>
-        {editable && (<Button type="button" onClick={() => setSelectedCard({ type: 'black', text: '' })}><Localise node="buttons.new_card" /></Button>)}
+        {editable && (<Button type="button" onClick={() => setSelectedCard({ type: 'black', text: '' })}>  {getTranslation("buttons.new_card")}</Button>)}
         <ul>
           {blackCards.map(card => (
             <CardStyles
@@ -160,9 +159,9 @@ export default function CardLists ({
       <section>
         <header>
           <WhiteIconCards />
-          <span><Localise node="general.n_answers" variables={{N: whiteCards.length}} /></span>
+          <span>  {getTranslation("general.n_answers", {N: whiteCards.length})}</span>
         </header>
-        {editable && (<Button type="button" onClick={() => setSelectedCard({ type: 'white', text: '' })}><Localise node="buttons.new_card" /></Button>)}
+        {editable && (<Button type="button" onClick={() => setSelectedCard({ type: 'white', text: '' })}>  {getTranslation("buttons.new_card")}</Button>)}
         <ul>
           {whiteCards.map(card => (
             <CardStyles

@@ -7,7 +7,7 @@ import Button from '../components/Button'
 import Input from '../components/Input'
 import config from '../config'
 import Select from "react-select";
-import Localise, {fetchTranslation, parseTranslation} from "../components/Localise";
+import {useTranslations} from "../components/Localise";
 import Loading from "../components/Loading";
 
 const NameSelectStyle = styled.div`
@@ -59,8 +59,7 @@ export default function NameSelect () {
   /* eslint-disable no-unused-vars */
   const [socket, setSocket] = useGlobalSlice('socket')
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
-  const [language, setLanguage] = useGlobalSlice('language')
-  const [translations, setTranslations] = useGlobalSlice('translations')
+  const [language, setLanguage, getTranslation] = useTranslations()
 
   /* eslint-enable no-unused-vars */
   const nameFromLS = localStorage.getItem(config.NAME_KEY) || ''
@@ -88,19 +87,6 @@ export default function NameSelect () {
       })
     })
   }
-
-  useEffect(() => {
-    if(language) {
-      fetchTranslation(language.value).then(translation => {
-        if(translation) {
-          localStorage.setItem(config.LANGUAGE_KEY, JSON.stringify(language))
-          setTranslations(translation);
-        }
-      })
-    }
-    // eslint-disable-next-line
-  }, [language])
-
   useEffect(() => {
     if (nameFromLS) {
       connect(nameFromLS)
@@ -130,7 +116,7 @@ export default function NameSelect () {
     <NameSelectStyle className="name-select">
       <Header />
       <form className="name-form" onSubmit={handleSubmit}>
-        <h2><Localise node="views.name_select.header" /></h2>
+        <h2>  {getTranslation("views.name_select.header")}</h2>
         <div className="input-group">
           <Input
             ref={inputRef}
@@ -139,11 +125,11 @@ export default function NameSelect () {
             name="name"
             value={name}
             onChange={ev => setName(ev.target.value.trim())}
-            placeholder={parseTranslation("views.name_select.input_name_placeholder", null, translations)} />
-          <Button type="submit"><Localise node="buttons.join" /></Button>
+            placeholder={getTranslation("views.name_select.input_name_placeholder", null)} />
+          <Button type="submit">  {getTranslation("buttons.join")}</Button>
         </div>
         <div className="input-block">
-          <label id="deck-select-label"><Localise node="general.language" /></label>
+          <label id="deck-select-label">  {getTranslation("general.language")}</label>
           <Select
               required
               value={language}

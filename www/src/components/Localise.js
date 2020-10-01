@@ -1,5 +1,6 @@
-import React from 'react';
+import {useEffect} from 'react';
 import useGlobalSlice from '../services/useGlobalSlice'
+import config from "../config";
 
 const nodeReducer = (object, key) => object[key] || '';
 
@@ -22,28 +23,65 @@ const replaceVariables = (translation, variables) => {
   return replaced;
 };
 
-export const parseTranslation = (nodeString, variables, translations) => {
+const parseTranslation = (nodeString, variables, translations) => {
   let translation = getTranslation(nodeString, translations);
   translation = replaceVariables(translation, variables);
   return translation;
-};
-
-const Localised = React.memo(({node, variables, translations, dangerouslySetInnerHTML}) => {
-  const translation = parseTranslation(node, variables, translations);
-  if (!dangerouslySetInnerHTML) {
-    return <React.Fragment>{translation}</React.Fragment>;
-  }
-  return <span dangerouslySetInnerHTML={{__html: translation}}/>;
-});
-
-export default function Localise({node, variables, dangerouslySetInnerHTML = false}) {
-  const [translations] = useGlobalSlice('translations')
-  return <Localised node={node} variables={variables} translations={translations}
-                    dangerouslySetInnerHTML={dangerouslySetInnerHTML}/>
 };
 
 export async function fetchTranslation(langCode = 'es') {
   let response = await fetch(`${process.env.PUBLIC_URL}/locales/${langCode}.json`)
   if (response) return await response.json();
   return {}
+}
+
+function getLanguage(langCode) {
+  const {availableLanguages} = config;
+  return availableLanguages.find(lang => lang.value === langCode)
+}
+
+function getFallbackLanguage() {
+  const navigatorLanguage = window.navigator.language.substr(0, 2);
+  let fallbackLanguage = getLanguage(navigatorLanguage) || config.availableLanguages[0];
+
+  try {
+    const languageFromLS = localStorage.getItem(config.LANGUAGE_KEY);
+    return  JSON.parse(languageFromLS) || fallbackLanguage;
+  } catch (ignore) {
+    return fallbackLanguage;
+  }
+}
+
+export function useTranslations() {
+  const [translations, setTranslations] = useGlobalSlice('translations')
+  const [language, setLanguage] = useGlobalSlice('language')
+
+  async function updateLanguage(language) {
+    try {
+      const translation = await fetchTranslation(language.value);
+      localStorage.setItem(config.LANGUAGE_KEY, JSON.stringify(language))
+      setTranslations(translation);
+    } catch (error) {
+      console.error('Error fetching translations:', error);
+      setTranslations({});
+    }
+  }
+
+  function getTranslation(nodeString, variables) {
+    return parseTranslation(nodeString, variables, translations())
+  }
+
+  useEffect(() => {
+    if (language) {
+      updateLanguage(language)
+    }
+    // eslint-disable-next-line
+  }, [language])
+
+  useEffect(() => {
+    setLanguage(getFallbackLanguage());
+    // eslint-disable-next-line
+  }, [])
+
+  return [language, setLanguage, translations, getTranslation]
 }

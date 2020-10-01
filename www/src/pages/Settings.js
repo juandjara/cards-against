@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import styled from 'styled-components'
 import Button from '../components/Button'
 import Input from '../components/Input'
@@ -10,7 +10,7 @@ import BlackIconCards from '../components/icons/IconBlackCards'
 import IconArrowLeft from '../components/icons/IconArrowLeft'
 import IconEdit from '../components/icons/IconEdit'
 import IconDoorExit from '../components/icons/IconDoorExit'
-import Localise, {fetchTranslation} from "../components/Localise";
+import {useTranslations} from "../components/Localise";
 import Select from "react-select";
 import config from "../config";
 
@@ -183,9 +183,7 @@ export default function Settings () {
   }))
   const [socket] = useGlobalSlice('socket')
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
-  const [language, setLanguage] = useGlobalSlice('language')
-  // eslint-disable-next-line
-  const [translations, setTranslations] = useGlobalSlice('translations')
+  const [language, setLanguage, getTranslation] = useTranslations()
   const [username, setUsername] = useState(currentUser.name)
   const [editMode, setEditMode] = useState(false)
 
@@ -202,43 +200,31 @@ export default function Settings () {
     navigate('/')
   }
 
-  useEffect(() => {
-    if(language) {
-      fetchTranslation(language.value).then(translation => {
-        if(translation) {
-          localStorage.setItem(config.LANGUAGE_KEY, JSON.stringify(language))
-          setTranslations(translation);
-        }
-      })
-    }
-    // eslint-disable-next-line
-  }, [language])
-
   return (
     <SettingsStyles className="deck-list">
       <button onClick={() => window.history.back()} className="button-link back">
         <IconArrowLeft width="20" height="20" />
-        <span><Localise node="buttons.back" /></span>
+        <span>  {getTranslation("buttons.back")}</span>
       </button>
-      <h2><Localise node="views.settings.title" /></h2>
+      <h2>  {getTranslation("views.settings.title")}</h2>
       <section>
-        <h3><Localise node="views.settings.player_name" /></h3>
+        <h3>  {getTranslation("views.settings.player_name")}</h3>
         {editMode ? (
           <div className="edit-username">
             <Input value={username} onChange={ev => setUsername(ev.target.value)} />
-            <Button onClick={editUsername}><Localise node="buttons.save" /></Button>
-            <Button onClick={() => setEditMode(false)} className="cancel-btn"><Localise node="buttons.cancel" /></Button>
+            <Button onClick={editUsername}>  {getTranslation("buttons.save")}</Button>
+            <Button onClick={() => setEditMode(false)} className="cancel-btn">  {getTranslation("buttons.cancel")}</Button>
           </div>
         ) : (
           <div className="username">
             <p className="pill">{currentUser.name}</p>
             <button className="button-link" onClick={() => setEditMode(true)}>
               <IconEdit />
-              <span><Localise node="buttons.edit" /></span>
+              <span>  {getTranslation("buttons.edit")}</span>
             </button>
           </div>
         )}
-          <h3 id="deck-select-label"><Localise node="general.language" /></h3>
+          <h3 id="deck-select-label">  {getTranslation("general.language")}</h3>
           <Select
             required
             value={language}
@@ -247,26 +233,26 @@ export default function Settings () {
             options={availableLanguages} />
       </section>
       <section>
-        <h3><Localise node="views.settings.game_list" /></h3>
+        <h3>  {getTranslation("views.settings.game_list")}</h3>
         {currentUser.game ? (
           <div className="game-id-wrapper">
             <p className="game-id">{currentUser.game}</p>
             <button className="button-link" onClick={leaveGame}>
               <IconDoorExit />
-              <span><Localise node="views.settings.leave_game" /></span>
+              <span>  {getTranslation("views.settings.leave_game")}</span>
             </button>
           </div>
         ) : (
-          <p><Localise node="views.settings.no_games" /></p>
+          <p>  {getTranslation("views.settings.no_games")}</p>
         )}
       </section>
       <section>
-        <h3><Localise node="views.settings.deck_list" /></h3>
+        <h3>  {getTranslation("views.settings.deck_list")}</h3>
         <Link to="/decks/new">
-          <Button><Localise node="buttons.new_deck" /></Button>
+          <Button>  {getTranslation("buttons.new_deck")}</Button>
         </Link>
         {decks.length === 0 ? (
-          <p className="no-data"><Localise node="views.settings.no_decks" /></p>
+          <p className="no-data">  {getTranslation("views.settings.no_decks")}</p>
         ) : (
           <ul>
             {decks.map(d => (
