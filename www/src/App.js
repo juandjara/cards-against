@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router } from '@reach/router'
+import {Router} from '@reach/router'
 import PrivateRoute from './components/PrivateRoute'
 import Main from './pages/Main'
 import Home from './pages/Home'
@@ -9,6 +9,8 @@ import Game from './pages/Game'
 import NewGame from './pages/NewGame'
 import WaitRoom from './pages/WaitRoom'
 import styled from 'styled-components'
+import {useTranslations} from "./components/Localise";
+import Spinner from "./components/Spinner";
 
 const StyledRoot = styled(Router)`
   min-height: 100vh;
@@ -23,16 +25,28 @@ const StyledRoot = styled(Router)`
   }
 `
 
+const FullScreen = styled.div`
+position: absolute;
+width: 100%;
+height: 100%;
+`
+
 function App() {
+  const {translations} = useTranslations()
+
+  if (!translations) {
+    return <FullScreen className="fullscreen"><Spinner/></FullScreen>;
+  }
+
   return (
     <StyledRoot className="router">
       <PrivateRoute as={Main} path="/">
-        <Home default />
-        <Settings path="settings" />
-        <DeckEdit path="decks/:deckid" />
-        <NewGame path="newgame" />
-        <WaitRoom path="wait/:gameId" />
-        <Game path="game/:gameId" />
+        <Home default/>
+        <Settings path="settings"/>
+        <DeckEdit path="decks/:deckid"/>
+        <NewGame path="newgame"/>
+        <WaitRoom path="wait/:gameId"/>
+        <Game path="game/:gameId"/>
       </PrivateRoute>
     </StyledRoot>
   );

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import InputStyles from '../Input'
 import Button from '../Button'
 import styled from 'styled-components'
+import  {useTranslations} from "../Localise";
 
 const DeckFormStyles = styled.form`
   label {
@@ -39,6 +40,7 @@ const DeckFormStyles = styled.form`
 export default function NewDeckForm ({ deck = {}, onSubmit }) {
   const [name, setName] = useState(deck.name || '')
   const [description, setDescription] = useState(deck.description || '')
+  const {getTranslation} = useTranslations()
   function handleSubmit (ev) {
     ev.preventDefault()
     onSubmit({ name, description })
@@ -46,26 +48,26 @@ export default function NewDeckForm ({ deck = {}, onSubmit }) {
 
   return (
     <DeckFormStyles className="new-deck-form" onSubmit={handleSubmit}>
-      <h2>Edición de mazo</h2>
-      <label htmlFor="deckName">Nombre</label>
+      <h2>  {getTranslation("views.deck_manager.title")}</h2>
+      <label htmlFor="deckName">{getTranslation("views.deck_manager.name")}</label>
       <InputStyles
         required
         type="text"
         name="deckName"
         value={name}
         onChange={ev => setName(ev.target.value)}
-        placeholder="Nombre del mazo" />
-      <label htmlFor="deckDescription">Descripci&oacute;n</label>
+        placeholder={getTranslation("views.deck_manager.name_placeholder", undefined)} />
+      <label htmlFor="deckDescription">{getTranslation("views.deck_manager.description")}</label>
       <InputStyles
         as="textarea"
         name="deckDescription"
         value={description}
         onChange={ev => setDescription(ev.target.value)}
-        placeholder="Descripcion del mazo" />
-      <Button>Guardar</Button>
+        placeholder={getTranslation("views.deck_manager.description_placeholder", undefined)} />
+      <Button>{getTranslation("buttons.save")}</Button>
       <Button className="cancel-btn"
         onClick={() => window.history.back()}
-        type="button">Cancelar</Button>
+        type="button">{getTranslation("buttons.cancel")}</Button>
     </DeckFormStyles>
   )
 }

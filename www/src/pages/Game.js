@@ -19,6 +19,8 @@ import { polyfill } from 'mobile-drag-drop'
 import { scrollBehaviourDragImageTranslateOverride } from 'mobile-drag-drop/scroll-behaviour'
 import 'mobile-drag-drop/default.css'
 import PlayerModal from '../components/PlayerModal'
+import Loading from "../components/Loading";
+import {useTranslations} from "../components/Localise";
 
 polyfill({
   dragImageTranslateOverride: scrollBehaviourDragImageTranslateOverride,
@@ -208,6 +210,7 @@ export default function Game ({ navigate, gameId }) {
   const [activeSendBtn, setActiveSendBtn] = useState(null)
   const [cardPair, setCardPair] = useState(EMPTY_PAIR_DATA)
   const [selectedPlayerModal, setSelectedPlayerModal] = useState(null)
+  const {getTranslation} = useTranslations()
 
   const playerData = (game && game.players.find(p => p.id === currentUser.id)) || { cards: [] }
   const blackCard = game && game.round.cards.black
@@ -218,7 +221,7 @@ export default function Game ({ navigate, gameId }) {
       return { owner: key, ...(value || {}) }
     })
     .filter(c => c.owner !== game.round.reader)
-  
+
   const numCardsReady = cardsInGame.filter(c => c.id).length
   const allCardsReady = cardsInGame.length && cardsInGame.length === numCardsReady
   const cardAlreadySent = cardsInGame.some(c => c.id && c.owner === currentUser.id)
@@ -291,7 +294,7 @@ export default function Game ({ navigate, gameId }) {
     ev.dataTransfer.dropEffect = 'move'
     return false
   }
-  
+
   function onDrop (ev) {
     ev.currentTarget.classList.remove('drag')
     const cardId = ev.dataTransfer.getData('text/plain')
@@ -346,10 +349,10 @@ export default function Game ({ navigate, gameId }) {
   if (!loading && !game) {
     return (
       <GameStyles className="game">
-        <h2 className="heading center">Ninguna partida activa con el c&oacute;digo <strong>{gameId}</strong></h2>
+        <h2 className="heading center" dangerouslySetInnerHTML={{__html: getTranslation("error.no_game_code", {code: gameId})}}/>
         <Link to="/" className="back">
           <IconArrowLeft width="20" height="20" />
-          <span>Volver al men&uacute; principal</span>
+          <span>{getTranslation("buttons.back_to_main")}</span>
         </Link>
       </GameStyles>
     )
@@ -358,7 +361,7 @@ export default function Game ({ navigate, gameId }) {
   if (loading || !blackCard) {
     return (
       <GameStyles className="game">
-        <h2 className="heading">Cargando...</h2>
+        <Loading className="heading" />
       </GameStyles>
     )
   }
@@ -380,7 +383,7 @@ export default function Game ({ navigate, gameId }) {
           {blackCard.answers > 1 && (<div className="answers">{blackCard.answers}</div>)}
         </CardStyles>
         <div className="block players">
-          <p className="label">Jugadores</p>
+          <p className="label">{getTranslation("general.players")}</p>
           <ul>
             {game.players.map(p => (
               <Player key={p.id} as="li"
@@ -399,15 +402,15 @@ export default function Game ({ navigate, gameId }) {
         onDragOver={onDragOver}
         onDrop={onDrop}>
         <header className="heading-small center">
-          <p className="title">Cartas en juego</p>
+          <p className="title">{getTranslation("views.game.ingame_cards")}</p>
           <p className="subtitle">
             {allCardsReady ? (
               <>
-                <IconBlackCards/> <strong>Juez</strong>, revela las cartas y haz tu elecci&oacute;n
+                <IconBlackCards/> <span dangerouslySetInnerHTML={{__html: getTranslation("views.game.phase_judge")}}/>
               </>
             ) : (
               <>
-                <IconWhiteCards /> <strong>Jugadores</strong>, enviad vuestras cartas
+                <IconWhiteCards /> <span dangerouslySetInnerHTML={{__html: getTranslation("views.game.phase_play")}}/>
               </>
             )}
           </p>
@@ -433,8 +436,8 @@ export default function Game ({ navigate, gameId }) {
           </ul>
         ) : (
           <CardStyles className="card card-counter">
-            <strong>{numCardsReady} / {cardsInGame.length}</strong>
-            <span>cartas enviadas</span>
+            <div>{getTranslation("views.game.sent_cards.plural")}</div>
+            <strong>{getTranslation("views.game.card_counter", {ready: numCardsReady, total: cardsInGame.length})}</strong>
             {cardsInGame.filter(c => c.id).map(c => (
               <CardStyles key={c.id} className="card hidden-card slide-in"></CardStyles>
             ))}
@@ -443,13 +446,13 @@ export default function Game ({ navigate, gameId }) {
       </section>
       <section className={classnames('player-hand', { disabled: disableHand })}>
         <header className="heading-small center">
-          <p className="title">Cartas en tu mano</p>
+          <p className="title">{getTranslation("views.game.your_hand")}</p>
           <p className="subtitle">
             {playerIsReader
-              ? 'En esta ronda no envias cartas, eres quien las juzga'
+              ? getTranslation("views.game.not_playing")
               : cardAlreadySent
-                ? 'Cartas enviadas'
-                : `Escoge ${blackCard.answers} carta${blackCard.answers === 1 ? '' : 's'}`}
+                ? getTranslation(`views.game.sent_cards.${blackCard.answers === 1 ? 'singular' : 'plural'}`)
+                : getTranslation(`views.game.choose_cards.${blackCard.answers === 1 ? 'singular' : 'plural'}`, {count: blackCard.answers})}
           </p>
         </header>
         <ul className="card-list">
@@ -463,7 +466,7 @@ export default function Game ({ navigate, gameId }) {
               <p>{c.text}</p>
               <Button
                 onClick={() => playWhiteCard(c.id)}
-                className={classnames('send-btn', { show: activeSendBtn === c.id })}>Enviar</Button>
+                className={classnames('send-btn', { show: activeSendBtn === c.id })}>{getTranslation("buttons.send")}</Button>
             </CardStyles>
           ))}
         </ul>

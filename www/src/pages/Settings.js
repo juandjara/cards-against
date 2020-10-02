@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import styled from 'styled-components'
 import Button from '../components/Button'
 import Input from '../components/Input'
@@ -10,6 +10,9 @@ import BlackIconCards from '../components/icons/IconBlackCards'
 import IconArrowLeft from '../components/icons/IconArrowLeft'
 import IconEdit from '../components/icons/IconEdit'
 import IconDoorExit from '../components/icons/IconDoorExit'
+import {useTranslations} from "../components/Localise";
+import Select from "react-select";
+import config from "../config";
 
 const SettingsStyles = styled.div`
   margin-top: 1.5rem;
@@ -77,7 +80,11 @@ const SettingsStyles = styled.div`
     max-width: 215px;
     height: 36px;
   }
-
+  
+  .select-container {
+    max-width: 240px;
+  }
+  
   @media (max-width: 45rem) {
     .edit-username {
       display: block;
@@ -176,8 +183,11 @@ export default function Settings () {
   }))
   const [socket] = useGlobalSlice('socket')
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
+  const {language, setLanguage, getTranslation} = useTranslations()
   const [username, setUsername] = useState(currentUser.name)
   const [editMode, setEditMode] = useState(false)
+
+  const {availableLanguages} = config
 
   function editUsername () {
     setCurrentUser({ ...currentUser, name: username })
@@ -194,48 +204,56 @@ export default function Settings () {
     <SettingsStyles className="deck-list">
       <button onClick={() => window.history.back()} className="button-link back">
         <IconArrowLeft width="20" height="20" />
-        <span>Volver</span>
+        <span>{getTranslation("buttons.back")}</span>
       </button>
-      <h2>Ajustes</h2>
+      <h2>{getTranslation("views.settings.title")}</h2>
       <section>
-        <h3>Nombre de jugador</h3>
+        <h3>{getTranslation("views.settings.player_name")}</h3>
         {editMode ? (
           <div className="edit-username">
             <Input value={username} onChange={ev => setUsername(ev.target.value)} />
-            <Button onClick={editUsername}>Guardar</Button>
-            <Button onClick={() => setEditMode(false)} className="cancel-btn">Cancelar</Button>
+            <Button onClick={editUsername}>{getTranslation("buttons.save")}</Button>
+            <Button onClick={() => setEditMode(false)} className="cancel-btn">  {getTranslation("buttons.cancel")}</Button>
           </div>
         ) : (
           <div className="username">
             <p className="pill">{currentUser.name}</p>
             <button className="button-link" onClick={() => setEditMode(true)}>
               <IconEdit />
-              <span>Editar</span>
+              <span>  {getTranslation("buttons.edit")}</span>
             </button>
           </div>
         )}
+          <h3 id="deck-select-label">  {getTranslation("general.language")}</h3>
+          <Select
+            required
+            value={language}
+            onChange={setLanguage}
+            placeholder={getTranslation("buttons.select")}
+            className="select-container"
+            options={availableLanguages} />
       </section>
       <section>
-        <h3>Partida</h3>
+        <h3>{getTranslation("views.settings.game_list")}</h3>
         {currentUser.game ? (
           <div className="game-id-wrapper">
             <p className="game-id">{currentUser.game}</p>
             <button className="button-link" onClick={leaveGame}>
               <IconDoorExit />
-              <span>Abandonar partida</span>
+              <span>{getTranslation("views.settings.leave_game")}</span>
             </button>
           </div>
         ) : (
-          <p>Ninguna partida comenzada</p>
+          <p>{getTranslation("views.settings.no_games")}</p>
         )}
       </section>
       <section>
-        <h3>Mazos</h3>
+        <h3>{getTranslation("views.settings.deck_list")}</h3>
         <Link to="/decks/new">
-          <Button>Crear mazo</Button>
+          <Button>{getTranslation("buttons.new_deck")}</Button>
         </Link>
         {decks.length === 0 ? (
-          <p className="no-data">Todavia no has guardado ningún mazo</p>
+          <p className="no-data">{getTranslation("views.settings.no_decks")}</p>
         ) : (
           <ul>
             {decks.map(d => (

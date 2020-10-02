@@ -1,0 +1,112 @@
+{
+  "general": {
+    "app_name": "Cartas contra la web",
+    "loading": "Cargando",
+    "language": "Idioma",
+    "cards": "Cartas",
+    "questions": "Preguntas",
+    "answers": "Respuestas",
+    "n_questions": "{{N}} Preguntas",
+    "n_answers": "{{N}} Respuestas",
+    "players": "Jugadores"
+  },
+  "buttons": {
+    "join": "Entrar",
+    "new_game": "Crear partida",
+    "new_deck": "Nuevo mazo",
+    "new_card": "Nueva carta",
+    "edit": "Editar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "back": "Volver",
+    "show": "Mostrar",
+    "hide": "Ocultar",
+    "send": "Enviar",
+    "show_cards": "Mostrar cartas",
+    "hide_cards": "Ocultar cartas",
+    "back_to_main": "Volver al menú principal",
+    "select": "Seleccionar...",
+    "start": "Empezar",
+    "dont_show_again": "No volver a mostrar",
+    "ok": "Vale"
+  },
+  "error": {
+    "no_game_code": "No hay ninguna partida activa con el código <strong>{{code}}</strong>"
+  },
+  "rules": {
+    "last_round_winner": "El ganador de la ultima ronda",
+    "next_in_list": "El siguiente jugador de la lista"
+  },
+  "decks": {
+    "groups": {
+      "original": "Mazos predefinidos",
+      "custom": "Mis mazos"
+    }
+  },
+  "views": {
+    "name_select": {
+      "header": "Hola, ¿cómo te llamas?",
+      "input_name_placeholder": "Introduce tu nombre"
+    },
+    "home": {
+      "join": "Unirse a partida",
+      "create": "Crear partida",
+      "code_input": "Introduce el código",
+      "leave": "Abandonar partida",
+      "continue": "Continuar partida"
+    },
+    "new_game": {
+      "title": "Nueva partida",
+      "choose_judge": "¿Quién será El Juez de las Cartas en cada ronda?",
+      "choose_deck": "Mazo de Cartas"
+    },
+    "settings": {
+      "title": "Ajustes",
+      "player_name": "Nombre del jugador",
+      "game_list": "Partida",
+      "leave_game": "Abandonar partida",
+      "no_games": "Ninguna partida comenzada",
+      "deck_list": "Mazos",
+      "no_decks": "Todavía no has guardado ningún mazo"
+    },
+    "deck_manager": {
+      "title": "Edición de mazo",
+      "name": "Nombre",
+      "name_placeholder": "Nombre del mazo",
+      "description": "Descripción",
+      "description_placeholder": "Descripción del mazo"
+    },
+    "card_form": {
+      "default_placeholder": "Texto de la carta",
+      "total_answers": "Nº de Respuestas",
+      "delete_confirm": "¿Seguro que quieres borrar esta carta?"
+    },
+    "wait_room": {
+      "title": "Sala de espera",
+      "game_code": "Código de la partida",
+      "chosen_deck": "Mazo de cartas",
+      "player_rotation": "Rotación del Juez"
+    },
+    "game": {
+      "ingame_cards": "Cartas en juego",
+      "phase_judge": "<strong>Juez</strong>, revela las cartas y haz tu elección",
+      "phase_play": "<strong>Jugadores</strong>, enviad vuestras cartas",
+      "card_counter": "{{ready}} / {{total}}",
+      "your_hand": "Cartas en tu mano",
+      "not_playing": "En esta ronda no envias cartas, eres quien las juzga",
+      "choose_cards": {
+        "singular": "Escoge {{count}} carta",
+        "plural": "Escoge {{count}} cartas"
+      },
+      "sent_cards": {
+        "singular": "Carta enviada",
+        "plural": "Cartas enviadas"
+      }
+    },
+    "tutorial": {
+      "title": "¿Cómo se juega?",
+      "game_guide": "<p>Los jugadores envían sus caratas arrastrándolas a la zona central o pulsando sobre ellas.</p><p>Cuando todos los jugadores hayan enviado sus cartas, el Juez las va revelando una a una pulsando sobre ellas.</p><p>Cuando todas las cartas estén reveladas, el Juez deberá escoger la carta ganadora. El jugador que haya enviado la carta ganadora será recompensado con un punto.</p><p>Para el caso de una carta con 2 respuestas, la carta que envíes primero será la primera que se lea.</p>"
+    }
+  }
+}

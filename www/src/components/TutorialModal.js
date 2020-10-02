@@ -4,6 +4,7 @@ import Button from './Button'
 import { Dialog } from '@reach/dialog'
 import '@reach/dialog/styles.css'
 import styled from 'styled-components'
+import {useTranslations} from "./Localise";
 
 const TutorialStyles = styled(Dialog)`
   border-radius: 8px;
@@ -45,6 +46,7 @@ export default function TutorialModal () {
   const [flag, setFlag] = useTutorial()
   const [isOpen, setIsOpen] = useState(true)
   const [dontshow, setDontshow] = useState(false)
+  const {getTranslation} = useTranslations();
   const buttonRef = useRef()
 
   function close () {
@@ -58,28 +60,18 @@ export default function TutorialModal () {
     return null
   }
 
+  const title = getTranslation("view.tutorial.title")
+
   return (
-    <TutorialStyles isOpen={isOpen} aria-label="¿Como se juega?"
+    <TutorialStyles isOpen={isOpen} aria-label={title}
       onDismiss={close} initialFocusRef={buttonRef}>
-      <h3>¿Como se juega?</h3>
-      <p>
-        Los jugadores envian sus cartas arrastrandolas a la zona central o pulsando sobre ellas.
-      </p>
-      <p>
-        Cuando todos los jugadores hayan enviado sus cartas, el Juez las va revelando una a una pulsando sobre ellas
-      </p>
-      <p>
-        Cuando todas las cartas estén reveladas, el Juez deberá escoger la carta ganadora.
-        El jugador que haya enviado la carta ganadora sera recompensado con un punto.
-      </p>
-      <p>
-        Para el caso de una carta con 2 respuestas, la carta que envias primero es la que se lee primero.
-      </p>
+      <h3>{title}</h3>
+      <div className="tutorial-guide" dangerouslySetInnerHTML={{__html: getTranslation("views.tutorial.game_guide")}}/>
       <label className="checkbox">
         <input type="checkbox" checked={dontshow} onChange={ev => setDontshow(ev.target.checked)} />
-        <span>No volver a mostrar</span>
+        <span>{getTranslation("buttons.dont_show_again")}</span>
       </label>
-      <Button ref={buttonRef} onClick={close}>Vale</Button>
+      <Button ref={buttonRef} onClick={close}>{getTranslation("buttons.ok")}</Button>
     </TutorialStyles>
   )
 }

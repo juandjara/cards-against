@@ -7,6 +7,7 @@ import Player from '../components/Player'
 import Button from '../components/Button'
 
 import IconArrowLeft from '../components/icons/IconArrowLeft'
+import {useTranslations} from "../components/Localise";
 
 const WaitRoomStyles = styled.div`
   padding: 1rem 0;
@@ -46,12 +47,13 @@ function Loading () {
 }
 
 function NoGame ({ id }) {
+  const {getTranslation} = useTranslations()
   return (
     <WaitRoomStyles className="wait-room no-game">
-      <h2 className="heading center">Ninguna partida activa con el c&oacute;digo <strong>{id}</strong></h2>
+      <h2 className="heading center" dangerouslySetInnerHTML={{__html: getTranslation("error.no_game_code", {code: id})}}/>
       <Link to="/" className="back">
         <IconArrowLeft width="20" height="20" />
-        <span>Volver al men&uacute; principal</span>
+        <span>{getTranslation("buttons.back_to_main")}</span>
       </Link>
     </WaitRoomStyles>
   )
@@ -62,6 +64,7 @@ export default function WaitRoom ({ navigate, gameId }) {
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
   const [game, setGame] = useState(null)
   const [loading, setLoading] = useState(true)
+  const {getTranslation} = useTranslations()
   const rotation = game && config.rotationOptions.find(opt => opt.value === game.rotation)
   const playerIsReader = game && game.round.reader === currentUser.id
 
@@ -102,21 +105,21 @@ export default function WaitRoom ({ navigate, gameId }) {
 
   return (
     <WaitRoomStyles>
-      <h2 className="heading">Sala de espera</h2>
+      <h2 className="heading">{getTranslation("views.wait_room.title")}</h2>
       <section>
-        <p className="label">Código de la partida</p>
+        <p className="label">{getTranslation("views.wait_room.game_code")}</p>
         <p className="game-id">{gameId}</p>
       </section>
       <section>
-        <p className="label">Mazo de cartas</p>
+        <p className="label">{getTranslation("views.wait_room.chosen_deck")}</p>
         <p className="value">{game.deck.name}</p>
       </section>
       <section>
-        <p className="label">Rotación del Juez</p>
-        <p className="value">{rotation.label}</p>
+        <p className="label">{getTranslation("views.wait_room.player_rotation")}</p>
+        <p className="value">{getTranslation(rotation.label)}</p>
       </section>
       <section>
-        <p className="label">Jugadores</p>
+        <p className="label">{getTranslation("general.players")}</p>
         <ul className="players">
           {game.players.map(p => (
             <Player as="li" key={p.id} player={p} readerId={game.round.reader} />
@@ -124,7 +127,7 @@ export default function WaitRoom ({ navigate, gameId }) {
         </ul>
       </section>
       {playerIsReader && (
-        <Button className="big" onClick={() => startGame(false)}>Comenzar</Button>
+        <Button className="big" onClick={() => startGame(false)}>{getTranslation("buttons.start")}</Button>
       )}
     </WaitRoomStyles>
   )
