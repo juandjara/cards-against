@@ -124,7 +124,7 @@ export default function Home ({ navigate }) {
   const [currentUser, setCurrentUser] = useGlobalSlice('currentUser')
 
   function goTo (id) {
-    navigate(`/config/${id}`)
+    navigate(`/game/${id}`)
   }
 
   function enterGame (ev) {
@@ -161,7 +161,7 @@ export default function Home ({ navigate }) {
         <div className="btn-group">
           <CardFlip rotated={isRotated}>
             <CardStyles as="button"
-              onClick={() => setIsRotated(true)} 
+              onClick={() => setIsRotated(true)}
               className="card-flip-elem card-flip-front card white scale">
               Unirse a una partida
             </CardStyles>
@@ -170,7 +170,7 @@ export default function Home ({ navigate }) {
               className="card-flip-elem card-flip-back card white">
               <label>Introduce el código</label>
               <div className="input-group">
-                <InputStyles 
+                <InputStyles
                   type="text"
                   value={code}
                   maxLength="4"
