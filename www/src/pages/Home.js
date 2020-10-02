@@ -126,7 +126,7 @@ export default function Home ({ navigate }) {
   const {getTranslation} = useTranslations()
 
   function goTo (id) {
-    navigate(`/config/${id}`)
+    navigate(`/game/${id}`)
   }
 
   function enterGame (ev) {
@@ -151,12 +151,12 @@ export default function Home ({ navigate }) {
           <CardStyles as="button"
             onClick={leaveGame}
             className="white scale">
-            Abandonar partida
+            {getTranslation("views.home.leave")}
           </CardStyles>
           <CardStyles as="button"
             onClick={continueGame}
             className="black scale">
-            Continuar partida
+            {getTranslation("views.home.continue")}
           </CardStyles>
         </div>
       ) : (

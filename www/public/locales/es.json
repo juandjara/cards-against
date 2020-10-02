@@ -52,7 +52,9 @@
     "home": {
       "join": "Unirse a partida",
       "create": "Crear partida",
-      "code_input": "Introduce el código"
+      "code_input": "Introduce el código",
+      "leave": "Abandonar partida",
+      "continue": "Continuar partida"
     },
     "new_game": {
       "title": "Nueva partida",

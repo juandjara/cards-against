@@ -52,7 +52,9 @@
     "home": {
       "join": "Join Game",
       "create": "Create Game",
-      "code_input": "Game code"
+      "code_input": "Game code",
+      "abandon": "Leave match",
+      "continue": "Continue game"
     },
     "new_game": {
       "title": "New Game",
