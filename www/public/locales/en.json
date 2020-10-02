@@ -27,7 +27,9 @@
     "hide_cards": "Hide cards",
     "back_to_main": "Go back to main menu",
     "select": "Select...",
-    "start": "Start"
+    "start": "Start",
+    "dont_show_again": "Don't show again",
+    "ok": "Understood"
   },
   "error": {
     "no_game_code": "There is no active match with the code <strong>{{code}}</strong>"
@@ -99,6 +101,10 @@
         "singular": "Card sent",
         "plural": "Cards sent"
       }
+    },
+    "tutorial": {
+      "title": "How do you play?",
+      "game_guide": "<p>Players can send their answers by dragging and dropping the white cards into the center of the game board or clicking them.</p><p>When all of the players have sent their answers, the Judge will reveal them one by one clicking over each card.</p><p>Once all of the sent answers have been shown the Judge shall chose the card he thinks it's the funniest. The player who sent that card will receive one point.</p><p>If it's a multi-answer black card, the chosen answers will be read in the order they were played.</p>"
     }
   }
 }

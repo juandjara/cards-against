@@ -27,7 +27,9 @@
     "hide_cards": "Ocultar cartas",
     "back_to_main": "Volver al menú principal",
     "select": "Seleccionar...",
-    "start": "Empezar"
+    "start": "Empezar",
+    "dont_show_again": "No volver a mostrar",
+    "ok": "Vale"
   },
   "error": {
     "no_game_code": "No hay ninguna partida activa con el código <strong>{{code}}</strong>"
@@ -99,6 +101,10 @@
         "singular": "Carta enviada",
         "plural": "Cartas enviadas"
       }
+    },
+    "tutorial": {
+      "title": "¿Cómo se juega?",
+      "game_guide": "<p>Los jugadores envían sus caratas arrastrándolas a la zona central o pulsando sobre ellas.</p><p>Cuando todos los jugadores hayan enviado sus cartas, el Juez las va revelando una a una pulsando sobre ellas.</p><p>Cuando todas las cartas estén reveladas, el Juez deberá escoger la carta ganadora. El jugador que haya enviado la carta ganadora será recompensado con un punto.</p><p>Para el caso de una carta con 2 respuestas, la carta que envíes primero será la primera que se lea.</p>"
     }
   }
 }
