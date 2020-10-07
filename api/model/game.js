@@ -105,8 +105,8 @@ class Game {
   recoverWhiteCards () {
     const whiteCardsInUse = Object.values(this.round.cards.white).map(c => c.id)
     for (const card of this.deck.cards) {
-      if (card.type === 'white' && c.used && whiteCardsInUse.indexOf(card.id) === -1) {
-        c.used = false
+      if (card.type === 'white' && card.used && whiteCardsInUse.indexOf(card.id) === -1) {
+        card.used = false
       }
     }
     shuffle(this.deck.cards)
