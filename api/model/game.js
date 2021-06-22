@@ -8,7 +8,7 @@ function shuffle(array) {
   }
 }
 
-function createID () {
+function createID() {
   return Math.random()
     .toString(36)
     .toUpperCase()
@@ -17,14 +17,13 @@ function createID () {
 }
 
 class Game {
-  constructor (firstPlayerId) {
-    // TODO: add parameteres for customizing gameover condition
-    // maybe switch first arg to a destructured object?
+  constructor({ deck, rotation, winCondition }) {
     const id = createID()
     const data = {
       id,
-      rotation: 'winner',
-      deck: null,
+      rotation,
+      winCondition,
+      deck,
       players: [],
       shuffled: false,
       finished: false,
@@ -40,15 +39,15 @@ class Game {
       }
     }
     Object.assign(this, data)
-    return this    
+    return this
   }
 
-  edit (data) {
+  edit(data) {
     Object.assign(this, data)
     return this
   }
 
-  addPlayer (player) {
+  addPlayer(player) {
     this.players.push({
       id: player.id,
       name: player.name,
@@ -59,7 +58,7 @@ class Game {
     return this
   }
 
-  removePlayer (playerId) {
+  removePlayer(playerId) {
     this.players = this.players.filter(p => p.id !== playerId)
     delete this.round.cards.white[playerId]
     if (this.players.length && this.round.reader === playerId) {
@@ -68,13 +67,13 @@ class Game {
     return this
   }
 
-  shuffle () {
+  shuffle() {
     shuffle(this.deck.cards)
     this.shuffled = true
     return this
   }
 
-  drawBlackCard () {
+  drawBlackCard() {
     const card = this.deck.cards.find(c => c.type === 'black' && !c.used)
     if (!card) {
       return this.gameOver()
@@ -84,7 +83,7 @@ class Game {
     return this
   }
 
-  drawWhiteCards (playerId) {
+  drawWhiteCards(playerId) {
     const availableCards = this.deck.cards.filter(c => c.type === 'white' && !c.used)
     if (availableCards.length < this.cardsPerHand) {
       this.recoverWhiteCards()
@@ -102,7 +101,7 @@ class Game {
     return this
   }
 
-  recoverWhiteCards () {
+  recoverWhiteCards() {
     const whiteCardsInUse = Object.values(this.round.cards.white).map(c => c.id)
     for (const card of this.deck.cards) {
       if (card.type === 'white' && card.used && whiteCardsInUse.indexOf(card.id) === -1) {
@@ -112,7 +111,7 @@ class Game {
     shuffle(this.deck.cards)
   }
 
-  playWhiteCard (cardId, playerId) {
+  playWhiteCard(cardId, playerId) {
     const player = this.players.find(p => p.id === playerId)
     player.cards = player.cards.filter(c => c.id !== cardId)
     const card = this.deck.cards.find(c => c.id === cardId)
@@ -121,7 +120,7 @@ class Game {
     return this
   }
 
-  revealCard (playerId) {
+  revealCard(playerId) {
     const card = this.round.cards.white[playerId]
     if (!card) {
       return null
@@ -130,7 +129,7 @@ class Game {
     return this
   }
 
-  setRoundWinner (playerId, whiteCardId, blackCardId) {
+  setRoundWinner(playerId, whiteCardId, blackCardId) {
     const player = this.players.find(p => p.id === playerId)
     const cards = {
       white: this.deck.cards.find(c => c.id === whiteCardId),
@@ -150,7 +149,7 @@ class Game {
     return this
   }
 
-  createNewRound (lastWinnerId) {
+  createNewRound(lastWinnerId) {
     this.rotateReader(lastWinnerId)
     this.drawBlackCard()
     for (const player of this.players) {
@@ -158,7 +157,7 @@ class Game {
     }
   }
 
-  rotateReader (lastWinnerId) {
+  rotateReader(lastWinnerId) {
     if (this.rotation === 'winner') {
       this.round.reader = lastWinnerId
     }
@@ -176,7 +175,7 @@ class Game {
     }
   }
 
-  gameOver () {
+  gameOver() {
     this.finished = true
     return this
   }

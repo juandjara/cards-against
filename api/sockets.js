@@ -1,14 +1,14 @@
-module.exports = function (socket, io, db) {
+module.exports = function (socket, io, db) {
   socket.on('user:id-request', (callback) => callback({
     id: socket.id,
     name: socket.handshake.query.name
   }))
 
-  socket.on('game:new', () => {
-    const game = db.createGame(socket.id)
+  socket.on('game:new', (data) => {
+    const game = db.createGame(data)
     io.to(socket.id).emit('game:new', game)
   })
-  
+
   socket.on('game:edit', (data) => {
     const room = `game-${data.id}`
     try {
@@ -20,11 +20,10 @@ module.exports = function (socket, io, db) {
     }
   })
 
-  socket.on('game:join', ({gameId, user}) => {
+  socket.on('game:join', ({ gameId, user }) => {
     const room = `game-${gameId}`
     socket.join(room, () => {
       try {
-        socket.room = room
         const game = db.addPlayer(gameId, user)
         io.to(room).emit('game:edit', game)
       } catch (err) {

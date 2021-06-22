@@ -1,84 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
-
-:root {
-  --colorTop: #1a1e29;
-  --colorHigh: #383d4c;
-  --colorMidHigh: #626775;
-  --colorMedium: #9397a2;
-  --colorModerate: #c9cbd1;
-  --colorLow: #e4e5e8;
-  --colorVeryLow: #f2f2f8;
-
-  --colorPrimary: hsl(211, 81%, 36%);
-
-  --fontDisplay: 'Rubik';
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 body {
   margin: 0;
-  font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: var(--colorHigh);
-  background-color: var(--colorVeryLow);
+  background-color: #616161;
+  color: white;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-}
-
-p {
-  margin: 0;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-a {
-  text-decoration: none;
-}
-
-a:hover, a:focus {
-  text-decoration: underline;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-.heading {
-  font-size: 20px;
-  line-height: 24px;
-  font-weight: 500;
-  margin-top: 8px;
-  margin-bottom: 16px;
-}
-
-.center {
-  text-align: center;
-}
-
-.back {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  margin-bottom: 12px;
-}
-
-.back span {
-  margin-left: 2px;
-}
-
-.back svg .primary {
-  display: none;
 }
