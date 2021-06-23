@@ -1,5 +1,5 @@
 import React from 'react'
-import { Routes as BrowserRoutes, Route } from 'react-router-dom';
+import { Routes as BrowserRoutes, Route } from 'react-router-dom'
 import Home from '@/views/Home'
 import DeckList from '@/views/DeckList'
 import NewGameForm from '@/views/NewGameForm'

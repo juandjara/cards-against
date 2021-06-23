@@ -17,21 +17,21 @@ function createID() {
 }
 
 class Game {
-  constructor({ deck, rotation, winCondition }) {
+  constructor({ deck, rotation, winCondition, maxPoints, maxRounds }) {
     const id = createID()
     const data = {
       id,
+      deck,
       rotation,
       winCondition,
-      deck,
       players: [],
       shuffled: false,
       finished: false,
       cardsPerHand: 5,
-      maxWins: null,
-      maxRounds: null,
+      maxPoints,
+      maxRounds,
       round: {
-        reader: firstPlayerId,
+        reader: null,
         cards: {
           black: null,
           white: {}
@@ -136,7 +136,7 @@ class Game {
       black: this.deck.cards.find(c => c.id === blackCardId)
     }
     player.wins.push(cards)
-    if (this.maxWins && player.wins.length >= this.maxWins) {
+    if (this.maxPoints && player.wins.length >= this.maxPoints) {
       return this.gameOver()
     }
     if (this.maxRounds) {

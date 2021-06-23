@@ -1,15 +1,10 @@
 const Game = require('./game')
 
-class GameError extends Error {
-  constructor (code, msg) {
+class ApiError extends Error {
+  constructor (status, msg) {
     super(msg)
-    this.code = code
+    this.status = status
   }
-}
-
-const ERRORS = {
-  GAME_404: 'GAME_NOT_FOUND',
-  CARD_404: 'CARD_NOT_FOUND'
 }
 
 const db = {
@@ -17,10 +12,10 @@ const db = {
   hasGame (id) {
     return !!this.games[id]
   },
-  createGame (firstPlayerId) {
-    const game = new Game(firstPlayerId)
+  createGame (data) {
+    const game = new Game(data)
     this.games[game.id] = game
-    return this.games[game.id]
+    return game
   },
   shuffleGame (id) {
     const game = this.getGame(id)
@@ -28,7 +23,7 @@ const db = {
   },
   getGame (id) {
     if (!this.hasGame(id)) {
-      throw new GameError(ERRORS.GAME_404, `Game "${id}" not found`)
+      throw new ApiError(404, `Game with ID '${id}' not found`)
     }
     return this.games[id]
   },
@@ -36,22 +31,16 @@ const db = {
     const game = this.getGame(id)
     return game.edit(data)
   },
+  removeGame (game) {
+    delete this.games[game.id]
+  },
   addPlayer (gameId, player) {
     const game = this.getGame(gameId)
     return game.addPlayer(player)
   },
   removePlayer (gameId, playerId) {
     const game = this.getGame(gameId)
-    game.removePlayer(playerId)
-    if (game.players.length == 0) {
-      delete this.games[gameId]
-    }
-    return this.games[gameId]
-  },
-  removePlayerAll (playerId) {
-    for (const key in this.games) {
-      this.removePlayer(key, playerId)
-    }
+    return game.removePlayer(playerId)
   },
   drawBlackCard (gameId) {
     const game = this.getGame(gameId)
@@ -69,7 +58,7 @@ const db = {
     const game = this.getGame(gameId)
     const result = game.revealCard(cardId)
     if (!result) {
-      throw new GameError(ERRORS.CARD_404, `Card for player "${playerId}" not found in the white cards played this round`)
+      throw new ApiError(404, `Card for player "${playerId}" not found in the white cards played this round`)
     }
     return result
   },
@@ -79,4 +68,4 @@ const db = {
   }
 }
 
-module.exports = { db, ERRORS, GameError }
+module.exports = { db, ApiError }

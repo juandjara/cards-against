@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Button from '@/components/Button'
 import { ArrowLeftIcon } from '@heroicons/react/solid'
@@ -6,9 +6,8 @@ import RadioGroup from '@/components/RadioGroup'
 import CheckboxGroup from '@/components/CheckboxGroup'
 import PrimaryButton from '@/components/PrimaryButton'
 import { StackSimple } from 'phosphor-react'
-
-import defaultSet from '@/assets/CAH-es-set.json'
-import gSet from '@/assets/cartas-guardianes.json'
+import { useSocket } from '@/lib/SocketProvider'
+import loadAllDecks from '@/lib/loadAllDecks'
 
 const ROTATION_OPTIONS = [
   {
@@ -16,29 +15,6 @@ const ROTATION_OPTIONS = [
     label: 'El siguiente jugador de la lista (vamos rotando)'
   },
   { value: 'winner', label: 'El ganador de la ultima ronda' }
-]
-
-const DECK_OPTIONS = [
-  {
-    label: (
-      <CheckboxLabel
-        numblack={defaultSet.blackCards.length}
-        numwhite={defaultSet.whiteCards.length}
-        label={defaultSet.name}
-      />
-    ),
-    value: defaultSet.id
-  },
-  {
-    label: (
-      <CheckboxLabel
-        numblack={gSet.blackCards.length}
-        numwhite={gSet.whiteCards.length}
-        label={gSet.name}
-      />
-    ),
-    value: gSet.id
-  }
 ]
 
 function CheckboxLabel({ label, numblack = 5, numwhite = 24 }) {
@@ -69,14 +45,65 @@ function CheckboxLabel({ label, numblack = 5, numwhite = 24 }) {
 
 export default function NewGameForm() {
   const navigate = useNavigate()
+  const socket = useSocket()
   const [rotation, setRotation] = useState('rotation')
   const [winCondition, setWinCondition] = useState('all-cards')
   const [nRounds, setNRounds] = useState(5)
   const [nPoints, setNPoints] = useState(5)
-  const [deck, setDeck] = useState([])
+  const [decks, setDecks] = useState([])
+  const [deckOptions, setDeckOptions] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    loadAllDecks().then((decks) => {
+      const deckOptions = decks.map((deck) => ({
+        ...deck,
+        value: deck.id,
+        label: (
+          <CheckboxLabel
+            numblack={deck.blackCards.length}
+            numwhite={deck.whiteCards.length}
+            label={deck.name}
+          />
+        )
+      }))
+      setDeckOptions(deckOptions)
+    })
+  }, [])
 
   function handleSubmit(ev) {
     ev.preventDefault()
+    setLoading(true)
+
+    const selectedDecks = deckOptions.filter(
+      (deck) => decks.indexOf(deck.id) !== -1
+    )
+
+    const mergedDeck = selectedDecks.reduce(
+      (acum, next) => {
+        return {
+          whiteCards: acum.whiteCards.concat(next.whiteCards),
+          blackCards: acum.blackCards.concat(next.blackCards)
+        }
+      },
+      {
+        blackCards: [],
+        whiteCards: []
+      }
+    )
+
+    socket.emit('game:new', {
+      deck: mergedDeck,
+      rotation,
+      winCondition,
+      maxPoints: nPoints,
+      maxRounds: nRounds
+    })
+
+    socket.once('game:new', (game) => {
+      setLoading(false)
+      navigate(`/join/${game.id}`)
+    })
   }
 
   const winConditionOptions = [
@@ -143,11 +170,13 @@ export default function NewGameForm() {
         <CheckboxGroup
           label="Mazos de cartas"
           className="w-52"
-          options={DECK_OPTIONS}
-          selected={deck}
-          onChange={setDeck}
+          options={deckOptions}
+          selected={decks}
+          onChange={setDecks}
         />
-        <PrimaryButton type="submit">Crear partida</PrimaryButton>
+        <PrimaryButton disabled={loading} type="submit">
+          Crear partida
+        </PrimaryButton>
       </form>
     </main>
   )
