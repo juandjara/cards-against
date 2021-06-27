@@ -8,6 +8,7 @@ import PrimaryButton from '@/components/PrimaryButton'
 import { StackSimple } from 'phosphor-react'
 import { useSocket } from '@/lib/SocketProvider'
 import loadAllDecks from '@/lib/loadAllDecks'
+import Container from '@/components/Container'
 
 const ROTATION_OPTIONS = [
   {
@@ -141,7 +142,7 @@ export default function NewGameForm() {
   ]
 
   return (
-    <main className="max-w-screen-lg mx-auto py-6 px-4">
+    <Container>
       <Button
         padding="p-2"
         className="rounded-full hover:shadow-md"
@@ -178,6 +179,6 @@ export default function NewGameForm() {
           Crear partida
         </PrimaryButton>
       </form>
-    </main>
+    </Container>
   )
 }

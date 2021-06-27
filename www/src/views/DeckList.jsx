@@ -4,12 +4,13 @@ import Button from '@/components/Button'
 import DeckCard from '@/components/DeckCard'
 import { useNavigate } from 'react-router-dom'
 import PrimaryButton from '@/components/PrimaryButton'
+import Container from '@/components/Container'
 
 export default function DeckList() {
   const navigate = useNavigate()
 
   return (
-    <main className="max-w-screen-lg mx-auto py-6 px-4">
+    <Container>
       <Button
         padding="p-2"
         className="rounded-full hover:shadow-md"
@@ -54,6 +55,6 @@ export default function DeckList() {
           numwhite={20}
         />
       </div>
-    </main>
+    </Container>
   )
 }
