@@ -10,6 +10,8 @@ import { useGame, GameLoaderUI } from '@/lib/GameLoader'
 import { useQueryClient } from 'react-query'
 import { editGame } from '@/lib/GameLoader'
 
+const MIN_PLAYERS = 3
+
 export default function JoinGame() {
   const cache = useQueryClient()
   const socket = useSocket()
@@ -88,9 +90,9 @@ function JoinGameUI({ socket, game }) {
         <Players game={game} />
         {playerIsHost ? (
           <div className="flex items-center space-x-3">
-            <PrimaryButton disabled={game.players.length < 3}>Comenzar</PrimaryButton>
-            {game.players.length < 3 && (
-              <p className="text-sm">Se necesita un minimo de 3 jugadores para comenzar una partida</p>
+            <PrimaryButton className="flex-shrink-0" disabled={game.players.length < MIN_PLAYERS}>Comenzar</PrimaryButton>
+            {game.players.length < MIN_PLAYERS && (
+              <p className="text-sm">Se necesita un minimo de {MIN_PLAYERS} jugadores para comenzar una partida</p>
             )}
           </div>
         ) : (

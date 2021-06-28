@@ -10,6 +10,9 @@ import { useSocket } from '@/lib/SocketProvider'
 import loadAllDecks from '@/lib/loadAllDecks'
 import Container from '@/components/Container'
 
+const MIN_BLACK_CARDS = 5
+const MIN_WHITE_CARDS = 20
+
 const ROTATION_OPTIONS = [
   {
     value: 'rotation',
@@ -45,17 +48,6 @@ export default function NewGameForm() {
   const [deckOptions, setDeckOptions] = useState([])
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    loadAllDecks().then((decks) => {
-      const deckOptions = decks.map((deck) => ({
-        ...deck,
-        value: deck.id,
-        label: <CheckboxLabel numblack={deck.blackCards.length} numwhite={deck.whiteCards.length} label={deck.name} />
-      }))
-      setDeckOptions(deckOptions)
-    })
-  }, [])
-
   const mergedDeck = useMemo(() => {
     return deckOptions
       .filter((deck) => deckSelection.indexOf(deck.id) !== -1)
@@ -71,7 +63,20 @@ export default function NewGameForm() {
           whiteCards: []
         }
       )
-  }, [deckOptions])
+  }, [deckOptions, deckSelection])
+
+  const cardsNumOk = mergedDeck.whiteCards.length >= MIN_WHITE_CARDS && mergedDeck.blackCards.length >= MIN_BLACK_CARDS
+
+  useEffect(() => {
+    loadAllDecks().then((decks) => {
+      const deckOptions = decks.map((deck) => ({
+        ...deck,
+        value: deck.id,
+        label: <CheckboxLabel numblack={deck.blackCards.length} numwhite={deck.whiteCards.length} label={deck.name} />
+      }))
+      setDeckOptions(deckOptions)
+    })
+  }, [])
 
   function handleSubmit(ev) {
     ev.preventDefault()
@@ -135,8 +140,7 @@ export default function NewGameForm() {
       >
         <ArrowLeftIcon className="w-5 h-5" />
       </Button>
-      <h2 className="mt-4 text-3xl font-semibold">Nueva partida</h2>
-      <p className="mb-8 text-2xl text-gray-300">ID AX4M</p>
+      <h2 className="mt-4 mb-8 text-3xl font-semibold">Nueva partida</h2>
       <form onSubmit={handleSubmit} className="space-y-8">
         <RadioGroup
           label="¿Como se elige al juez de las cartas?"
@@ -160,10 +164,15 @@ export default function NewGameForm() {
           onChange={setDeckSelection}
         />
         <div className="flex items-center space-x-3">
-          <PrimaryButton disabled={loading} type="submit">
+          <PrimaryButton className="flex-shrink-0" disabled={loading || !cardsNumOk} type="submit">
             Crear partida
           </PrimaryButton>
-          <p>Se necesitan un mínimo de 5 cartas negras y 20 cartas blancas para empezar una partida</p>
+          {cardsNumOk ? null : (
+            <p className="text-sm">
+              Se necesitan un mínimo de {MIN_BLACK_CARDS} cartas negras y {MIN_WHITE_CARDS} cartas blancas para empezar
+              una partida
+            </p>
+          )}
         </div>
       </form>
     </Container>
