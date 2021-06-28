@@ -42,7 +42,7 @@ export default function JoinGame() {
 
   return (
     <GameLoaderUI {...gameQuery}>
-      <JoinGameUI socket={socket} game={game} />
+      {socket && game && <JoinGameUI socket={socket} game={game} />}
     </GameLoaderUI>
   )
 }
