@@ -26,7 +26,7 @@ export function useGame(id) {
   })
   return {
     game: data,
-    loading: isLoading,
+    loading: isLoading || !data,
     error
   }
 }
@@ -41,7 +41,7 @@ export function GameLoaderUI({ game, loading, error, children }) {
     return <ErrorMessage status={error.status} id={game?.id || id} />
   }
 
-  if (loading || !game) {
+  if (loading) {
     return <Loading />
   }
 
