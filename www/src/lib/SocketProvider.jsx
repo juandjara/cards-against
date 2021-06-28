@@ -8,7 +8,16 @@ export function SocketProvider({ children }) {
   const [socket, setSocket] = useState(null)
 
   useEffect(() => {
-    setSocket(io(config.api))
+    if (!socket) {
+      const socket = io(config.api)
+      setSocket(socket)
+    }
+
+    return () => {
+      if (socket) {
+        socket.disconnect()
+      }
+    }
   }, [])
 
   return (
