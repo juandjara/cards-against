@@ -49,7 +49,8 @@ export default function JoinGame() {
 
 function JoinGameUI({ socket, game }) {
   const navigate = useNavigate()
-  const playerIsHost = socket && game && game.players[0] && game.players[0].id === socket.id
+  const playerIsHost =
+    socket && game && game.players[0] && game.players[0].id === socket.id
 
   function copyLink() {
     navigator.clipboard.writeText(window.location.href).then(() => {
@@ -93,7 +94,16 @@ function JoinGameUI({ socket, game }) {
         </div>
         <Players game={game} />
         {playerIsHost ? (
-          <PrimaryButton>Comenzar</PrimaryButton>
+          <div className="flex items-center space-x-3">
+            <PrimaryButton disabled={game.players.length < 3}>
+              Comenzar
+            </PrimaryButton>
+            {game.players.length < 3 && (
+              <p className="text-sm">
+                Se necesita un minimo de 3 jugadores para comenzar una partida
+              </p>
+            )}
+          </div>
         ) : (
           <p>Esperando a que el anfitrión empieze el juego ...</p>
         )}
