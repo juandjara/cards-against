@@ -24,36 +24,11 @@ export default function DeckList() {
         <PrimaryButton>Nuevo mazo</PrimaryButton>
       </div>
       <div className="py-8 flex flex-wrap justify-center items-center">
-        <DeckCard
-          className="pl-4 pr-4 pb-6"
-          name="Mazo 1"
-          numblack={5}
-          numwhite={20}
-        />
-        <DeckCard
-          className="pl-4 pr-4 pb-6"
-          name="Mazo 2"
-          numblack={5}
-          numwhite={20}
-        />
-        <DeckCard
-          className="pl-4 pr-4 pb-6"
-          name="Mazo 3"
-          numblack={5}
-          numwhite={20}
-        />
-        <DeckCard
-          className="pl-4 pr-4 pb-6"
-          name="Mazo 4"
-          numblack={5}
-          numwhite={20}
-        />
-        <DeckCard
-          className="pl-4 pr-4 pb-6"
-          name="Mazo 5"
-          numblack={5}
-          numwhite={20}
-        />
+        <DeckCard className="pl-4 pr-4 pb-6" name="Mazo 1" numblack={5} numwhite={20} />
+        <DeckCard className="pl-4 pr-4 pb-6" name="Mazo 2" numblack={5} numwhite={20} />
+        <DeckCard className="pl-4 pr-4 pb-6" name="Mazo 3" numblack={5} numwhite={20} />
+        <DeckCard className="pl-4 pr-4 pb-6" name="Mazo 4" numblack={5} numwhite={20} />
+        <DeckCard className="pl-4 pr-4 pb-6" name="Mazo 5" numblack={5} numwhite={20} />
       </div>
     </Container>
   )

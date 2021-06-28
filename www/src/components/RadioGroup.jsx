@@ -1,18 +1,9 @@
 import React from 'react'
 
-export default function RadioGroup({
-  label = '',
-  name = '',
-  options,
-  selected,
-  onChange
-}) {
+export default function RadioGroup({ label = '', name = '', options, selected, onChange }) {
   return (
     <div>
-      <label
-        htmlFor={name}
-        className="block ml-1 mb-2 text-sm text-gray-200 font-medium"
-      >
+      <label htmlFor={name} className="block ml-1 mb-2 text-sm text-gray-200 font-medium">
         {label}
       </label>
       <div className="space-y-3">

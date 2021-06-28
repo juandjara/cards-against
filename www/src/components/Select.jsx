@@ -3,14 +3,7 @@ import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { buttonFocusStyle } from './Button'
 
-export default function Select({
-  options = [],
-  selected,
-  onChange,
-  placeholder,
-  valueKey = 'value',
-  className = ''
-}) {
+export default function Select({ options = [], selected, onChange, placeholder, valueKey = 'value', className = '' }) {
   return (
     <Listbox value={selected} onChange={onChange}>
       {({ open }) => (
@@ -21,15 +14,10 @@ export default function Select({
             {selected ? (
               <span className="block truncate">{selected.label}</span>
             ) : (
-              <span className="text-gray-500 block truncate">
-                {placeholder}
-              </span>
+              <span className="text-gray-500 block truncate">{placeholder}</span>
             )}
             <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-              <SelectorIcon
-                className="w-5 h-5 text-gray-400"
-                aria-hidden="true"
-              />
+              <SelectorIcon className="w-5 h-5 text-gray-400" aria-hidden="true" />
             </span>
           </Listbox.Button>
           <Transition
@@ -48,26 +36,16 @@ export default function Select({
                   key={opt[valueKey]}
                   value={opt}
                   className={({ active }) =>
-                    `${
-                      active ? 'text-yellow-900 bg-yellow-100' : 'text-gray-900'
-                    }
+                    `${active ? 'text-yellow-900 bg-yellow-100' : 'text-gray-900'}
                         cursor-default select-none relative py-2 pr-10 pl-4`
                   }
                 >
                   {({ selected, active }) => (
                     <>
-                      <span
-                        className={`${
-                          selected ? 'font-medium' : 'font-normal'
-                        } block truncate`}
-                      >
-                        {opt.label}
-                      </span>
+                      <span className={`${selected ? 'font-medium' : 'font-normal'} block truncate`}>{opt.label}</span>
                       {selected ? (
                         <span
-                          className={`${
-                            active ? 'text-yellow-600' : 'text-yellow-600'
-                          }
+                          className={`${active ? 'text-yellow-600' : 'text-yellow-600'}
                               absolute inset-y-0 right-0 flex items-center pr-3`}
                         >
                           <CheckIcon className="w-5 h-5" aria-hidden="true" />

@@ -21,8 +21,7 @@ export default function Card({
 }) {
   const bg = bgmap[type]
   const color = colormap[type]
-  const animation =
-    'hover:shadow-lg hover:scale-105 duration-300 transform transition'
+  const animation = 'hover:shadow-lg hover:scale-105 duration-300 transform transition'
   return (
     <Base
       style={{ backgroundColor: bg, ...style }}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Button from '@/components/Button'
 import { ArrowLeftIcon } from '@heroicons/react/solid'
@@ -23,21 +23,11 @@ function CheckboxLabel({ label, numblack = 5, numwhite = 24 }) {
     <div className="space-y-2">
       <p className="mr-6">{label}</p>
       <div className="mr-4 inline-flex space-x-2">
-        <StackSimple
-          weight="fill"
-          className="text-gray-900"
-          width={24}
-          height={24}
-        />
+        <StackSimple weight="fill" className="text-gray-900" width={24} height={24} />
         <span>{numblack}</span>
       </div>
       <div className="mr-4 inline-flex space-x-2">
-        <StackSimple
-          weight="fill"
-          className="text-white"
-          width={24}
-          height={24}
-        />
+        <StackSimple weight="fill" className="text-white" width={24} height={24} />
         <span>{numwhite}</span>
       </div>
     </div>
@@ -51,7 +41,7 @@ export default function NewGameForm() {
   const [winCondition, setWinCondition] = useState('all-cards')
   const [nRounds, setNRounds] = useState(5)
   const [nPoints, setNPoints] = useState(5)
-  const [decks, setDecks] = useState([])
+  const [deckSelection, setDeckSelection] = useState([])
   const [deckOptions, setDeckOptions] = useState([])
   const [loading, setLoading] = useState(false)
 
@@ -60,38 +50,32 @@ export default function NewGameForm() {
       const deckOptions = decks.map((deck) => ({
         ...deck,
         value: deck.id,
-        label: (
-          <CheckboxLabel
-            numblack={deck.blackCards.length}
-            numwhite={deck.whiteCards.length}
-            label={deck.name}
-          />
-        )
+        label: <CheckboxLabel numblack={deck.blackCards.length} numwhite={deck.whiteCards.length} label={deck.name} />
       }))
       setDeckOptions(deckOptions)
     })
   }, [])
 
+  const mergedDeck = useMemo(() => {
+    return deckOptions
+      .filter((deck) => deckSelection.indexOf(deck.id) !== -1)
+      .reduce(
+        (acum, next) => {
+          return {
+            whiteCards: acum.whiteCards.concat(next.whiteCards),
+            blackCards: acum.blackCards.concat(next.blackCards)
+          }
+        },
+        {
+          blackCards: [],
+          whiteCards: []
+        }
+      )
+  }, [deckOptions])
+
   function handleSubmit(ev) {
     ev.preventDefault()
     setLoading(true)
-
-    const selectedDecks = deckOptions.filter(
-      (deck) => decks.indexOf(deck.id) !== -1
-    )
-
-    const mergedDeck = selectedDecks.reduce(
-      (acum, next) => {
-        return {
-          whiteCards: acum.whiteCards.concat(next.whiteCards),
-          blackCards: acum.blackCards.concat(next.blackCards)
-        }
-      },
-      {
-        blackCards: [],
-        whiteCards: []
-      }
-    )
 
     socket.emit('game:new', {
       deck: mergedDeck,
@@ -172,12 +156,15 @@ export default function NewGameForm() {
           label="Mazos de cartas"
           className="w-52"
           options={deckOptions}
-          selected={decks}
-          onChange={setDecks}
+          selected={deckSelection}
+          onChange={setDeckSelection}
         />
-        <PrimaryButton disabled={loading} type="submit">
-          Crear partida
-        </PrimaryButton>
+        <div className="flex items-center space-x-3">
+          <PrimaryButton disabled={loading} type="submit">
+            Crear partida
+          </PrimaryButton>
+          <p>Se necesitan un mínimo de 5 cartas negras y 20 cartas blancas para empezar una partida</p>
+        </div>
       </form>
     </Container>
   )

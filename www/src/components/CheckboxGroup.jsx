@@ -1,11 +1,6 @@
 import React from 'react'
 
-export default function CheckboxGroup({
-  label = '',
-  options,
-  selected,
-  onChange
-}) {
+export default function CheckboxGroup({ label = '', options, selected, onChange }) {
   function handleChange(ev) {
     const { name, checked } = ev.target
     let newSelection
@@ -19,15 +14,10 @@ export default function CheckboxGroup({
 
   return (
     <div>
-      <p className="block ml-1 mb-2 text-sm text-gray-200 font-medium">
-        {label}
-      </p>
+      <p className="block ml-1 mb-2 text-sm text-gray-200 font-medium">{label}</p>
       <div className="space-y-4">
         {options.map((opt) => (
-          <label
-            key={opt.value}
-            className="flex items-start border border-gray-400 rounded-lg p-2"
-          >
+          <label key={opt.value} className="flex items-start border border-gray-400 rounded-lg p-2">
             <input
               type="checkbox"
               name={opt.value}

@@ -1,14 +1,6 @@
 import React from 'react'
 
-export default function Input({
-  id,
-  label,
-  value,
-  onChange,
-  corner,
-  type = 'text',
-  placeholder
-}) {
+export default function Input({ id, label, value, onChange, corner, type = 'text', placeholder }) {
   return (
     <div>
       <div className="flex items-baseline justify-between">

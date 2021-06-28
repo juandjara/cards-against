@@ -41,9 +41,7 @@ export default function Alert() {
       socket.on('error', onError)
       socket.on('disconnect', onDisconnect)
       socket.on('reconnect', onReconnect)
-      socket.on('alert', ({ text, color }) =>
-        setAlert({ text, color: color || 'blue' })
-      )
+      socket.on('alert', ({ text, color }) => setAlert({ text, color: color || 'blue' }))
     }
 
     return () => {
@@ -75,9 +73,7 @@ export default function Alert() {
         className={`z-20 animation-alert fixed top-0 left-1/2 transform -translate-x-1/2 w-3/4 xl:w-2/4 max-w-xl mt-6 p-4 rounded-md bg-${color}-100 text-base flex items-center`}
       >
         <span className="sr-only">{alertType}:</span>
-        <span className={`text-${color}-700 whitespace-pre-line`}>
-          {alertText}
-        </span>
+        <span className={`text-${color}-700 whitespace-pre-line`}>{alertText}</span>
       </div>
     )
   )

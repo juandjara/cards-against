@@ -19,24 +19,13 @@ export default function Home() {
     >
       <h1 className="mt-6 text-4xl font-semibold">Cards Against Web</h1>
       <div className="md:flex flex-row justify-center items-center my-12 space-y-6 md:space-y-0 md:space-x-6">
-        <Card
-          as="button"
-          type="white"
-          text="Unirse a una partida"
-          onClick={joinGame}
-        />
+        <Card as="button" type="white" text="Unirse a una partida" onClick={joinGame} />
         <Card as={Link} to="/newgame" type="black" text="Crear partida" />
       </div>
-      <Link
-        to="/decks"
-        className="mb-6 font-medium text-gray-200 hover:text-white hover:underline"
-      >
+      <Link to="/decks" className="mb-6 font-medium text-gray-200 hover:text-white hover:underline">
         Editor de mazos
       </Link>
-      <Link
-        to="/guide"
-        className="mb-6 font-medium text-gray-200 hover:text-white hover:underline"
-      >
+      <Link to="/guide" className="mb-6 font-medium text-gray-200 hover:text-white hover:underline">
         ¿Como se juega?
       </Link>
     </div>

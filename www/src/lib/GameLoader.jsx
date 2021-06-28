@@ -9,9 +9,7 @@ async function fetchGame({ queryKey }) {
   const res = await fetch(`${config.api}/games/${id}`)
   if (!res.ok) {
     const text = await res.text()
-    const error = new Error(
-      `Request failed with status code ${res.status}: \n${text}`
-    )
+    const error = new Error(`Request failed with status code ${res.status}: \n${text}`)
     error.status = res.status
     throw error
   }
@@ -49,15 +47,9 @@ export function GameLoaderUI({ game, loading, error, children }) {
 }
 
 function ErrorMessage({ id, status }) {
-  const msg =
-    status === 404
-      ? `No se ha encontrado ningún juego para el ID ${id}`
-      : `Error cargando el juego ${id}`
+  const msg = status === 404 ? `No se ha encontrado ningún juego para el ID ${id}` : `Error cargando el juego ${id}`
   return (
-    <Container
-      style={{ minHeight: 'calc(100vh - 52px)' }}
-      className="flex flex-col justify-center items-center"
-    >
+    <Container style={{ minHeight: 'calc(100vh - 52px)' }} className="flex flex-col justify-center items-center">
       <p className="text-gray-100 text-lg font-semibold">{msg}</p>
       <Link to="/" className="text-blue-300 hover:underline mt-2">
         Volver
@@ -68,10 +60,7 @@ function ErrorMessage({ id, status }) {
 
 function Loading() {
   return (
-    <Container
-      style={{ minHeight: 'calc(100vh - 52px)' }}
-      className="flex flex-col justify-center items-center"
-    >
+    <Container style={{ minHeight: 'calc(100vh - 52px)' }} className="flex flex-col justify-center items-center">
       <p>Cargando datos del juego...</p>
     </Container>
   )

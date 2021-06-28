@@ -40,17 +40,12 @@ export default function JoinGame() {
     }
   }, [socket, game])
 
-  return (
-    <GameLoaderUI {...gameQuery}>
-      {socket && game && <JoinGameUI socket={socket} game={game} />}
-    </GameLoaderUI>
-  )
+  return <GameLoaderUI {...gameQuery}>{socket && game && <JoinGameUI socket={socket} game={game} />}</GameLoaderUI>
 }
 
 function JoinGameUI({ socket, game }) {
   const navigate = useNavigate()
-  const playerIsHost =
-    socket && game && game.players[0] && game.players[0].id === socket.id
+  const playerIsHost = socket && game && game.players[0] && game.players[0].id === socket.id
 
   function copyLink() {
     navigator.clipboard.writeText(window.location.href).then(() => {
@@ -73,9 +68,7 @@ function JoinGameUI({ socket, game }) {
 
       <div className="space-y-8">
         <div>
-          <p className="ml-1 mb-1 text-sm text-gray-200 font-medium">
-            Enlace para compartir
-          </p>
+          <p className="ml-1 mb-1 text-sm text-gray-200 font-medium">Enlace para compartir</p>
           <div className="flex">
             <pre className="py-2 pl-3 px-5 -mr-2 bg-white text-gray-700 rounded-l-md">
               <code>{window.location.href}</code>
@@ -95,13 +88,9 @@ function JoinGameUI({ socket, game }) {
         <Players game={game} />
         {playerIsHost ? (
           <div className="flex items-center space-x-3">
-            <PrimaryButton disabled={game.players.length < 3}>
-              Comenzar
-            </PrimaryButton>
+            <PrimaryButton disabled={game.players.length < 3}>Comenzar</PrimaryButton>
             {game.players.length < 3 && (
-              <p className="text-sm">
-                Se necesita un minimo de 3 jugadores para comenzar una partida
-              </p>
+              <p className="text-sm">Se necesita un minimo de 3 jugadores para comenzar una partida</p>
             )}
           </div>
         ) : (
@@ -116,9 +105,7 @@ function Players({ game }) {
   if (!game) {
     return (
       <div>
-        <p className="ml-1 text-sm text-gray-200 font-medium">
-          Cargando lista de jugadores...
-        </p>
+        <p className="ml-1 text-sm text-gray-200 font-medium">Cargando lista de jugadores...</p>
       </div>
     )
   }
@@ -129,12 +116,7 @@ function Players({ game }) {
       <ul>
         {game.players.map((p, i) => (
           <li key={p.id} className="flex items-center space-x-2 py-2">
-            <StackSimple
-              weight="fill"
-              className={i === 0 ? 'text-gray-900' : 'text-white'}
-              width={24}
-              height={24}
-            />
+            <StackSimple weight="fill" className={i === 0 ? 'text-gray-900' : 'text-white'} width={24} height={24} />
             <span>{p.name}</span>
             {i === 0 && <small>- Anfitrión</small>}
           </li>

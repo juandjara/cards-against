@@ -18,12 +18,7 @@ export default function Header() {
         <h1 className="text-2xl">CAW</h1>
       </Link>
       <div className="flex-grow"></div>
-      <Select
-        options={OPTIONS}
-        selected={selected}
-        onChange={setSelected}
-        className="w-20 text-gray-700"
-      />
+      <Select options={OPTIONS} selected={selected} onChange={setSelected} className="w-20 text-gray-700" />
     </header>
   )
 }
