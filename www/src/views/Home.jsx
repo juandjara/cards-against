@@ -13,10 +13,7 @@ export default function Home() {
   }
 
   return (
-    <div
-      style={{ minHeight: 'calc(100vh - 52px)' }}
-      className="flex flex-col justify-center items-center py-4 px-2 mb-8"
-    >
+    <div style={{ minHeight: 'calc(100vh - 52px)' }} className="flex flex-col justify-center items-center py-4 px-2">
       <h1 className="mt-6 text-4xl font-semibold">Cards Against Web</h1>
       <div className="md:flex flex-row justify-center items-center my-12 space-y-6 md:space-y-0 md:space-x-6">
         <Card as="button" type="white" text="Unirse a una partida" onClick={joinGame} />
