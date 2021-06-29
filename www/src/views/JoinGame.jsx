@@ -6,9 +6,9 @@ import Button from '@/components/Button'
 import PrimaryButton from '@/components/PrimaryButton'
 import Container from '@/components/Container'
 import { useSocket } from '@/lib/SocketProvider'
-import { useGame, GameLoaderUI } from '@/lib/GameLoader'
+import { useGame, editGame } from '@/lib/game'
 import { useQueryClient } from 'react-query'
-import { editGame } from '@/lib/GameLoader'
+import GameMessage from '@/components/GameMessage'
 
 const MIN_PLAYERS = 3
 
@@ -17,14 +17,18 @@ export default function JoinGame() {
   const cache = useQueryClient()
   const socket = useSocket()
   const { id } = useParams()
-  const gameQuery = useGame(id)
-  const game = gameQuery.game
+  const { game, loading, error } = useGame(id)
 
   const playerHasJoined = game && game.players.some((p) => p.id === socket.id)
 
   useEffect(() => {
     if (socket && game) {
-      socket.on('game:edit', (game) => editGame(cache, game))
+      socket.on('game:edit', (game) => {
+        editGame(cache, game)
+        if (game.started) {
+          navigate(`/game/${game.id}`)
+        }
+      })
       if (!playerHasJoined) {
         // TODO: 1. save name in local storage and use as second argument for prompt in other plays
         // TODO: 2. replace window.prompt with custom modal
@@ -48,7 +52,11 @@ export default function JoinGame() {
     }
   }, [socket, game])
 
-  return <GameLoaderUI {...gameQuery}>{socket && game && <JoinGameUI socket={socket} game={game} />}</GameLoaderUI>
+  if (!socket || !game) {
+    return <GameMessage error={error} loading={loading} />
+  }
+
+  return <JoinGameUI socket={socket} game={game} />
 }
 
 function JoinGameUI({ socket, game }) {
@@ -64,10 +72,9 @@ function JoinGameUI({ socket, game }) {
 
   function startGame() {
     setLoading(true)
-    socket.emit('game:start')
-    socket.once('game:edit', (game) => {
+    socket.emit('game:start', game.id)
+    socket.once('game:edit', () => {
       setLoading(false)
-      navigate(`/game/${game.id}`)
     })
   }
 

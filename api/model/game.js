@@ -62,6 +62,7 @@ class Game {
       started: false,
       finished: false,
       cardsPerHand: 5,
+      usedCards: new Set(),
       maxPoints,
       maxRounds,
       finishedRounds: [],
