@@ -42,40 +42,23 @@ module.exports = function (socket, io, db) {
     io.to(room).emit('game:edit', game)
   })
 
-  handleMessage('game:draw-black-card', (gameId) => {
-    const room = `game-${gameId}`
-    const game = db.getGame(gameId).drawBlackCard()
-    io.to(room).emit('game:edit', game)
-  })
-
-  handleMessage('game:draw-white-cards', (gameId) => {
-    const room = `game-${gameId}`
-    const game = db.getGame(gameId).drawWhiteCards(socket.id)
-    io.to(room).emit('game:edit', game)
-  })
-
   handleMessage('game:play-white-card', ({ gameId, card }) => {
     const room = `game-${gameId}`
     const game = db.getGame(gameId).playWhiteCard(card, socket.id)
     io.to(room).emit('game:edit', game)
   })
 
-  handleMessage('game:reveal-card', ({ gameId, card }) => {
+  handleMessage('game:reveal-card', ({ gameId, playerId }) => {
     const room = `game-${gameId}`
-    const game = db.getGame(gameId).revealCard(card)
+    const game = db.getGame(gameId).revealCard(playerId)
     io.to(room).emit('game:edit', game)
   })
 
-  handleMessage('game:set-round-winner', ({ gameId, player, whiteCard, blackCard }) => {
+  handleMessage('game:finish-round', ({ gameId, winnerPlayerId }) => {
     const room = `game-${gameId}`
-    const game = db.getGame(gameId).setRoundWinner(player, whiteCard, blackCard)
-    socket.to(room).emit('game:show-round-winner', {
-      player: game.players.find(p => p.id === player),
-      whiteCard: game.deck.cards.find(c => c.id === whiteCard),
-      blackCard: game.deck.cards.find(c => c.id === blackCard)
-    })
-    io.to(room).emit('game:edit', game)
-    io.to(room).emit('alert', { text: 'Comienza una nueva ronda' })
+    const game = db.getGame(gameId)
+    io.to(room).emit('game:edit', game.finishRound(winnerPlayerId))
+    io.to(room).emit('game:round-winner', game.getLastFinishedRound())
   })
 
   handleMessage('disconnect', () => {

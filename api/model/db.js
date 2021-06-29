@@ -25,13 +25,6 @@ const db = {
   },
   removeGame (game) {
     delete this.games[game.id]
-  },
-  revealCard (gameId, cardId) {
-    const result = this.getGame(gameId).revealCard(cardId)
-    if (!result) {
-      throw new ApiError(404, `Card for player "${playerId}" not found in the white cards played this round`)
-    }
-    return result
   }
 }
 
