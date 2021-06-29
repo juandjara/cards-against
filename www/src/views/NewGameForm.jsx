@@ -9,16 +9,16 @@ import { StackSimple } from 'phosphor-react'
 import { useSocket } from '@/lib/SocketProvider'
 import loadAllDecks from '@/lib/loadAllDecks'
 import Container from '@/components/Container'
-
-const MIN_BLACK_CARDS = 5
-const MIN_WHITE_CARDS = 20
+import constants from '../../../constants'
+const { ROTATE_NEXT, ROTATE_WINNER, WIN_ALL_CARDS, WIN_N_ROUNDS, WIN_N_POINTS, MIN_BLACK_CARDS, MIN_WHITE_CARDS } =
+  constants
 
 const ROTATION_OPTIONS = [
   {
-    value: 'rotation',
+    value: ROTATE_NEXT,
     label: 'El siguiente jugador de la lista (vamos rotando)'
   },
-  { value: 'winner', label: 'El ganador de la ultima ronda' }
+  { value: ROTATE_WINNER, label: 'El ganador de la ultima ronda' }
 ]
 
 function CheckboxLabel({ label, numblack = 5, numwhite = 24 }) {
@@ -40,8 +40,8 @@ function CheckboxLabel({ label, numblack = 5, numwhite = 24 }) {
 export default function NewGameForm() {
   const navigate = useNavigate()
   const socket = useSocket()
-  const [rotation, setRotation] = useState('rotation')
-  const [winCondition, setWinCondition] = useState('all-cards')
+  const [rotation, setRotation] = useState(ROTATE_NEXT)
+  const [winCondition, setWinCondition] = useState(WIN_ALL_CARDS)
   const [nRounds, setNRounds] = useState(5)
   const [nPoints, setNPoints] = useState(5)
   const [deckSelection, setDeckSelection] = useState([])
@@ -97,9 +97,9 @@ export default function NewGameForm() {
   }
 
   const winConditionOptions = [
-    { value: 'all-cards', label: 'Cuando se acaben todas las cartas negras' },
+    { value: WIN_ALL_CARDS, label: 'Cuando se acaben todas las cartas negras' },
     {
-      value: 'win-n-rounds',
+      value: WIN_N_ROUNDS,
       label: (
         <>
           <span>Cuando se acaben</span>
@@ -114,7 +114,7 @@ export default function NewGameForm() {
       )
     },
     {
-      value: 'win-n-points',
+      value: WIN_N_POINTS,
       label: (
         <>
           <span>Cuando un jugador gane</span>

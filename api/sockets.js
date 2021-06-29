@@ -36,9 +36,9 @@ module.exports = function (socket, io, db) {
     socket.to(room).emit('game:edit', game)
   })
 
-  handleMessage('game:shuffle', (gameId) => {
+  handleMessage('game:start', (gameId) => {
     const room = `game-${gameId}`
-    const game = db.getGame(gameId).shuffle()
+    const game = db.getGame(gameId).start()
     io.to(room).emit('game:edit', game)
   })
 
@@ -54,15 +54,15 @@ module.exports = function (socket, io, db) {
     io.to(room).emit('game:edit', game)
   })
 
-  handleMessage('game:play-white-card', ({ gameId, cardId }) => {
+  handleMessage('game:play-white-card', ({ gameId, card }) => {
     const room = `game-${gameId}`
-    const game = db.getGame(gameId).playWhiteCard(cardId, socket.id)
+    const game = db.getGame(gameId).playWhiteCard(card, socket.id)
     io.to(room).emit('game:edit', game)
   })
 
-  handleMessage('game:reveal-card', ({ gameId, cardId }) => {
+  handleMessage('game:reveal-card', ({ gameId, card }) => {
     const room = `game-${gameId}`
-    const game = db.getGame(gameId).revealCard(cardId)
+    const game = db.getGame(gameId).revealCard(card)
     io.to(room).emit('game:edit', game)
   })
 
