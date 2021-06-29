@@ -9,7 +9,7 @@ import { StackSimple } from 'phosphor-react'
 import { useSocket } from '@/lib/SocketProvider'
 import loadAllDecks from '@/lib/loadAllDecks'
 import Container from '@/components/Container'
-import constants from '../../../constants'
+import constants from '@/www.constants'
 const { ROTATE_NEXT, ROTATE_WINNER, WIN_ALL_CARDS, WIN_N_ROUNDS, WIN_N_POINTS, MIN_BLACK_CARDS, MIN_WHITE_CARDS } =
   constants
 

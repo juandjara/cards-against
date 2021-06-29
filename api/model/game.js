@@ -1,4 +1,4 @@
-const constants = require('../../constants')
+const constants = require('../api.constants')
 const { ROTATE_NEXT, ROTATE_WINNER, WIN_ALL_CARDS, WIN_N_ROUNDS, WIN_N_POINTS, MIN_BLACK_CARDS, MIN_WHITE_CARDS } =
   constants
 

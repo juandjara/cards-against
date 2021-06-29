@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeftIcon } from '@heroicons/react/solid'
 import { Copy, StackSimple } from 'phosphor-react'
@@ -13,6 +13,7 @@ import { editGame } from '@/lib/GameLoader'
 const MIN_PLAYERS = 3
 
 export default function JoinGame() {
+  const navigate = useNavigate()
   const cache = useQueryClient()
   const socket = useSocket()
   const { id } = useParams()
@@ -32,6 +33,11 @@ export default function JoinGame() {
           gameId: game.id,
           user: { id: socket.id, name }
         })
+        socket.once('game:edit', (game) => {
+          if (game.started) {
+            navigate(`/game/${game.id}`)
+          }
+        })
       }
     }
 
@@ -48,10 +54,20 @@ export default function JoinGame() {
 function JoinGameUI({ socket, game }) {
   const navigate = useNavigate()
   const playerIsHost = socket && game && game.players[0] && game.players[0].id === socket.id
+  const [loading, setLoading] = useState(false)
 
   function copyLink() {
     navigator.clipboard.writeText(window.location.href).then(() => {
       alert('Link copied to the clipboard')
+    })
+  }
+
+  function startGame() {
+    setLoading(true)
+    socket.emit('game:start')
+    socket.once('game:edit', (game) => {
+      setLoading(false)
+      navigate(`/game/${game.id}`)
     })
   }
 
@@ -90,7 +106,13 @@ function JoinGameUI({ socket, game }) {
         <Players game={game} />
         {playerIsHost ? (
           <div className="flex items-center space-x-3">
-            <PrimaryButton className="flex-shrink-0" disabled={game.players.length < MIN_PLAYERS}>Comenzar</PrimaryButton>
+            <PrimaryButton
+              onClick={startGame}
+              className="flex-shrink-0"
+              disabled={loading || game.players.length < MIN_PLAYERS}
+            >
+              Comenzar
+            </PrimaryButton>
             {game.players.length < MIN_PLAYERS && (
               <p className="text-sm">Se necesita un minimo de {MIN_PLAYERS} jugadores para comenzar una partida</p>
             )}
