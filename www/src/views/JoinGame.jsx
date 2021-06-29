@@ -6,7 +6,7 @@ import Button from '@/components/Button'
 import PrimaryButton from '@/components/PrimaryButton'
 import Container from '@/components/Container'
 import { useSocket } from '@/lib/SocketProvider'
-import { useGame, editGame } from '@/lib/game'
+import { useGame, editGame } from '@/lib/gameUtils'
 import { useQueryClient } from 'react-query'
 import GameMessage from '@/components/GameMessage'
 
