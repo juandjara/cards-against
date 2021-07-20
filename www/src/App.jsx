@@ -20,7 +20,7 @@ export default function App() {
       <Alert />
       <QueryClientProvider client={apiClient}>
         <Router>
-          <div>
+          <div className="mx-auto max-w-screen-xl">
             <Header />
             <Routes />
           </div>

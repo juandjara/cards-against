@@ -19,8 +19,6 @@ export default function JoinGame() {
   const { id } = useParams()
   const { game, loading, error } = useGame(id)
 
-  const playerHasJoined = game && game.players.some((p) => p.id === socket.id)
-
   useEffect(() => {
     if (socket && game) {
       socket.on('game:edit', (game) => {
@@ -29,6 +27,7 @@ export default function JoinGame() {
           navigate(`/game/${game.id}`)
         }
       })
+      const playerHasJoined = game && game.players.some((p) => p.id === socket.id)
       if (!playerHasJoined) {
         // TODO: 1. save name in local storage and use as second argument for prompt in other plays
         // TODO: 2. replace window.prompt with custom modal
@@ -73,9 +72,6 @@ function JoinGameUI({ socket, game }) {
   function startGame() {
     setLoading(true)
     socket.emit('game:start', game.id)
-    socket.once('game:edit', () => {
-      setLoading(false)
-    })
   }
 
   return (

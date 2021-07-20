@@ -9,6 +9,7 @@ import { StackSimple } from 'phosphor-react'
 import { useSocket } from '@/lib/SocketProvider'
 import loadAllDecks from '@/lib/loadAllDecks'
 import Container from '@/components/Container'
+import { motion } from 'framer-motion'
 import constants from '@/www.constants'
 const { ROTATE_NEXT, ROTATE_WINNER, WIN_ALL_CARDS, WIN_N_ROUNDS, WIN_N_POINTS, MIN_BLACK_CARDS, MIN_WHITE_CARDS } =
   constants
@@ -132,49 +133,51 @@ export default function NewGameForm() {
 
   return (
     <Container>
-      <Button
-        padding="p-2"
-        className="rounded-full hover:shadow-md"
-        backgroundColor="bg-white hover:bg-blue-50"
-        onClick={() => navigate(-1)}
-      >
-        <ArrowLeftIcon className="w-5 h-5" />
-      </Button>
-      <h2 className="mt-4 mb-8 text-3xl font-semibold">Nueva partida</h2>
-      <form onSubmit={handleSubmit} className="space-y-8">
-        <RadioGroup
-          label="¿Como se elige al juez de las cartas?"
-          name="rotation"
-          selected={rotation}
-          options={ROTATION_OPTIONS}
-          onChange={setRotation}
-        />
-        <RadioGroup
-          label="¿Cuando se acaba el juego?"
-          name="win-condition"
-          options={winConditionOptions}
-          selected={winCondition}
-          onChange={setWinCondition}
-        />
-        <CheckboxGroup
-          label="Mazos de cartas"
-          className="w-52"
-          options={deckOptions}
-          selected={deckSelection}
-          onChange={setDeckSelection}
-        />
-        <div className="flex items-center space-x-3">
-          <PrimaryButton className="flex-shrink-0" disabled={loading || !cardsNumOk} type="submit">
-            Crear partida
-          </PrimaryButton>
-          {cardsNumOk ? null : (
-            <p className="text-sm">
-              Se necesitan un mínimo de {MIN_BLACK_CARDS} cartas negras y {MIN_WHITE_CARDS} cartas blancas para empezar
-              una partida
-            </p>
-          )}
-        </div>
-      </form>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <Button
+          padding="p-2"
+          className="rounded-full hover:shadow-md"
+          backgroundColor="bg-white hover:bg-blue-50"
+          onClick={() => navigate(-1)}
+        >
+          <ArrowLeftIcon className="w-5 h-5" />
+        </Button>
+        <h2 className="mt-4 mb-8 text-3xl font-semibold">Nueva partida</h2>
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <RadioGroup
+            label="¿Como se elige al juez de las cartas?"
+            name="rotation"
+            selected={rotation}
+            options={ROTATION_OPTIONS}
+            onChange={setRotation}
+          />
+          <RadioGroup
+            label="¿Cuando se acaba el juego?"
+            name="win-condition"
+            options={winConditionOptions}
+            selected={winCondition}
+            onChange={setWinCondition}
+          />
+          <CheckboxGroup
+            label="Mazos de cartas"
+            className="w-52"
+            options={deckOptions}
+            selected={deckSelection}
+            onChange={setDeckSelection}
+          />
+          <div className="flex items-center space-x-3">
+            <PrimaryButton className="flex-shrink-0" disabled={loading || !cardsNumOk} type="submit">
+              Crear partida
+            </PrimaryButton>
+            {cardsNumOk ? null : (
+              <p className="text-sm">
+                Se necesitan un mínimo de {MIN_BLACK_CARDS} cartas negras y {MIN_WHITE_CARDS} cartas blancas para empezar
+                una partida
+              </p>
+            )}
+          </div>
+        </form>
+      </motion.div>
     </Container>
   )
 }

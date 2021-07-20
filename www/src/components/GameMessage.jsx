@@ -2,7 +2,7 @@ import React from 'react'
 import Container from '@/components/Container'
 import { Link, useParams } from 'react-router-dom'
 
-export default function GameMessage({ loading, error, children }) {
+export default function GameMessage({ loading, error }) {
   const { id } = useParams()
 
   if (error) {
@@ -13,7 +13,7 @@ export default function GameMessage({ loading, error, children }) {
     return <LoadingMessage />
   }
 
-  return children
+  return null
 }
 
 function ErrorMessage({ id, status }) {

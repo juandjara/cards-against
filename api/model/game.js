@@ -116,7 +116,7 @@ class Game {
   }
 
   finishRound(winnerPlayerId) {
-    const player = this.players.find(p => p.id === playerId)
+    const player = this.players.find(p => p.id === winnerPlayerId)
     player.points++
     this.round.finish(winnerPlayerId)
     this.finishedRounds.push(this.round)
@@ -139,16 +139,17 @@ class Game {
       this.round.host = lastRound.winner
     }
     if (this.rotation === ROTATE_NEXT) {
-      this.players.forEach((p, i) => {
-        if (p.id === lastRound.winner) {
-          let nextIndex = i + 1
+      for (const player of this.players) {
+        if (player.id === lastRound.host) {
+          let nextIndex = this.players.indexOf(player) + 1
           if (nextIndex >= this.players.length) {
             nextIndex = 0
           }
           const nextPlayer = this.players[nextIndex]
           this.round.host = nextPlayer.id
+          return
         }
-      })
+      }
     }
   }
 
@@ -190,6 +191,7 @@ class Game {
     const numCardsMissing = this.cardsPerHand - player.cards.length
     let newCards = this.deck.whiteCards.filter(c => !this.usedCards.has(c)).slice(0, numCardsMissing)
     if (newCards.length < numCardsMissing) {
+      console.log('> Recovering white cards')
       this.recoverUsedWhiteCards()
       newCards = this.deck.whiteCards.filter(c => !this.usedCards.has(c)).slice(0, numCardsMissing)
     }
@@ -210,13 +212,25 @@ class Game {
     shuffle(this.deck.whiteCards)
   }
 
-  playWhiteCard(card, playerId) {
-    this.round.addWhiteCard(card, playerId)
+  playWhiteCards(cards, playerId) {
+    for (const card of cards) {
+      this.round.addWhiteCard(card, playerId)
+    }
+    const player = this.players.find(p => p.id === playerId)
+    player.cards = player.cards.filter(c => cards.indexOf(c) === -1)
+    this.drawWhiteCards(playerId)
+    return this
+  }
+
+  discardWhiteCard (card, playerId) {
+    const player = this.players.find(p => p.id === playerId)
+    player.cards = player.cards.filter(c => c !== card)
+    this.drawWhiteCards(playerId)
     return this
   }
 
   revealCard(playerId) {
-    this.round.revealCard(playerId)
+    this.round.revealWhiteCards(playerId)
     return this
   }
 }

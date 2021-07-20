@@ -33,7 +33,7 @@ app.get('/rooms', (req, res) => {
 })
 
 app.get('/games', (req, res) => {
-  res.json(Object.values(db.games))
+  res.json(Object.values(db.games).map(g => ({ ...g, usedCards: [...g.usedCards] })))
 })
 
 app.get('/games/:id/', (req, res) => {

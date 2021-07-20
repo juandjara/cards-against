@@ -10,8 +10,8 @@ const colormap = {
   black: 'white'
 }
 
-export default function Card({
-  as: Base = 'div',
+export default function ButtonCard({
+  as: Base = 'button',
   type = 'white',
   text = '',
   className = '',
