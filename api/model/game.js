@@ -165,8 +165,6 @@ class Game {
       }
     }
     if (this.winCondition === WIN_N_POINTS) {
-      this.finishedRounds.push(this.round)
-      this.start
       const higherPoints = Math.max(...this.players.map(p => p.points))
       if (higherPoints >= this.maxPoints) {
         this.gameOver()

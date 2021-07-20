@@ -107,6 +107,7 @@ export default function Game() {
       {playerData && (
         <PlayerData playerData={playerData} playerIsHost={playerIsHost} roundNum={game.finishedRounds.length + 1} />
       )}
+      {game.finished && <GameOverModal game={game} />}
       <RoundModal closeModal={closeModal} round={finishedRound} />
       <Round
         playerIsHost={playerIsHost}
@@ -135,6 +136,11 @@ export default function Game() {
       )}
     </main>
   )
+}
+
+function GameOverModal() {
+  // TODO: announce game over and show all players by order of points. Maybe include a gallery of rounds here using finishedRounds data
+  return null
 }
 
 // partly taken from https://headlessui.dev/react/dialog
