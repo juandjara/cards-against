@@ -117,7 +117,7 @@ export default function Game() {
   return (
     <main className="px-4 pb-8">
       {playerData && (
-        <PlayerData playerData={playerData} playerIsHost={playerIsHost} roundNum={game.finishedRounds.length + 1} />
+        <PlayerData host={game.round.host} players={game.players} roundNum={game.finishedRounds.length + 1} />
       )}
       <GameOverModal closeModal={closeGameOverModal} game={game} />
       <RoundModal closeModal={closeModal} show={showRoundModal && !game.finished} game={game} />
@@ -131,6 +131,7 @@ export default function Game() {
         round={game.round}
         onCardClick={onRoundWhiteCardClick}
         onWinnerSelect={finishRound}
+        showHand={showHand}
       />
       {showHand ? (
         <CardPicker
@@ -229,17 +230,23 @@ function RoundModal({ closeModal, show, game }) {
   )
 }
 
-function PlayerData({ playerData, playerIsHost, roundNum }) {
+function PlayerData({ host, players, roundNum }) {
   return (
     <div className="pt-2 flex items-start justify-between">
-      <div>
-        <p>
-          <span className="font-bold text-lg">{playerData && playerData.name} </span>
-          <span className="font-medium bg-gray-900 px-2 ml-2 py-1 rounded-full">{playerData && playerData.points}</span>
-        </p>
-        <p className="text-sm mt-2">{playerIsHost ? 'Juez de las cartas' : 'Jugador'}</p>
-      </div>
-      <p className="text-lg font-bold">Ronda {roundNum}</p>
+      <ul className="space-y-3">
+        {players.map((p) => (
+          <li key={p.id}>
+            <p>
+              <span className="font-bold text-lg">{p.name} </span>
+            </p>
+            <p className="mt-1">
+              <span className="font-medium bg-gray-900 px-2 py-1 rounded-full">{p.points}</span>
+              <span className="text-sm ml-1"> {p.id === host ? 'Juez de las cartas' : 'Jugador'}</span>
+            </p>
+          </li>
+        ))}
+      </ul>
+      <p className="text-lg font-bold flex-shrink-0 pl-4">Ronda {roundNum}</p>
     </div>
   )
 }
@@ -268,7 +275,8 @@ function Round({
   allCardsSent,
   round,
   onCardClick,
-  onWinnerSelect
+  onWinnerSelect,
+  showHand
 }) {
   function getGroupClassName(group) {
     const selectedStyles = group.player === winner ? 'ring-4 ring-blue-500 ring-inset' : ''
@@ -293,7 +301,7 @@ function Round({
   return (
     <div
       className="py-6 flex flex-col items-center justify-center content-center"
-      style={{ minHeight: 'calc(100vh - 320px)' }}
+      style={{ paddingBottom: showHand ? 260 : 0 }}
     >
       {winner && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
