@@ -1,14 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/src/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="El mejor juego de cartas para la gente que ha vivido en internet gran parte de su vida">
     <title>Cartas contra la web</title>
+    <style>
+      body {
+        margin: 0;
+      }
+      .root-loading {
+        font-family: sans-serif;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .root-loading h1 {
+        font-weight: normal;
+        font-size: 2rem;
+      }
+      .root-loading p {
+        margin-top: 0;
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="root-loading">
+        <h1>Cartas contra la web</h1>
+        <p>Cargando ...</p>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
