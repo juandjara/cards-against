@@ -4,7 +4,7 @@
     "start": "vite --port 4000",
     "dev": "vite --port 4000",
     "build": "vite build",
-    "copy": "cp dist/index.html dist/200.html",
+    "copy": "cp ../_redirects dist/_redirects",
     "deploy": "yarn build && yarn copy",
     "serve": "vite preview",
     "lint:fix": "eslint ./src --ext .jsx,.js --quiet --fix --ignore-path ./.gitignore",
