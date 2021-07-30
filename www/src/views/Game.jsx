@@ -303,7 +303,9 @@ function Round({
         </motion.div>
       )}
       <div className="py-4 flex flex-wrap items-center justify-center">
-        <GameCard className="m-2" type="black" text={decodeHtml(round.blackCard.text)} badge={round.blackCard.pick} />
+        {round.blackCard && (
+          <GameCard className="m-2" type="black" text={decodeHtml(round.blackCard.text)} badge={round.blackCard.pick} />
+        )}
         {cardCounter}
         <ul className="flex flex-wrap justify-center">
           {allCardsSent &&
