@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 export default function Guide() {
   const navigate = useNavigate()
   return (
-    <div className="space-y-4 max-w-prose mx-auto py-8 px-4 font-medium text-lg">
+    <div className="space-y-4 max-w-prose mx-auto py-8 px-4 text-lg">
       <div>
         <Button
           padding="p-2"
@@ -17,7 +17,7 @@ export default function Guide() {
           <ArrowLeftIcon className="w-5 h-5" />
         </Button>
       </div>
-      <h3 className="text-3xl">¿Cómo se juega?</h3>
+      <h3 className="text-3xl font-medium ">¿Cómo se juega?</h3>
       <p>
         En cada ronda se muestra una carta negra en el centro de la pantalla. Un jugador es el Juez de las Cartas,
         encargado de esta carta, y los demás jugadores deben enviar sus cartas blancas para completar la frase escrita
