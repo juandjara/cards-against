@@ -17,7 +17,6 @@ export default function GameCard({
   className = '',
   br = 'rounded-xl',
   style = {},
-  size = 52,
   badge = 1,
   ...props
 }) {
@@ -26,7 +25,7 @@ export default function GameCard({
   return (
     <Base
       style={{ backgroundColor: bg, ...style, touchAction: 'pan-x' }}
-      className={`${className} relative hover:shadow-lg flex justify-start items-start ${br} w-${size} h-${size} p-3`}
+      className={`${className} relative hover:shadow-lg flex justify-start items-start ${br} w-52 h-52 p-3`}
       {...props}
     >
       <div style={{ color }} className="font-semibold">
