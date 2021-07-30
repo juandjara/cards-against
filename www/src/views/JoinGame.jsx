@@ -6,7 +6,7 @@ import Button from '@/components/Button'
 import PrimaryButton from '@/components/PrimaryButton'
 import Container from '@/components/Container'
 import { useSocket } from '@/lib/SocketProvider'
-import { useGame, editGame } from '@/lib/gameUtils'
+import { useGame, editGame, joinGame } from '@/lib/gameUtils'
 import { useQueryClient } from 'react-query'
 import GameMessage from '@/components/GameMessage'
 
@@ -31,8 +31,7 @@ export default function JoinGame() {
       if (!playerHasJoined) {
         // TODO: 1. save name in local storage and use as second argument for prompt in other plays
         // TODO: 2. replace window.prompt with custom modal
-        const name = window.prompt('Introduce un nombre de usuario')
-        socket.emit('game:join', { gameId: game.id, name })
+        joinGame(socket, game)
         socket.once('game:edit', (game) => {
           if (game.started) {
             navigate(`/game/${game.id}`)

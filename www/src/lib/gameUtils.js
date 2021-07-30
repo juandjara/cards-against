@@ -29,3 +29,26 @@ export function useGame(id) {
 export function editGame(cache, game) {
   cache.setQueryData(['game', game.id], game)
 }
+
+export function joinGame(socket, game) {
+  let msg = 'Introduce un nombre de usuario'
+  let name = window.prompt(msg)
+  if (!name) {
+    msg = msg + ' que no este vacío'
+    name = window.prompt(msg)
+  }
+  if (!name) {
+    msg = msg + ' por favor'
+    name = window.prompt(msg)
+  }
+  if (!name) {
+    msg = msg + '. En serio'
+    name = window.prompt(msg)
+  }
+  if (!name) {
+    msg = 'Introduce el nombre que te de la gana'
+    name = window.prompt(msg)
+  }
+
+  socket.emit('game:join', { gameId: game.id, name })
+}
