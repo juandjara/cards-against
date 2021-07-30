@@ -15,7 +15,7 @@ export default function Home() {
 
   return (
     <div style={{ minHeight: 'calc(100vh - 52px)' }} className="flex flex-col justify-center items-center py-4 px-2">
-      <h1 className="mt-6 text-4xl font-semibold">Cards Against Web</h1>
+      <h1 className="mt-6 text-4xl font-semibold">Cartas contra la web</h1>
       <div className="md:flex flex-row justify-center items-center my-12 space-y-6 md:space-y-0 md:space-x-6">
         <ButtonCard as={motion.button} initial={{ x: -200 }} animate={{ x: 0 }} onClick={joinGame} type="white" text="Unirse a una partida" />
         <ButtonCard as={motion(Link)} initial={{ x: 200 }} animate={{ x: 0 }} to="/newgame" type="black" text="Crear partida" />

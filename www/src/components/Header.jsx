@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Stack } from 'phosphor-react'
+// import { Stack } from 'phosphor-react'
+import logo from '../assets/logo.svg'
 import { Link } from 'react-router-dom'
 import Select from '@/components/Select'
 
@@ -14,8 +15,8 @@ export default function Header() {
   return (
     <header className="flex p-2">
       <Link to="/" className="flex items-center space-x-2">
-        <Stack width={32} height={32} />
-        <h1 className="text-2xl">CAW</h1>
+        <img src={logo} width={36} height={36} alt="logo" />
+        <h1 className="text-2xl">CCW</h1>
       </Link>
       <div className="flex-grow"></div>
       <Select options={OPTIONS} selected={selected} onChange={setSelected} className="w-20 text-gray-700" />
