@@ -62,7 +62,7 @@ function JoinGameUI({ socket, game }) {
 
   function copyLink() {
     navigator.clipboard.writeText(window.location.href).then(() => {
-      alert('Link copied to the clipboard')
+      alert('Enlace copiado al portapapeles')
     })
   }
 
