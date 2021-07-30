@@ -84,6 +84,9 @@ class Game {
       cards: [],
       points: 0
     })
+    if (this.started) {
+      this.drawWhiteCards(player.id)
+    }
     return this
   }
 

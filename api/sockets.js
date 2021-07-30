@@ -22,10 +22,10 @@ module.exports = function (socket, io, db) {
     io.to(room).emit('game:edit', game)
   })
 
-  handleMessage('game:join', ({ gameId, user }) => {
+  handleMessage('game:join', ({ gameId, name }) => {
     const room = `game-${gameId}`
     socket.join(room)
-    const game = db.getGame(gameId).addPlayer(user)
+    const game = db.getGame(gameId).addPlayer({ id: socket.id, name })
     io.to(room).emit('game:edit', game)
   })
 

@@ -32,10 +32,7 @@ export default function JoinGame() {
         // TODO: 1. save name in local storage and use as second argument for prompt in other plays
         // TODO: 2. replace window.prompt with custom modal
         const name = window.prompt('Introduce un nombre de usuario')
-        socket.emit('game:join', {
-          gameId: game.id,
-          user: { id: socket.id, name }
-        })
+        socket.emit('game:join', { gameId: game.id, name })
         socket.once('game:edit', (game) => {
           if (game.started) {
             navigate(`/game/${game.id}`)
