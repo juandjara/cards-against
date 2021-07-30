@@ -5,6 +5,7 @@ import DeckList from '@/views/DeckList'
 import NewGameForm from '@/views/NewGameForm'
 import JoinGame from '@/views/JoinGame'
 import Game from '@/views/Game'
+import Guide from './views/Guide'
 
 export default function Routes() {
   return (
@@ -14,6 +15,7 @@ export default function Routes() {
       <Route path="/newgame" element={<NewGameForm />} />
       <Route path="/join/:id" element={<JoinGame />} />
       <Route path="/game/:id" element={<Game />} />
+      <Route path="/guide" element={<Guide />} />
     </BrowserRoutes>
   )
 }

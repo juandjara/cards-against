@@ -20,9 +20,9 @@ export default function Home() {
         <ButtonCard as={motion.button} initial={{ x: -200 }} animate={{ x: 0 }} onClick={joinGame} type="white" text="Unirse a una partida" />
         <ButtonCard as={motion(Link)} initial={{ x: 200 }} animate={{ x: 0 }} to="/newgame" type="black" text="Crear partida" />
       </div>
-      <Link to="/decks" className="mb-6 font-medium text-gray-200 hover:text-white hover:underline">
+      {/* <Link to="/decks" className="mb-6 font-medium text-gray-200 hover:text-white hover:underline">
         Editor de mazos
-      </Link>
+      </Link> */}
       <Link to="/guide" className="mb-6 font-medium text-gray-200 hover:text-white hover:underline">
         ¿Como se juega?
       </Link>
