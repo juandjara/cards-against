@@ -36,7 +36,7 @@ export default function Select({ options = [], selected, onChange, placeholder, 
                   key={opt[valueKey]}
                   value={opt}
                   className={({ active }) =>
-                    `${active ? 'text-yellow-900 bg-yellow-100' : 'text-gray-900'}
+                    `${active ? 'text-blue-900 bg-blue-100' : 'text-gray-900'}
                         cursor-default select-none relative py-2 pr-10 pl-4`
                   }
                 >
@@ -45,7 +45,7 @@ export default function Select({ options = [], selected, onChange, placeholder, 
                       <span className={`${selected ? 'font-medium' : 'font-normal'} block truncate`}>{opt.label}</span>
                       {selected ? (
                         <span
-                          className={`${active ? 'text-yellow-600' : 'text-yellow-600'}
+                          className={`${active ? 'text-blue-600' : 'text-blue-600'}
                               absolute inset-y-0 right-0 flex items-center pr-3`}
                         >
                           <CheckIcon className="w-5 h-5" aria-hidden="true" />
