@@ -4,6 +4,8 @@
     "start": "vite --port 4000",
     "dev": "vite --port 4000",
     "build": "vite build",
+    "copy": "cp dist/index.html dist/200.html",
+    "deploy": "yarn build && yarn copy",
     "serve": "vite preview",
     "lint:fix": "eslint ./src --ext .jsx,.js --quiet --fix --ignore-path ./.gitignore",
     "lint:format": "prettier --loglevel warn --write \"./**/*.{js,jsx,css,md,json}\" ",
