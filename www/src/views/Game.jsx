@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useRef, useState } from 'react'
 import { editGame, useGame } from '@/lib/gameUtils'
 import { useSocket } from '@/lib/SocketProvider'
 import { useQueryClient } from 'react-query'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import GameMessage from '@/components/GameMessage'
 import GameCard from '@/components/GameCard'
 import { motion, AnimatePresence, useAnimation } from 'framer-motion'
@@ -10,7 +10,18 @@ import PrimaryButton from '@/components/PrimaryButton'
 import Button from '@/components/Button'
 import { Dialog, Transition } from '@headlessui/react'
 
+function getLastFinishedRound(game) {
+  const round = game.finishedRounds[game.finishedRounds.length - 1]
+  if (!round) {
+    return null
+  }
+
+  const winner = game.players.find((p) => p.id === round.winner)
+  return { ...round, winner }
+}
+
 export default function Game() {
+  const navigate = useNavigate()
   const cache = useQueryClient()
   const socket = useSocket()
   const playerId = socket?.id
@@ -27,7 +38,7 @@ export default function Game() {
   const cardCounterText = `${playersReady} / ${game?.players.length - 1}`
   const counterAnimation = useAnimation()
   const [winner, setWinner] = useState(null)
-  const [finishedRound, setFinishedRound] = useState(null)
+  const [showRoundModal, setShowRoundModal] = useState(false)
 
   useEffect(() => {
     if (socket && game) {
@@ -35,9 +46,8 @@ export default function Game() {
       socket.on('game:cards-played', () => {
         counterAnimation.start({ x: [300, 0] })
       })
-      socket.on('game:round-winner', (round) => {
-        const winner = game.players.find((p) => p.id === round.winner)
-        setFinishedRound({ ...round, winner })
+      socket.on('game:round-winner', () => {
+        setShowRoundModal(true)
       })
       if (!playerData) {
         // TODO: 1. save name in local storage and use as second argument for prompt in other plays
@@ -95,7 +105,12 @@ export default function Game() {
   }
 
   function closeModal() {
-    setFinishedRound(null)
+    setShowRoundModal(false)
+  }
+
+  function closeGameOverModal() {
+    socket.emit('game:leave', game.id)
+    navigate('/')
   }
 
   if (!socket || !game) {
@@ -107,8 +122,8 @@ export default function Game() {
       {playerData && (
         <PlayerData playerData={playerData} playerIsHost={playerIsHost} roundNum={game.finishedRounds.length + 1} />
       )}
-      {game.finished && <GameOverModal game={game} />}
-      <RoundModal closeModal={closeModal} round={finishedRound} />
+      <GameOverModal closeModal={closeGameOverModal} game={game} />
+      <RoundModal closeModal={closeModal} show={showRoundModal && !game.finished} game={game} />
       <Round
         playerIsHost={playerIsHost}
         cardCounterText={cardCounterText}
@@ -138,13 +153,8 @@ export default function Game() {
   )
 }
 
-function GameOverModal() {
-  // TODO: announce game over and show all players by order of points. Maybe include a gallery of rounds here using finishedRounds data
-  return null
-}
-
 // partly taken from https://headlessui.dev/react/dialog
-function RoundModal({ closeModal, round }) {
+function Modal({ show, title, children, onClose }) {
   const closeRef = useRef()
 
   useEffect(() => {
@@ -154,18 +164,10 @@ function RoundModal({ closeModal, round }) {
   }, [])
 
   return (
-    <Transition appear show={!!round} as={Fragment}>
-      <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={closeModal}>
+    <Transition appear show={show} as={Fragment}>
+      <Dialog as="div" initialFocus={closeRef} className="fixed inset-0 z-10 overflow-y-auto" onClose={onClose}>
         <div className="min-h-screen px-4 text-center">
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
+          <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100">
             <Dialog.Overlay className="fixed inset-0" />
           </Transition.Child>
           {/* This element is to trick the browser into centering the modal contents. */}
@@ -177,33 +179,16 @@ function RoundModal({ closeModal, round }) {
             enter="ease-out duration-300"
             enterFrom="opacity-0 scale-95"
             enterTo="opacity-100 scale-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100 scale-100"
-            leaveTo="opacity-0 scale-95"
           >
             <div
               style={{ minWidth: 300 }}
               className="inline-block max-w-screen-xl p-4 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
             >
-              {round && (
-                <>
-                  <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
-                    Ganador de la ronda: {round.winner.name}
-                  </Dialog.Title>
-                  <div className="py-6 flex flex-wrap items-center justify-center content-center">
-                    <GameCard
-                      className="m-2 ml-0"
-                      type="black"
-                      text={decodeHtml(round.blackCard.text)}
-                      badge={round.blackCard.pick}
-                    />
-                    {round.whiteCards.map((c) => (
-                      <GameCard className="shadow-lg m-2" text={decodeHtml(c.card)} type="white" key={c.card} />
-                    ))}
-                  </div>
-                </>
-              )}
-              <Button ref={closeRef} onClick={closeModal} className="mt-4 block ml-auto">
+              <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
+                {title}
+              </Dialog.Title>
+              {children}
+              <Button ref={closeRef} onClick={onClose} className="mt-4 block ml-auto">
                 Cerrar
               </Button>
             </div>
@@ -211,6 +196,39 @@ function RoundModal({ closeModal, round }) {
         </div>
       </Dialog>
     </Transition>
+  )
+}
+
+function GameOverModal({ closeModal, game }) {
+  // TODO: include a gallery of rounds here using finishedRounds data
+  const players = game.players.slice().sort((a, b) => b.points - a.points)
+  return (
+    <Modal show={game.finished} onClose={closeModal} title="Fin de la partida">
+      <ul className="pt-4">
+        {players.map((p) => (
+          <li className="text-gray-700" key={p.id}>
+            <strong className="font-bold">{p.name}:</strong> {p.points} puntos
+          </li>
+        ))}
+      </ul>
+    </Modal>
+  )
+}
+
+function RoundModal({ closeModal, show, game }) {
+  const round = getLastFinishedRound(game)
+  const title = `Ganador de la ronda: ${round?.winner?.name}`
+  const whiteCards = round ? round.whiteCards : []
+  const blackCard = round ? round.blackCard : { text: '' }
+  return (
+    <Modal show={show} onClose={closeModal} title={title}>
+      <div className="py-6 flex flex-wrap items-center justify-center content-center">
+        <GameCard className="m-2 ml-0" type="black" text={decodeHtml(blackCard.text)} badge={blackCard.pick} />
+        {whiteCards.map((c) => (
+          <GameCard className="shadow-lg m-2" text={decodeHtml(c.card)} type="white" key={c.card} />
+        ))}
+      </div>
+    </Modal>
   )
 }
 

@@ -65,7 +65,9 @@ module.exports = function (socket, io, db) {
     const room = `game-${gameId}`
     const game = db.getGame(gameId)
     io.to(room).emit('game:edit', game.finishRound(winnerPlayerId))
-    io.to(room).emit('game:round-winner', game.getLastFinishedRound())
+    setTimeout(() => {
+      io.to(room).emit('game:round-winner', game.getLastFinishedRound())
+    }, 500)
   })
 
   handleMessage('disconnect', () => {
