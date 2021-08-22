@@ -171,8 +171,8 @@ export default function NewGameForm() {
             </PrimaryButton>
             {cardsNumOk ? null : (
               <p className="text-sm">
-                Se necesitan un mínimo de {MIN_BLACK_CARDS} cartas negras y {MIN_WHITE_CARDS} cartas blancas para empezar
-                una partida
+                Se necesitan un mínimo de {MIN_BLACK_CARDS} cartas negras y {MIN_WHITE_CARDS} cartas blancas para
+                empezar una partida
               </p>
             )}
           </div>
