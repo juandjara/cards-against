@@ -51,7 +51,7 @@ class Round {
 }
 
 class Game {
-  constructor({ deck, rotation, winCondition, maxPoints, maxRounds, public }) {
+  constructor({ deck, rotation, winCondition, maxPoints, maxRounds, isPublic }) {
     const id = createID()
     const data = {
       id,
@@ -65,7 +65,7 @@ class Game {
       usedCards: new Set(),
       maxPoints,
       maxRounds,
-      public,
+      isPublic,
       finishedRounds: [],
       round: new Round()
     }

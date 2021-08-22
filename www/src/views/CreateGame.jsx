@@ -90,7 +90,7 @@ export default function NewGameForm() {
       winCondition,
       maxPoints: nPoints,
       maxRounds: nRounds,
-      public: isPublic
+      isPublic
     })
 
     socket.once('game:new', (game) => {
