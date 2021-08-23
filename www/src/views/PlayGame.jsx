@@ -21,7 +21,7 @@ function getLastFinishedRound(game) {
   return { ...round, winner }
 }
 
-export default function Game() {
+export default function PlayGame() {
   const navigate = useNavigate()
   const cache = useQueryClient()
   const socket = useSocket()

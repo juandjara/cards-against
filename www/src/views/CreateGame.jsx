@@ -38,7 +38,7 @@ function CheckboxLabel({ label, numblack = 5, numwhite = 24 }) {
   )
 }
 
-export default function NewGameForm() {
+export default function CreateGame() {
   const navigate = useNavigate()
   const socket = useSocket()
   const [isPublic, setIsPublic] = useState(false)
@@ -56,11 +56,13 @@ export default function NewGameForm() {
       .reduce(
         (acum, next) => {
           return {
+            name: [acum.name, next.name].filter(Boolean).join(', '),
             whiteCards: acum.whiteCards.concat(next.whiteCards),
             blackCards: acum.blackCards.concat(next.blackCards)
           }
         },
         {
+          name: null,
           blackCards: [],
           whiteCards: []
         }
@@ -146,6 +148,20 @@ export default function NewGameForm() {
         </Button>
         <h2 className="mt-4 mb-8 text-3xl font-semibold">Nueva partida</h2>
         <form onSubmit={handleSubmit} className="space-y-8">
+          <RadioGroup
+            label="¿Como se elige al juez de las cartas?"
+            name="rotation"
+            selected={rotation}
+            options={ROTATION_OPTIONS}
+            onChange={setRotation}
+          />
+          <RadioGroup
+            label="¿Cuando se acaba el juego?"
+            name="win-condition"
+            options={winConditionOptions}
+            selected={winCondition}
+            onChange={setWinCondition}
+          />
           <div>
             <label className="flex items-start p-2 pl-1">
               <input
@@ -161,21 +177,6 @@ export default function NewGameForm() {
               Si marcas esta opción la partida aparecerá en el menú <em>Unirse a una partida</em>
             </p>
           </div>
-
-          <RadioGroup
-            label="¿Como se elige al juez de las cartas?"
-            name="rotation"
-            selected={rotation}
-            options={ROTATION_OPTIONS}
-            onChange={setRotation}
-          />
-          <RadioGroup
-            label="¿Cuando se acaba el juego?"
-            name="win-condition"
-            options={winConditionOptions}
-            selected={winCondition}
-            onChange={setWinCondition}
-          />
           <CheckboxGroup
             label="Mazos de cartas"
             className="w-52"
