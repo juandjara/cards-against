@@ -224,9 +224,9 @@ class Game {
     return this
   }
 
-  discardWhiteCard (card, playerId) {
+  discardWhiteCard (cards, playerId) {
     const player = this.players.find(p => p.id === playerId)
-    player.cards = player.cards.filter(c => c !== card)
+    player.cards = player.cards.filter(c => cards.indexOf(c) === -1)
     this.drawWhiteCards(playerId)
     return this
   }

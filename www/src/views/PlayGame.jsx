@@ -88,11 +88,11 @@ export default function PlayGame() {
     }
   }
 
-  function discardWhiteCards(card) {
+  function discardWhiteCards(cards) {
     socket.emit('game:discard-white-card', {
       gameId: game.id,
       playerId,
-      card
+      cards
     })
   }
 
@@ -400,7 +400,7 @@ function CardPicker({ cardsToPick, cards = [], onCardsPicked, onDiscard }) {
   }
 
   function discard() {
-    onDiscard(selected[0])
+    onDiscard(selected)
     setSelected([])
   }
 
@@ -412,7 +412,7 @@ function CardPicker({ cardsToPick, cards = [], onCardsPicked, onDiscard }) {
             <PrimaryButton onClick={sendCards}>
               {cardsToPick === 1 ? 'Elegir esta carta' : 'Elegir estas cartas'}
             </PrimaryButton>
-            {selected.length === 1 && (
+            {selected.length >= 1 && (
               <Button onClick={discard} className="ml-2">
                 Descartar
               </Button>
