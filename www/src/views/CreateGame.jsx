@@ -52,7 +52,7 @@ export default function NewGameForm() {
 
   const mergedDeck = useMemo(() => {
     return deckOptions
-      .filter((deck) => deckSelection.indexOf(deck.id) !== -1)
+      .filter(deck => deckSelection.indexOf(deck.id) !== -1)
       .reduce(
         (acum, next) => {
           return {
@@ -70,8 +70,8 @@ export default function NewGameForm() {
   const cardsNumOk = mergedDeck.whiteCards.length >= MIN_WHITE_CARDS && mergedDeck.blackCards.length >= MIN_BLACK_CARDS
 
   useEffect(() => {
-    loadAllDecks().then((decks) => {
-      const deckOptions = decks.map((deck) => ({
+    loadAllDecks().then(decks => {
+      const deckOptions = decks.map(deck => ({
         ...deck,
         value: deck.id,
         label: <CheckboxLabel numblack={deck.blackCards.length} numwhite={deck.whiteCards.length} label={deck.name} />
@@ -93,7 +93,7 @@ export default function NewGameForm() {
       isPublic
     })
 
-    socket.once('game:new', (game) => {
+    socket.once('game:new', game => {
       setLoading(false)
       navigate(`/join/${game.id}`)
     })
@@ -110,7 +110,7 @@ export default function NewGameForm() {
             type="number"
             className="w-20 mx-2 rounded-md text-gray-700"
             value={nRounds}
-            onChange={(ev) => setNRounds(ev.target.value)}
+            onChange={ev => setNRounds(ev.target.value)}
           />
           <span>rondas</span>
         </>
@@ -125,7 +125,7 @@ export default function NewGameForm() {
             type="number"
             value={nPoints}
             className="w-20 mx-2 rounded-md text-gray-700"
-            onChange={(ev) => setNPoints(ev.target.value)}
+            onChange={ev => setNPoints(ev.target.value)}
           />
           <span>puntos</span>
         </>
@@ -152,7 +152,7 @@ export default function NewGameForm() {
                 type="checkbox"
                 name="public"
                 checked={isPublic}
-                onChange={(ev) => setIsPublic(ev.target.checked)}
+                onChange={ev => setIsPublic(ev.target.checked)}
                 className="h-5 w-5 text-blue-500 rounded-sm"
               />
               <span className="ml-3 text-white font-medium">Pública</span>

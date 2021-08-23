@@ -9,11 +9,13 @@ import { useSocket } from '@/lib/SocketProvider'
 import { useGame, editGame, joinGame } from '@/lib/gameUtils'
 import { useQueryClient } from 'react-query'
 import GameMessage from '@/components/GameMessage'
+import usePlayerId from '@/lib/usePlayerId'
 
-const MIN_PLAYERS = 3
+const MIN_PLAYERS = 1
 
 export default function JoinGame() {
   const navigate = useNavigate()
+  const playerId = usePlayerId()
   const cache = useQueryClient()
   const socket = useSocket()
   const { id } = useParams()
@@ -21,18 +23,18 @@ export default function JoinGame() {
 
   useEffect(() => {
     if (socket && game) {
-      socket.on('game:edit', (game) => {
+      socket.on('game:edit', game => {
         editGame(cache, game)
         if (game.started) {
           navigate(`/game/${game.id}`)
         }
       })
-      const playerHasJoined = game && game.players.some((p) => p.id === socket.id)
+      const playerHasJoined = game && game.players.some(p => p.id === playerId)
       if (!playerHasJoined) {
         // TODO: 1. save name in local storage and use as second argument for prompt in other plays
         // TODO: 2. replace window.prompt with custom modal
-        joinGame(socket, game)
-        socket.once('game:edit', (game) => {
+        joinGame({ socket, game, playerId })
+        socket.once('game:edit', game => {
           if (game.started) {
             navigate(`/game/${game.id}`)
           }
@@ -51,12 +53,12 @@ export default function JoinGame() {
     return <GameMessage error={error} loading={loading} />
   }
 
-  return <JoinGameUI socket={socket} game={game} />
+  return <JoinGameUI socket={socket} game={game} playerId={playerId} />
 }
 
-function JoinGameUI({ socket, game }) {
+function JoinGameUI({ socket, game, playerId }) {
   const navigate = useNavigate()
-  const playerIsHost = socket && game && game.players[0] && game.players[0].id === socket.id
+  const playerIsHost = socket && game && game.players[0] && game.players[0].id === playerId
   const [loading, setLoading] = useState(false)
 
   function copyLink() {

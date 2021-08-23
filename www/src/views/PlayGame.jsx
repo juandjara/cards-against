@@ -9,6 +9,7 @@ import { motion, AnimatePresence, useAnimation } from 'framer-motion'
 import PrimaryButton from '@/components/PrimaryButton'
 import Button from '@/components/Button'
 import { Dialog, Transition } from '@headlessui/react'
+import usePlayerId from '@/lib/usePlayerId'
 
 function getLastFinishedRound(game) {
   const round = game.finishedRounds[game.finishedRounds.length - 1]
@@ -16,7 +17,7 @@ function getLastFinishedRound(game) {
     return null
   }
 
-  const winner = game.players.find((p) => p.id === round.winner)
+  const winner = game.players.find(p => p.id === round.winner)
   return { ...round, winner }
 }
 
@@ -24,14 +25,14 @@ export default function Game() {
   const navigate = useNavigate()
   const cache = useQueryClient()
   const socket = useSocket()
-  const playerId = socket?.id
+  const playerId = usePlayerId()
   const { id } = useParams()
   const { game, loading, error } = useGame(id)
-  const playerData = game?.players.find((p) => p.id === playerId)
+  const playerData = game?.players.find(p => p.id === playerId)
   const cardsToPick = game?.round.blackCard?.pick || 1
   const playerIsHost = playerId === game?.round.host
-  const roundPlayed = game?.round.whiteCards.some((c) => c.player === playerId)
-  const playersReady = game?.players.filter((p) => game.round.whiteCards.some((c) => c.player === p.id)).length
+  const roundPlayed = game?.round.whiteCards.some(c => c.player === playerId)
+  const playersReady = game?.players.filter(p => game.round.whiteCards.some(c => c.player === p.id)).length
   const allCardsSent = playersReady === game?.players.length - 1
   const showHand = !playerIsHost && !roundPlayed
   const showCardCounter = !allCardsSent && (playerIsHost || roundPlayed)
@@ -42,7 +43,7 @@ export default function Game() {
 
   useEffect(() => {
     if (socket && game) {
-      socket.on('game:edit', (game) => editGame(cache, game))
+      socket.on('game:edit', game => editGame(cache, game))
       socket.on('game:cards-played', () => {
         counterAnimation.start({ x: [300, 0] })
       })
@@ -52,7 +53,7 @@ export default function Game() {
       if (!playerData) {
         // TODO: 1. save name in local storage and use as second argument for prompt in other plays
         // TODO: 2. replace window.prompt with custom modal
-        joinGame(socket, game)
+        joinGame({ socket, game, playerId })
       }
     }
 
@@ -66,6 +67,7 @@ export default function Game() {
   function playCards(cards) {
     socket.emit('game:play-white-cards', {
       gameId: game.id,
+      playerId,
       cards
     })
   }
@@ -88,6 +90,7 @@ export default function Game() {
   function discardWhiteCards(card) {
     socket.emit('game:discard-white-card', {
       gameId: game.id,
+      playerId,
       card
     })
   }
@@ -202,7 +205,7 @@ function GameOverModal({ closeModal, game }) {
   return (
     <Modal show={game.finished} onClose={closeModal} title="Fin de la partida">
       <ul className="pt-4">
-        {players.map((p) => (
+        {players.map(p => (
           <li className="text-gray-700" key={p.id}>
             <strong className="font-bold">{p.name}:</strong> {p.points} puntos
           </li>
@@ -221,7 +224,7 @@ function RoundModal({ closeModal, show, game }) {
     <Modal show={show} onClose={closeModal} title={title}>
       <div className="py-6 flex flex-wrap items-center justify-center content-center">
         <GameCard className="m-2 ml-0" type="black" text={decodeHtml(blackCard.text)} badge={blackCard.pick} />
-        {whiteCards.map((c) => (
+        {whiteCards.map(c => (
           <GameCard className="shadow-lg m-2" text={decodeHtml(c.card)} type="white" key={c.card} />
         ))}
       </div>
@@ -233,7 +236,7 @@ function PlayerData({ host, players, roundNum }) {
   return (
     <div className="pt-2 flex items-start justify-between">
       <ul className="space-y-3">
-        {players.map((p) => (
+        {players.map(p => (
           <li key={p.id}>
             <p>
               <span className="font-bold text-lg">{p.name} </span>
@@ -316,7 +319,7 @@ function Round({
         {cardCounter}
         <ul className="flex flex-wrap justify-center">
           {allCardsSent &&
-            groupCardsByPlayer(round.whiteCards).map((group) => (
+            groupCardsByPlayer(round.whiteCards).map(group => (
               <div key={group.player} className={getGroupClassName(group)}>
                 {group.cards.map((c, i) =>
                   playerIsHost ? (
@@ -353,7 +356,7 @@ function CardPicker({ cardsToPick, cards = [], onCardsPicked, onDiscard }) {
 
   function selectCard(card) {
     if (cardIsSelected(card)) {
-      setSelected(selected.filter((c) => c !== card))
+      setSelected(selected.filter(c => c !== card))
     } else {
       setSelected(selected.concat(card).slice(-cardsToPick))
     }
@@ -400,7 +403,7 @@ function CardPicker({ cardsToPick, cards = [], onCardsPicked, onDiscard }) {
       </div>
       <div className="flex md:justify-center items-start space-x-4 px-4">
         <AnimatePresence>
-          {cards.map((card) => (
+          {cards.map(card => (
             <GameCard
               key={card}
               type="white"

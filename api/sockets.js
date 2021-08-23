@@ -22,19 +22,35 @@ module.exports = function (socket, io, db) {
     io.to(room).emit('game:edit', game)
   })
 
-  handleMessage('game:join', ({ gameId, name }) => {
+  handleMessage('game:join', ({ gameId, name, playerId }) => {
     const room = `game-${gameId}`
     socket.join(room)
-    const game = db.getGame(gameId).addPlayer({ id: socket.id, name })
+    const game = db.getGame(gameId).addPlayer({ id: playerId, name })
     io.to(room).emit('game:edit', game)
   })
 
-  handleMessage('game:leave', (gameId) => {
+  handleMessage('game:leave', ({ gameId, playerId }) => {
     const room = `game-${gameId}`
     socket.leave(room)
-    const game = db.getGame(gameId).removePlayer(socket.id)
+    const game = db.getGame(gameId).removePlayer(playerId)
     socket.to(room).emit('game:edit', game)
+    if (game.players.length === 0) {
+      db.removeGame(game)
+    }
   })
+
+  // handleMessage('disconnect', () => {
+  //   for (const gameid in db.games) {
+  //     let game = db.games[gameid]
+  //     if (game.players.some(p => p.id === socket.id)) {
+  //       game = db.getGame(gameid).removePlayer(socket.id)
+  //       io.to(`game-${gameid}`).emit('game:edit', game)
+  //     }
+  //     if (game.players.length === 0) {
+  //       db.removeGame(game)
+  //     }
+  //   }
+  // })
 
   handleMessage('game:start', (gameId) => {
     const room = `game-${gameId}`
@@ -42,16 +58,16 @@ module.exports = function (socket, io, db) {
     io.to(room).emit('game:edit', game)
   })
 
-  handleMessage('game:play-white-cards', ({ gameId, cards }) => {
+  handleMessage('game:play-white-cards', ({ gameId, cards, playerId }) => {
     const room = `game-${gameId}`
-    const game = db.getGame(gameId).playWhiteCards(cards, socket.id)
+    const game = db.getGame(gameId).playWhiteCards(cards, playerId)
     io.to(room).emit('game:edit', game)
     io.to(room).emit('game:cards-played', cards)
   })
 
-  handleMessage('game:discard-white-card', ({ gameId, card }) => {
+  handleMessage('game:discard-white-card', ({ gameId, card, playerId }) => {
     const room = `game-${gameId}`
-    const game = db.getGame(gameId).discardWhiteCard(card, socket.id)
+    const game = db.getGame(gameId).discardWhiteCard(card, playerId)
     io.to(room).emit('game:edit', game)
   })
 
@@ -68,18 +84,5 @@ module.exports = function (socket, io, db) {
     setTimeout(() => {
       io.to(room).emit('game:round-winner', game.getLastFinishedRound())
     }, 500)
-  })
-
-  handleMessage('disconnect', () => {
-    for (const gameid in db.games) {
-      let game = db.games[gameid]
-      if (game.players.some(p => p.id === socket.id)) {
-        game = db.getGame(gameid).removePlayer(socket.id)
-        io.to(`game-${gameid}`).emit('game:edit', game)
-      }
-      if (game.players.length === 0) {
-        db.removeGame(game)
-      }
-    }
   })
 }

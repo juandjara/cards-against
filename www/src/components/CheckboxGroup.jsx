@@ -7,7 +7,7 @@ export default function CheckboxGroup({ label = '', options, selected, onChange 
     if (checked) {
       newSelection = selected.concat(name)
     } else {
-      newSelection = selected.filter((v) => v !== name)
+      newSelection = selected.filter(v => v !== name)
     }
     onChange(newSelection)
   }
@@ -16,7 +16,7 @@ export default function CheckboxGroup({ label = '', options, selected, onChange 
     <div>
       <p className="block ml-1 mb-2 text-sm text-gray-200 font-medium">{label}</p>
       <div className="space-y-4">
-        {options.map((opt) => (
+        {options.map(opt => (
           <label key={opt.value} className="flex items-start border border-gray-400 rounded-lg p-2">
             <input
               type="checkbox"
