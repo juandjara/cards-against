@@ -10,6 +10,7 @@ import PrimaryButton from '@/components/PrimaryButton'
 import Button from '@/components/Button'
 import { Dialog, Transition } from '@headlessui/react'
 import usePlayerId from '@/lib/usePlayerId'
+import { Check, Clock, CrownSimple } from 'phosphor-react'
 
 function getLastFinishedRound(game) {
   const round = game.finishedRounds[game.finishedRounds.length - 1]
@@ -118,9 +119,7 @@ export default function PlayGame() {
 
   return (
     <main className="px-4 pb-8">
-      {playerData && (
-        <PlayerData host={game.round.host} players={game.players} roundNum={game.finishedRounds.length + 1} />
-      )}
+      <PlayersInfo game={game} />
       <GameOverModal closeModal={closeGameOverModal} game={game} />
       <RoundModal closeModal={closeModal} show={showRoundModal && !game.finished} game={game} />
       <Round
@@ -232,19 +231,43 @@ function RoundModal({ closeModal, show, game }) {
   )
 }
 
-function PlayerData({ host, players, roundNum }) {
+function getPlayerState(game, player) {
+  const isHost = game.round.host === player.id
+  const hasPlayed = game.round.whiteCards.some(c => c.player === player.id)
+
+  if (isHost) {
+    return (
+      <span title="Juez de las cartas">
+        <CrownSimple className="w-6 h-6" />
+      </span>
+    )
+  }
+  if (hasPlayed) {
+    return (
+      <span title="Jugador. Carta enviada">
+        <Check className="w-6 h-6" />
+      </span>
+    )
+  } else {
+    return (
+      <span title="Jugador. Esperando a que este jugador envie su carta">
+        <Clock className="w-6 h-6 opacity-50" />
+      </span>
+    )
+  }
+}
+
+function PlayersInfo({ game }) {
+  const host = game.round.host
+  const roundNum = game.finishedRounds.length + 1
   return (
     <div className="pt-2 flex items-start justify-between">
       <ul className="space-y-3">
-        {players.map(p => (
-          <li key={p.id}>
-            <p>
-              <span className="font-bold text-lg">{p.name} </span>
-            </p>
-            <p className="mt-1">
-              <span className="font-medium bg-gray-900 px-2 py-1 rounded-full">{p.points}</span>
-              <span className="text-sm ml-1"> {p.id === host ? 'Juez de las cartas' : 'Jugador'}</span>
-            </p>
+        {game.players.map(p => (
+          <li key={p.id} className="flex space-x-3 items-center">
+            {getPlayerState(game, p)}
+            <span className="font-medium font-mono bg-gray-900 px-2 py-1 rounded-lg">{p.points}</span>
+            <span className={`${p.id === host ? 'font-bold' : 'font-medium'} text-lg`}>{p.name} </span>
           </li>
         ))}
       </ul>
