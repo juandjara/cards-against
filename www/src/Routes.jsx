@@ -5,11 +5,13 @@ import CreateGame from '@/views/CreateGame'
 import JoinGame from '@/views/JoinGame'
 import PlayGame from '@/views/PlayGame'
 import Guide from './views/Guide'
+import PublicGames from './views/PublicGames'
 
 export default function Routes() {
   return (
     <BrowserRoutes>
       <Route path="/" element={<Home />} />
+      <Route path="/publicgames" element={<PublicGames />} />
       <Route path="/newgame" element={<CreateGame />} />
       <Route path="/join/:id" element={<JoinGame />} />
       <Route path="/game/:id" element={<PlayGame />} />

@@ -17,10 +17,11 @@ export default function Home() {
     if (currentGame) {
       navigate(`/join/${currentGame.id}`)
     } else {
-      const id = window.prompt('Introduce el ID de la partida (4 digitos)')
-      if (id && id.length === 4) {
-        navigate(`/join/${id}`)
-      }
+      navigate('/publicgames')
+      // const id = window.prompt('Introduce el ID de la partida (4 digitos)')
+      // if (id && id.length === 4) {
+      //   navigate(`/join/${id}`)
+      // }
     }
   }
 
