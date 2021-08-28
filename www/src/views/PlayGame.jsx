@@ -360,7 +360,8 @@ function Round({
 function CardPicker({ cardsToPick, cards = [], onCardsPicked, onDiscard }) {
   const [selected, setSelected] = useState([])
   const selectCardMessage = cardsToPick === 1 ? 'Elije una carta' : `Elije ${cardsToPick} cartas`
-  const readyToSend = selected.length >= cardsToPick
+  const showSendButton = selected.length >= cardsToPick
+  const showDiscardButton = selected.length >= 1
 
   function selectCard(card) {
     if (cardIsSelected(card)) {
@@ -390,14 +391,16 @@ function CardPicker({ cardsToPick, cards = [], onCardsPicked, onDiscard }) {
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="">
       <div className="mx-auto px-1 md:px-8 max-w-6xl mb-1">
-        {readyToSend ? (
+        {showSendButton || showDiscardButton ? (
           <motion.div className="mb-2" animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
-            <PrimaryButton onClick={sendCards}>
-              {cardsToPick === 1 ? 'Elegir esta carta' : 'Elegir estas cartas'}
-            </PrimaryButton>
-            {selected.length >= 1 && (
+            {showSendButton && (
+              <PrimaryButton onClick={sendCards}>
+                {cardsToPick === 1 ? 'Elegir esta carta' : 'Elegir estas cartas'}
+              </PrimaryButton>
+            )}
+            {showDiscardButton && (
               <Button onClick={discard} className="ml-2">
                 Descartar
               </Button>
@@ -411,7 +414,7 @@ function CardPicker({ cardsToPick, cards = [], onCardsPicked, onDiscard }) {
           <small className="text-gray-100 text-base"> · {selectCardMessage}</small>
         </p>
       </div>
-      <div className="flex md:justify-center items-start space-x-4">
+      <div className="overflow-x-auto flex md:justify-center items-start space-x-4">
         <AnimatePresence>
           {cards.map(card => (
             <GameCard
