@@ -1,9 +1,8 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react'
-import { editGame, joinGame, useGame } from '@/lib/gameUtils'
-import { useSocket } from '@/lib/SocketProvider'
+import { editGame, joinGame } from '@/lib/gameUtils'
 import { useQueryClient } from 'react-query'
-import { useNavigate, useParams } from 'react-router-dom'
-import GameMessage from '@/components/GameMessage'
+import { useNavigate } from 'react-router-dom'
+import withGame from '@/lib/withGame'
 import GameCard from '@/components/GameCard'
 import { motion, AnimatePresence, useAnimation } from 'framer-motion'
 import PrimaryButton from '@/components/PrimaryButton'
@@ -22,13 +21,10 @@ function getLastFinishedRound(game) {
   return { ...round, winner }
 }
 
-export default function PlayGame() {
+function PlayGameUI({ socket, game }) {
   const navigate = useNavigate()
   const cache = useQueryClient()
-  const socket = useSocket()
   const playerId = usePlayerId()
-  const { id } = useParams()
-  const { game, loading, error } = useGame(id)
   const playerData = game?.players.find(p => p.id === playerId)
   const cardsToPick = game?.round.blackCard?.pick || 1
   const playerIsHost = playerId === game?.round.host
@@ -43,27 +39,24 @@ export default function PlayGame() {
   const [showRoundModal, setShowRoundModal] = useState(false)
 
   useEffect(() => {
-    if (socket && game) {
-      socket.on('game:edit', game => editGame(cache, game))
-      socket.on('game:cards-played', () => {
-        counterAnimation.start({ x: [300, 0] })
-      })
-      socket.on('game:round-winner', () => {
-        setShowRoundModal(true)
-      })
-      if (!playerData) {
-        // TODO: 1. save name in local storage and use as second argument for prompt in other plays
-        // TODO: 2. replace window.prompt with custom modal
-        joinGame({ socket, game, playerId })
-      }
-    }
+    socket.on('game:edit', game => editGame(cache, game))
+    socket.on('game:cards-played', () => {
+      counterAnimation.start({ x: [300, 0] })
+    })
+    socket.on('game:round-winner', () => {
+      setShowRoundModal(true)
+    })
+
+    // TODO: 1. save name in local storage and use as second argument for prompt in other plays
+    //       2. replace window.prompt with custom modal
+    joinGame({ socket, game, playerId })
 
     return () => {
       if (socket) {
         socket.off('game:edit')
       }
     }
-  })
+  }, [])
 
   function playCards(cards) {
     socket.emit('game:play-white-cards', {
@@ -113,12 +106,8 @@ export default function PlayGame() {
     navigate('/')
   }
 
-  if (!socket || !game) {
-    return <GameMessage error={error} loading={loading} />
-  }
-
   return (
-    <main className="px-4 pb-8">
+    <main className="h-full px-4 flex flex-col items-stretch justify-start" style={{ minHeight: 'calc(100vh - 54px)' }}>
       <PlayersInfo game={game} />
       <GameOverModal closeModal={closeGameOverModal} game={game} />
       <RoundModal closeModal={closeModal} show={showRoundModal && !game.finished} game={game} />
@@ -142,7 +131,7 @@ export default function PlayGame() {
           onDiscard={discardWhiteCards}
         />
       ) : (
-        <p className="text-center">
+        <p className="text-center flex-grow">
           {allCardsSent
             ? '... Esperando a que el juez elija la carta ganadora'
             : '... Esperando a que los jugadores envíen sus cartas'}
@@ -300,8 +289,7 @@ function Round({
   allCardsSent,
   round,
   onCardClick,
-  onWinnerSelect,
-  showHand
+  onWinnerSelect
 }) {
   function getGroupClassName(group) {
     const selectedStyles = group.player === winner ? 'ring-4 ring-blue-500 ring-inset' : ''
@@ -324,10 +312,7 @@ function Round({
   )
 
   return (
-    <div
-      className="py-6 flex flex-col items-center justify-center content-center"
-      style={{ paddingBottom: showHand ? 260 : 0 }}
-    >
+    <div className="flex-grow py-6 flex flex-col items-center justify-center content-center">
       {winner && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <PrimaryButton onClick={onWinnerSelect} className="my-2">
@@ -405,9 +390,9 @@ function CardPicker({ cardsToPick, cards = [], onCardsPicked, onDiscard }) {
   }
 
   return (
-    <div className="fixed w-full -bottom-2 left-0 overflow-x-auto">
-      <div className="mx-auto px-5 md:px-8 max-w-6xl mb-1">
-        {readyToSend && (
+    <div className="overflow-x-auto">
+      <div className="mx-auto px-1 md:px-8 max-w-6xl mb-1">
+        {readyToSend ? (
           <motion.div className="mb-2" animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
             <PrimaryButton onClick={sendCards}>
               {cardsToPick === 1 ? 'Elegir esta carta' : 'Elegir estas cartas'}
@@ -418,13 +403,15 @@ function CardPicker({ cardsToPick, cards = [], onCardsPicked, onDiscard }) {
               </Button>
             )}
           </motion.div>
+        ) : (
+          <div className="h-9 mb-2"></div>
         )}
         <p className="font-medium text-xl">
           <span>Cartas en tu mano</span>
           <small className="text-gray-100 text-base"> · {selectCardMessage}</small>
         </p>
       </div>
-      <div className="flex md:justify-center items-start space-x-4 px-4">
+      <div className="flex md:justify-center items-start space-x-4">
         <AnimatePresence>
           {cards.map(card => (
             <GameCard
@@ -446,3 +433,6 @@ function CardPicker({ cardsToPick, cards = [], onCardsPicked, onDiscard }) {
     </div>
   )
 }
+
+const PlayGame = withGame(PlayGameUI)
+export default PlayGame

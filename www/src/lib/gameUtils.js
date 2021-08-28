@@ -56,23 +56,28 @@ export function editGame(cache, game) {
 }
 
 export function joinGame({ socket, game, playerId }) {
+  const playerHasJoined = game.players.some(p => p.id === playerId)
   let msg = 'Introduce un nombre de usuario'
-  let name = window.prompt(msg)
-  if (!name) {
-    msg = msg + ' que no este vacío'
+  let name = 'rejoining ...'
+
+  if (!playerHasJoined) {
     name = window.prompt(msg)
-  }
-  if (!name) {
-    msg = msg + ' por favor'
-    name = window.prompt(msg)
-  }
-  if (!name) {
-    msg = msg + '. En serio'
-    name = window.prompt(msg)
-  }
-  if (!name) {
-    msg = 'Introduce el nombre que te de la gana'
-    name = window.prompt(msg)
+    if (!name) {
+      msg = msg + ' que no este vacío'
+      name = window.prompt(msg)
+    }
+    if (!name) {
+      msg = msg + ' por favor'
+      name = window.prompt(msg)
+    }
+    if (!name) {
+      msg = msg + '. En serio'
+      name = window.prompt(msg)
+    }
+    if (!name) {
+      msg = 'Introduce el nombre que te de la gana'
+      name = window.prompt(msg)
+    }
   }
 
   socket.emit('game:join', { gameId: game.id, name, playerId })

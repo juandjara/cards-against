@@ -29,7 +29,11 @@ app.get('/', (req, res) => {
 })
 
 app.get('/rooms', (req, res) => {
-  res.json([...io.sockets.adapter.rooms.keys()])
+  const rooms = [...io.sockets.adapter.rooms.entries()].map(entry => ({
+    key: entry[0],
+    value: [...entry[1]]
+  }))
+  res.json(rooms)
 })
 
 app.get('/games', (req, res) => {

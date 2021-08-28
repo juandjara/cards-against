@@ -79,14 +79,17 @@ class Game {
   }
 
   addPlayer(player) {
-    this.players.push({
-      id: player.id,
-      name: player.name,
-      cards: [],
-      points: 0
-    })
-    if (this.started) {
-      this.drawWhiteCards(player.id)
+    const playerHasJoined = this.players.some(p => p.id === player.id)
+    if (!playerHasJoined) {
+      this.players.push({
+        id: player.id,
+        name: player.name,
+        cards: [],
+        points: 0
+      })
+      if (this.started) {
+        this.drawWhiteCards(player.id)
+      }
     }
     return this
   }

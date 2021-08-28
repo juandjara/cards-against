@@ -1,65 +1,43 @@
 import React, { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { ArrowLeftIcon } from '@heroicons/react/solid'
 import { Copy, StackSimple } from 'phosphor-react'
 import Button from '@/components/Button'
 import PrimaryButton from '@/components/PrimaryButton'
 import Container from '@/components/Container'
-import { useSocket } from '@/lib/SocketProvider'
-import { useGame, editGame, joinGame } from '@/lib/gameUtils'
+import { editGame, joinGame } from '@/lib/gameUtils'
 import { useQueryClient } from 'react-query'
-import GameMessage from '@/components/GameMessage'
 import usePlayerId from '@/lib/usePlayerId'
+import withGame from '@/lib/withGame'
 
-const MIN_PLAYERS = 1
+const MIN_PLAYERS = 2
 
-export default function JoinGame() {
+function JoinGameUI({ socket, game }) {
   const navigate = useNavigate()
-  const playerId = usePlayerId()
   const cache = useQueryClient()
-  const socket = useSocket()
-  const { id } = useParams()
-  const { game, loading, error } = useGame(id)
+  const playerId = usePlayerId()
+  const playerIsHost = socket && game && game.players[0] && game.players[0].id === playerId
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (socket && game) {
-      socket.on('game:edit', game => {
-        editGame(cache, game)
-        if (game.started) {
-          navigate(`/game/${game.id}`)
-        }
-      })
-      const playerHasJoined = game && game.players.some(p => p.id === playerId)
-      if (!playerHasJoined) {
-        // TODO: 1. save name in local storage and use as second argument for prompt in other plays
-        // TODO: 2. replace window.prompt with custom modal
-        joinGame({ socket, game, playerId })
-        socket.once('game:edit', game => {
-          if (game.started) {
-            navigate(`/game/${game.id}`)
-          }
-        })
+    socket.on('game:edit', game => {
+      editGame(cache, game)
+      if (game.started) {
+        navigate(`/game/${game.id}`)
       }
-    }
+    })
+
+    // TODO:
+    // 1. save name in local storage and use as second argument for prompt in other plays
+    // 2. replace window.prompt with custom modal
+    joinGame({ socket, game, playerId })
 
     return () => {
       if (socket) {
         socket.off('game:edit')
       }
     }
-  }, [socket, game])
-
-  if (!socket || !game) {
-    return <GameMessage error={error} loading={loading} />
-  }
-
-  return <JoinGameUI socket={socket} game={game} playerId={playerId} />
-}
-
-function JoinGameUI({ socket, game, playerId }) {
-  const navigate = useNavigate()
-  const playerIsHost = socket && game && game.players[0] && game.players[0].id === playerId
-  const [loading, setLoading] = useState(false)
+  }, [])
 
   function copyLink() {
     navigator.clipboard.writeText(window.location.href).then(() => {
@@ -150,3 +128,6 @@ function Players({ game }) {
     </div>
   )
 }
+
+const JoinGame = withGame(JoinGameUI)
+export default JoinGame
