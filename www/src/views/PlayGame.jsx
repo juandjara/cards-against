@@ -41,6 +41,9 @@ function PlayGameUI({ socket, game }) {
   useEffect(() => {
     socket.on('game:edit', game => {
       editGame(cache, game)
+      if (game.finished) {
+        socket.off('game:edit')
+      }
     })
     socket.on('game:cards-played', () => {
       counterAnimation.start({ x: [300, 0] })
