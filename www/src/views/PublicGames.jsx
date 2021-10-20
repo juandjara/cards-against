@@ -101,7 +101,7 @@ export default function PublicGames() {
       {publicGames.length === 0 && (
         <p>
           No hay ninguna partida púublica disponible.{' '}
-          <Link className="text-blue-200 hover:text-blue-300 transition-colors" to="/newgame">
+          <Link className="text-blue-300 hover:text-blue-200 transition-colors" to="/newgame">
             Crear partida
           </Link>
         </p>

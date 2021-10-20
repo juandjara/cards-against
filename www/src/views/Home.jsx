@@ -37,8 +37,8 @@ export default function Home() {
 
   return (
     <div style={{ minHeight: 'calc(100vh - 52px)' }} className="flex flex-col justify-center items-center py-4 px-2">
-      <h1 className="mt-6 text-4xl font-semibold">Cartas contra la web</h1>
-      <div className="md:flex flex-row justify-center items-center my-12 space-y-6 md:space-y-0 md:space-x-6">
+      <h1 className="mb-3 font-bold text-5xl leading-tight text-transparent bg-clip-text bg-gradient-to-tr from-blue-100 to-gray-400">Cartas contra la web</h1>
+      <div className="md:flex flex-row justify-center items-center mt-8 mb-12 space-y-6 md:space-y-0 md:space-x-6">
         <ButtonCard
           as={motion.button}
           initial={{ x: -200 }}
@@ -56,10 +56,10 @@ export default function Home() {
           text={currentGame ? 'Abandonar partida' : 'Crear partida'}
         />
       </div>
-      {/* <Link to="/decks" className="mb-6 font-medium text-gray-200 hover:text-white hover:underline">
-        Editor de mazos
-      </Link> */}
-      <Link to="/guide" className="mb-6 font-medium text-gray-200 hover:text-white hover:underline">
+      <Link to="/decks" className="mb-6 font-medium text-gray-300 hover:text-white">
+        Mazos personalizados
+      </Link>
+      <Link to="/guide" className="mb-6 font-medium text-gray-300 hover:text-white">
         ¿Como se juega?
       </Link>
     </div>
