@@ -7,6 +7,7 @@ import PlayGame from '@/views/PlayGame'
 import Guide from '@/views/Guide'
 import PublicGames from '@/views/PublicGames'
 import DeckList from '@/views/DeckList'
+import DeckEdit from './views/DeckEdit'
 
 export default function Routes() {
   return (
@@ -18,6 +19,7 @@ export default function Routes() {
       <Route path="/game/:id" element={<PlayGame />} />
       <Route path="/guide" element={<Guide />} />
       <Route path="/decks" element={<DeckList />} />
+      <Route path="/decks/:id" element={<DeckEdit />} />
     </BrowserRoutes>
   )
 }
