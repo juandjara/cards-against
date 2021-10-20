@@ -1,16 +1,15 @@
-import React, { useState } from 'react'
-// import { Stack } from 'phosphor-react'
+import React from 'react'
 import logo from '../assets/logo.svg'
 import { Link } from 'react-router-dom'
-import Select from '@/components/Select'
+// import Select from '@/components/Select'
 
-const OPTIONS = [
-  { label: 'ES', value: 'es' },
-  { label: 'EN', value: 'en' }
-]
+// const OPTIONS = [
+//   { label: 'ES', value: 'es' },
+//   { label: 'EN', value: 'en' }
+// ]
 
 export default function Header() {
-  const [selected, setSelected] = useState(OPTIONS[0])
+  // const [selected, setSelected] = useState(OPTIONS[0])
 
   return (
     <header className="flex p-2">
@@ -19,7 +18,7 @@ export default function Header() {
         <h1 className="text-2xl">CCW</h1>
       </Link>
       <div className="flex-grow"></div>
-      <Select options={OPTIONS} selected={selected} onChange={setSelected} className="w-20 text-gray-700" />
+      {/* <Select options={OPTIONS} selected={selected} onChange={setSelected} className="w-20 text-gray-700" /> */}
     </header>
   )
 }
