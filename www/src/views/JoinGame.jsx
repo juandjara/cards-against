@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeftIcon } from '@heroicons/react/solid'
-import { Copy, StackSimple } from 'phosphor-react'
+import { Copy, CrownSimple, Stack, User } from 'phosphor-react'
 import Button from '@/components/Button'
 import PrimaryButton from '@/components/PrimaryButton'
 import Container from '@/components/Container'
@@ -119,7 +119,11 @@ function Players({ game }) {
       <ul>
         {game.players.map((p, i) => (
           <li key={p.id} className="flex items-center space-x-2 py-2">
-            <StackSimple weight="fill" className={i === 0 ? 'text-gray-900' : 'text-white'} width={24} height={24} />
+            {i === 0 ? (
+              <CrownSimple weight="fill" className="text-gray-900 w-6 h-6" />
+            ) : (
+              <User weight="fill" className="text-white w-6 h-6" />
+            )}
             <span>{p.name}</span>
             {i === 0 && <small>- Anfitrión</small>}
           </li>

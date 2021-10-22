@@ -17,6 +17,11 @@ module.exports = {
         .concat(['text-left', 'text-right'])
     }
   },
+  theme: {
+    gridTemplateColumns: {
+      'fill-52': 'repeat(auto-fill, 13rem)'
+    }
+  },
   variants: {
     extend: {
       borderWidth: ['hover'],

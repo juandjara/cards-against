@@ -5,7 +5,7 @@ import { ArrowLeftIcon } from '@heroicons/react/solid'
 import RadioGroup from '@/components/RadioGroup'
 import CheckboxGroup from '@/components/CheckboxGroup'
 import PrimaryButton from '@/components/PrimaryButton'
-import { StackSimple } from 'phosphor-react'
+import { Stack } from 'phosphor-react'
 import { useSocket } from '@/lib/SocketProvider'
 import loadAllDecks from '@/lib/loadAllDecks'
 import Container from '@/components/Container'
@@ -27,11 +27,11 @@ function CheckboxLabel({ label, numblack = 5, numwhite = 24 }) {
     <div className="space-y-2">
       <p className="mr-6">{label}</p>
       <div className="mr-4 inline-flex space-x-2">
-        <StackSimple weight="fill" className="text-gray-900" width={24} height={24} />
+        <Stack weight="fill" className="text-gray-900" width={24} height={24} />
         <span>{numblack}</span>
       </div>
       <div className="mr-4 inline-flex space-x-2">
-        <StackSimple weight="fill" className="text-white" width={24} height={24} />
+        <Stack weight="fill" className="text-white" width={24} height={24} />
         <span>{numwhite}</span>
       </div>
     </div>
