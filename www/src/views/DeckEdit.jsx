@@ -5,14 +5,22 @@ import Container from '@/components/Container'
 import GameCard from '@/components/GameCard'
 import Input from '@/components/Input'
 import PrimaryButton from '@/components/PrimaryButton'
-import { ArrowLeftIcon, PencilAltIcon } from '@heroicons/react/solid'
+import { ArrowLeftIcon, ChevronRightIcon, PencilAltIcon } from '@heroicons/react/solid'
 import { Plus, Stack, Trash } from 'phosphor-react'
 import deck from '@/assets/CAH-es-set.json'
+import { Disclosure } from '@headlessui/react'
+import classNames from 'classnames'
+
+function decodeHtml(html) {
+  var el = document.createElement('textarea')
+  el.innerHTML = html
+  return el.value
+}
 
 function EditTools({ selection, onNew, onEdit, onDelete }) {
   if (selection.length === 0) {
     return (
-      <Button onClick={onNew} className="flex items-center space-x-2 pl-2 pr-3">
+      <Button type="button" onClick={onNew} className="flex items-center space-x-2 pl-2 pr-3">
         <Plus weight="bold" className="w-4 h-4" />
         <p>Nueva carta</p>
       </Button>
@@ -24,11 +32,11 @@ function EditTools({ selection, onNew, onEdit, onDelete }) {
       <p className="font-semibold">
         {selection.length} seleccionado{selection.length === 1 ? '' : 's'}
       </p>
-      <Button onClick={onEdit} disabled={selection.length > 1} className="flex items-center space-x-2 pl-2 pr-3">
+      <Button type="button" onClick={onEdit} disabled={selection.length > 1} className="flex items-center space-x-2 pl-2 pr-3">
         <PencilAltIcon weight="fill" className="w-4 h-4" />
         <p>Editar</p>
       </Button>
-      <Button onClick={onDelete} color="red" className="flex items-center space-x-2 pl-2 pr-3">
+      <Button type="button" onClick={onDelete} color="red" className="flex items-center space-x-2 pl-2 pr-3">
         <Trash weight="fill" className="w-4 h-4" />
         <p>Eliminar</p>
       </Button>
@@ -62,6 +70,14 @@ export default function DeckEdit() {
     return `${animation} ${extra}`
   }
 
+  function openEditForm(card, selection) {
+    // TODO
+  }
+
+  function deleteCards(cards) {
+    // TODO
+  }
+
   return (
     <Container maxw="container">
       <div>
@@ -81,45 +97,75 @@ export default function DeckEdit() {
         </div>
         <div className="space-y-8">
           <p className="text-xl border-b border-white">Cartas</p>
-          <section>
-            <header className="sticky top-0 z-10 bg-gray-500 p-2 rounded-lg flex items-center space-x-3 mb-2">
-              <Stack weight="fill" className="text-white w-8 h-8" />
-              <span className="text-lg font-semibold">
-                Blancas - <small className="text-sm font-bold">{deck.whiteCards.length}</small>
-              </span>
-              <div className="flex-grow"></div>
-              <EditTools selection={whiteSelection} />
-            </header>
-            <ul className="my-6 grid gap-5 grid-cols-fill-52 place-content-center">
-              {deck.whiteCards.map((card, i) => (
-                <li key={i} onClick={() => selectWhiteCard(card)}>
-                  <GameCard className={getCardClass(card, whiteSelection)} type="white" text={card} />
-                </li>
-              ))}
-            </ul>
-          </section>
-          <section>
-            <header className="sticky top-0 z-10 bg-gray-500 p-2 rounded-lg flex items-center space-x-2 mb-2">
-              <Stack weight="fill" className="text-gray-900 w-8 h-8" />
-              <span className="text-lg font-semibold">
-                Negras - <span className="text-sm font-bold">{deck.blackCards.length}</span>
-              </span>
-              <div className="flex-grow"></div>
-              <EditTools selection={blackSelection} />
-            </header>
-            <ul className="my-6 grid gap-5 grid-cols-fill-52 place-content-center">
-              {deck.blackCards.map((card, i) => (
-                <li key={i} onClick={() => selectBlackCard(card)}>
-                  <GameCard
-                    type="black"
-                    className={getCardClass(card, blackSelection)}
-                    text={card.text}
-                    badge={card.pick}
+          <Disclosure>
+            {({ open }) => (
+              <>
+                <Disclosure.Button
+                  as="header"
+                  className="sticky w-full top-0 z-10 bg-gray-500 p-2 rounded-lg flex items-center space-x-3 mb-2"
+                >
+                  <ChevronRightIcon className={classNames('w-6 h-6', { 'transform rotate-90': open })} />
+                  <Stack weight="fill" className="text-white w-8 h-8" />
+                  <span className="text-lg font-semibold">
+                    Blancas - <small className="text-sm font-bold">{deck.whiteCards.length}</small>
+                  </span>
+                  <div className="flex-grow"></div>
+                  <EditTools
+                    selection={whiteSelection}
+                    onNew={() => openEditForm(null, whiteSelection)}
+                    onEdit={card => openEditForm(card, whiteSelection)}
+                    onDelete={cards => deleteCards(cards, whiteSelection)}
                   />
-                </li>
-              ))}
-            </ul>
-          </section>
+                </Disclosure.Button>
+                <Disclosure.Panel>
+                  <ul className="my-6 grid gap-5 grid-cols-fill-52 place-content-center">
+                    {deck.whiteCards.map((card, i) => (
+                      <li key={i} onClick={() => selectWhiteCard(card)}>
+                        <GameCard className={getCardClass(card, whiteSelection)} type="white" text={decodeHtml(card)} />
+                      </li>
+                    ))}
+                  </ul>
+                </Disclosure.Panel>
+              </>
+            )}
+          </Disclosure>
+          <Disclosure>
+            {({ open }) => (
+              <>
+                <Disclosure.Button
+                  as="header"
+                  className="sticky w-full top-0 z-10 bg-gray-500 p-2 rounded-lg flex items-center space-x-3 mb-2"
+                >
+                  <ChevronRightIcon className={classNames('w-6 h-6', { 'transform rotate-90': open })} />
+                  <Stack weight="fill" className="text-gray-900 w-8 h-8" />
+                  <span className="text-lg font-semibold">
+                    Negras - <span className="text-sm font-bold">{deck.blackCards.length}</span>
+                  </span>
+                  <div className="flex-grow"></div>
+                  <EditTools
+                    selection={blackSelection}
+                    onNew={() => openEditForm(null, blackSelection)}
+                    onEdit={card => openEditForm(card, blackSelection)}
+                    onDelete={cards => deleteCards(cards, blackSelection)}
+                  />
+                </Disclosure.Button>
+                <Disclosure.Panel>
+                  <ul className="my-6 grid gap-5 grid-cols-fill-52 place-content-center">
+                    {deck.blackCards.map((card, i) => (
+                      <li key={i} onClick={() => selectBlackCard(card)}>
+                        <GameCard
+                          type="black"
+                          className={getCardClass(card, blackSelection)}
+                          text={decodeHtml(card.text)}
+                          badge={card.pick}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </Disclosure.Panel>
+              </>
+            )}
+          </Disclosure>
         </div>
         <div className="border-b border-white my-8" />
         <PrimaryButton>Guardar</PrimaryButton>
