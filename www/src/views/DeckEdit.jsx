@@ -5,6 +5,7 @@ import Container from '@/components/Container'
 import GameCard from '@/components/GameCard'
 import Input from '@/components/Input'
 import PrimaryButton from '@/components/PrimaryButton'
+import Modal from '@/components/Modal'
 import { ArrowLeftIcon, ChevronRightIcon, PencilAltIcon } from '@heroicons/react/solid'
 import { Plus, Stack, Trash } from 'phosphor-react'
 import deck from '@/assets/CAH-es-set.json'
@@ -17,10 +18,18 @@ function decodeHtml(html) {
   return el.value
 }
 
+function handleStopClick(fn) {
+  return ev => {
+    ev.preventDefault()
+    ev.stopPropagation()
+    fn()
+  }
+}
+
 function EditTools({ selection, onNew, onEdit, onDelete }) {
   if (selection.length === 0) {
     return (
-      <Button type="button" onClick={onNew} className="flex items-center space-x-2 pl-2 pr-3">
+      <Button type="button" onClick={handleStopClick(onNew)} className="flex items-center space-x-2 pl-2 pr-3 my-2">
         <Plus weight="bold" className="w-4 h-4" />
         <p>Nueva carta</p>
       </Button>
@@ -28,41 +37,49 @@ function EditTools({ selection, onNew, onEdit, onDelete }) {
   }
 
   return (
-    <>
+    <div className="flex space-x-2 items-center my-2">
       <p className="font-semibold">
         {selection.length} seleccionado{selection.length === 1 ? '' : 's'}
       </p>
-      <Button type="button" onClick={onEdit} disabled={selection.length > 1} className="flex items-center space-x-2 pl-2 pr-3">
+      <Button
+        type="button"
+        onClick={handleStopClick(onEdit)}
+        disabled={selection.length > 1}
+        className="flex items-center space-x-2 pl-2 pr-3"
+      >
         <PencilAltIcon weight="fill" className="w-4 h-4" />
         <p>Editar</p>
       </Button>
-      <Button type="button" onClick={onDelete} color="red" className="flex items-center space-x-2 pl-2 pr-3">
+      <Button
+        type="button"
+        onClick={handleStopClick(onDelete)}
+        color="red"
+        className="flex items-center space-x-2 pl-2 pr-3"
+      >
         <Trash weight="fill" className="w-4 h-4" />
         <p>Eliminar</p>
       </Button>
-    </>
+    </div>
   )
 }
 
-export default function DeckEdit() {
-  const navigate = useNavigate()
-  const [form, setForm] = useState({ name: '' })
-  const [whiteSelection, setWhiteSelection] = useState([])
-  const [blackSelection, setBlackSelection] = useState([])
+function CardGroup({ type, deck }) {
+  const cards = type === 'white' ? deck.whiteCards : deck.blackCards
+  const label = type === 'white' ? 'Blancas' : 'Negras'
+  const [selection, setSelection] = useState([])
+  const [showEditForm, setShowEditForm] = useState(false)
+  const [newCard, setNewCard] = useState({
+    pick: 1,
+    text: ''
+  })
 
-  function selectWhiteCard(card) {
-    const isSelected = whiteSelection.indexOf(card) !== -1
-    const newSelection = isSelected ? whiteSelection.filter(c => c !== card) : whiteSelection.concat(card)
-    setWhiteSelection(newSelection)
+  function selectCard(card) {
+    const isSelected = selection.indexOf(card) !== -1
+    const newSelection = isSelected ? selection.filter(c => c !== card) : selection.concat(card)
+    setSelection(newSelection)
   }
 
-  function selectBlackCard(card) {
-    const isSelected = blackSelection.indexOf(card) !== -1
-    const newSelection = isSelected ? blackSelection.filter(c => c !== card) : blackSelection.concat(card)
-    setBlackSelection(newSelection)
-  }
-
-  function getCardClass(card, selection) {
+  function getCardClass(card) {
     const animation = 'hover:shadow-lg hover:scale-105 transform-gpu transition'
     const selected = selection.indexOf(card) !== -1
     const extra = selected ? 'ring-4 ring-blue-500' : ''
@@ -70,13 +87,88 @@ export default function DeckEdit() {
     return `${animation} ${extra}`
   }
 
-  function openEditForm(card, selection) {
+  function update(ev, key) {
+    setNewCard(card => ({ ...card, [key]: ev.target.value }))
+  }
+
+  function openEditForm(card) {
     // TODO
+    setShowEditForm(true)
   }
 
   function deleteCards(cards) {
     // TODO
   }
+
+  function closeModal() {
+    setShowEditForm(false)
+  }
+
+  return (
+    <>
+      <Modal show={showEditForm} onClose={closeModal} title="Editar carta">
+        <div>
+          <Input
+            id="new-card-pick"
+            label="Pick"
+            type="number"
+            value={newCard.pick}
+            onChange={ev => update(ev, 'pick')}
+          />
+          <Input
+            id="new-card-text"
+            label="Texto"
+            type="text"
+            value={newCard.text}
+            onChange={ev => update(ev, 'text')}
+          />
+        </div>
+      </Modal>
+      <Disclosure>
+        {({ open }) => (
+          <>
+            <Disclosure.Button
+              as="header"
+              className="cursor-pointer flex flex-wrap items-center w-full sticky top-0 z-10 space-x-3 mb-2 py-2 px-3 bg-gray-500 rounded-lg"
+            >
+              <ChevronRightIcon className={classNames('w-6 h-6', { 'transform rotate-90': open })} />
+              <Stack
+                weight="fill"
+                className={classNames('w-8 h-8', type === 'white' ? 'text-white' : 'text-gray-900')}
+              />
+              <span className="text-lg font-semibold">
+                {label} - <small className="text-sm font-bold">{cards.length}</small>
+              </span>
+              <div className="flex-grow"></div>
+              <EditTools
+                selection={selection}
+                onNew={() => openEditForm(null)}
+                onEdit={card => openEditForm(card)}
+                onDelete={cards => deleteCards(cards)}
+              />
+            </Disclosure.Button>
+            <Disclosure.Panel>
+              <ul className="my-6 grid gap-5 grid-cols-fill-52 place-content-center">
+                {cards.map((card, i) => (
+                  <li key={i} onClick={() => selectCard(card)}>
+                    <GameCard
+                      className={getCardClass(card)}
+                      type="white"
+                      text={decodeHtml(type === 'white' ? card : card.text)}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </Disclosure.Panel>
+          </>
+        )}
+      </Disclosure>
+    </>
+  )
+}
+
+export default function DeckEdit() {
+  const navigate = useNavigate()
 
   return (
     <Container maxw="container">
@@ -97,75 +189,8 @@ export default function DeckEdit() {
         </div>
         <div className="space-y-8">
           <p className="text-xl border-b border-white">Cartas</p>
-          <Disclosure>
-            {({ open }) => (
-              <>
-                <Disclosure.Button
-                  as="header"
-                  className="sticky w-full top-0 z-10 bg-gray-500 p-2 rounded-lg flex items-center space-x-3 mb-2"
-                >
-                  <ChevronRightIcon className={classNames('w-6 h-6', { 'transform rotate-90': open })} />
-                  <Stack weight="fill" className="text-white w-8 h-8" />
-                  <span className="text-lg font-semibold">
-                    Blancas - <small className="text-sm font-bold">{deck.whiteCards.length}</small>
-                  </span>
-                  <div className="flex-grow"></div>
-                  <EditTools
-                    selection={whiteSelection}
-                    onNew={() => openEditForm(null, whiteSelection)}
-                    onEdit={card => openEditForm(card, whiteSelection)}
-                    onDelete={cards => deleteCards(cards, whiteSelection)}
-                  />
-                </Disclosure.Button>
-                <Disclosure.Panel>
-                  <ul className="my-6 grid gap-5 grid-cols-fill-52 place-content-center">
-                    {deck.whiteCards.map((card, i) => (
-                      <li key={i} onClick={() => selectWhiteCard(card)}>
-                        <GameCard className={getCardClass(card, whiteSelection)} type="white" text={decodeHtml(card)} />
-                      </li>
-                    ))}
-                  </ul>
-                </Disclosure.Panel>
-              </>
-            )}
-          </Disclosure>
-          <Disclosure>
-            {({ open }) => (
-              <>
-                <Disclosure.Button
-                  as="header"
-                  className="sticky w-full top-0 z-10 bg-gray-500 p-2 rounded-lg flex items-center space-x-3 mb-2"
-                >
-                  <ChevronRightIcon className={classNames('w-6 h-6', { 'transform rotate-90': open })} />
-                  <Stack weight="fill" className="text-gray-900 w-8 h-8" />
-                  <span className="text-lg font-semibold">
-                    Negras - <span className="text-sm font-bold">{deck.blackCards.length}</span>
-                  </span>
-                  <div className="flex-grow"></div>
-                  <EditTools
-                    selection={blackSelection}
-                    onNew={() => openEditForm(null, blackSelection)}
-                    onEdit={card => openEditForm(card, blackSelection)}
-                    onDelete={cards => deleteCards(cards, blackSelection)}
-                  />
-                </Disclosure.Button>
-                <Disclosure.Panel>
-                  <ul className="my-6 grid gap-5 grid-cols-fill-52 place-content-center">
-                    {deck.blackCards.map((card, i) => (
-                      <li key={i} onClick={() => selectBlackCard(card)}>
-                        <GameCard
-                          type="black"
-                          className={getCardClass(card, blackSelection)}
-                          text={decodeHtml(card.text)}
-                          badge={card.pick}
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                </Disclosure.Panel>
-              </>
-            )}
-          </Disclosure>
+          <CardGroup type="white" deck={deck} />
+          <CardGroup type="black" deck={deck} />
         </div>
         <div className="border-b border-white my-8" />
         <PrimaryButton>Guardar</PrimaryButton>
