@@ -8,7 +8,6 @@ import PrimaryButton from '@/components/PrimaryButton'
 import Modal from '@/components/Modal'
 import { ArrowLeftIcon, ChevronRightIcon, PencilAltIcon, XIcon } from '@heroicons/react/solid'
 import { Plus, Stack, Trash } from 'phosphor-react'
-import deck from '@/assets/CAH-es-set.json'
 import { Disclosure } from '@headlessui/react'
 import classNames from 'classnames'
 
@@ -37,7 +36,7 @@ function EditTools({ selection, onNew, onEdit, onDelete, onClear }) {
   }
 
   return (
-    <div className="flex space-x-2 items-center my-2">
+    <div className="flex space-x-2 items-center my-2" style={{ marginLeft: 0 }}>
       <button
         title="Eliminar selección"
         aria-label="Eliminar selección"
@@ -71,8 +70,7 @@ function EditTools({ selection, onNew, onEdit, onDelete, onClear }) {
   )
 }
 
-function CardGroup({ type, deck }) {
-  const cards = type === 'white' ? deck.whiteCards : deck.blackCards
+function CardGroup({ type, cards, setCards }) {
   const label = type === 'white' ? 'Blancas' : 'Negras'
   const [selection, setSelection] = useState([])
   const [showEditForm, setShowEditForm] = useState(false)
@@ -105,12 +103,26 @@ function CardGroup({ type, deck }) {
     setShowEditForm(true)
   }
 
-  function deleteCards(cards) {
-    // TODO
+  function deleteCards(cardsToDelete) {
+    setCards(cards => cards.filter(c => cardsToDelete.indexOf(c) === -1))
+    setSelection([])
   }
 
   function closeModal() {
+    const selectedCard = selection[0]
+    const selectionIndex = cards.indexOf(selectedCard)
+    const newCardContent = type === 'white' ? newCard.text : newCard
+    setCards(cards => {
+      if (selectionIndex > -1) {
+        const copy = cards.slice()
+        copy[selectionIndex] = newCardContent
+        return copy
+      } else {
+        return cards.concat(newCardContent)
+      }
+    })
     setShowEditForm(false)
+    setSelection([])
   }
 
   return (
@@ -172,6 +184,7 @@ function CardGroup({ type, deck }) {
                     <GameCard
                       className={getCardClass(card)}
                       type={type}
+                      badge={type === 'white' ? null : card.pick}
                       text={decodeHtml(type === 'white' ? card : card.text)}
                     />
                   </li>
@@ -187,6 +200,13 @@ function CardGroup({ type, deck }) {
 
 export default function DeckEdit() {
   const navigate = useNavigate()
+  const [title, setTitle] = useState('')
+  const [whiteCards, setWhiteCards] = useState([])
+  const [blackCards, setBlackCards] = useState([])
+
+  function handleSubmit(ev) {
+    ev.preventDefault()
+  }
 
   return (
     <Container maxw="container">
@@ -201,17 +221,24 @@ export default function DeckEdit() {
         </Button>
       </div>
       <h3 className="mb-3 text-3xl font-medium">Editor de mazos</h3>
-      <form className="space-y-10 py-6">
+      <form className="space-y-10 py-6" onSubmit={handleSubmit}>
         <div className="max-w-xs">
-          <Input id="name" label="Título" />
+          <Input
+            id="name"
+            type="text"
+            label="Título"
+            value={title}
+            onChange={ev => setTitle(ev.target.value)}
+            required
+          />
         </div>
         <div className="space-y-8">
-          <p className="text-xl border-b border-white">Cartas</p>
-          <CardGroup type="white" deck={deck} />
-          <CardGroup type="black" deck={deck} />
+          <p className="text-xl border-b border-white pb-1 pl-1">Cartas</p>
+          <CardGroup type="white" cards={whiteCards} setCards={setWhiteCards} />
+          <CardGroup type="black" cards={blackCards} setCards={setBlackCards} />
         </div>
         <div className="border-b border-white my-8" />
-        <PrimaryButton>Guardar</PrimaryButton>
+        <PrimaryButton type="submit">Guardar</PrimaryButton>
       </form>
     </Container>
   )
