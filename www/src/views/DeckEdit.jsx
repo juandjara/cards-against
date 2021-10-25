@@ -253,6 +253,18 @@ export default function DeckEdit() {
     navigate('/decks')
   }
 
+  function deleteDeck() {
+    if (!window.confirm('¿Estas seguro de que quieres borrar este mazo?')) {
+      return
+    }
+
+    const decks = JSON.parse(localStorage.getItem(DECKS_KEY) || '[]')
+    const newDecks = decks.filter(d => d.id !== id)
+
+    localStorage.setItem(DECKS_KEY, JSON.stringify(newDecks))
+    navigate('/decks')
+  }
+
   return (
     <Container maxw="container">
       <div>
@@ -283,7 +295,14 @@ export default function DeckEdit() {
           <CardGroup type="black" cards={blackCards} setCards={setBlackCards} />
         </div>
         <div className="border-b border-white my-8" />
-        <PrimaryButton type="submit">Guardar</PrimaryButton>
+        <div className="flex justify-between">
+          <PrimaryButton type="submit">Guardar</PrimaryButton>
+          {id !== 'new' && (
+            <Button color="red" className="ml-4" onClick={deleteDeck}>
+              Eliminar
+            </Button>
+          )}
+        </div>
       </form>
     </Container>
   )
