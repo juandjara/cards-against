@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router'
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router'
 import Button from '@/components/Button'
 import Container from '@/components/Container'
 import GameCard from '@/components/GameCard'
@@ -109,6 +109,11 @@ function CardGroup({ type, cards, setCards }) {
   }
 
   function closeModal() {
+    if (!newCard.text) {
+      setShowEditForm(false)
+      return
+    }
+
     const selectedCard = selection[0]
     const selectionIndex = cards.indexOf(selectedCard)
     const newCardContent = type === 'white' ? newCard.text : newCard
@@ -198,14 +203,54 @@ function CardGroup({ type, cards, setCards }) {
   )
 }
 
+function createID() {
+  return Math.random()
+    .toString(36)
+    .toUpperCase()
+    .replace(/[^A-Z]+/g, '')
+    .substr(0, 8)
+}
+
+const DECKS_KEY = 'CCW_DECKS'
+
 export default function DeckEdit() {
   const navigate = useNavigate()
+  const { id } = useParams()
   const [title, setTitle] = useState('')
   const [whiteCards, setWhiteCards] = useState([])
   const [blackCards, setBlackCards] = useState([])
 
+  useEffect(() => {
+    if (id && id !== 'new') {
+      const decks = JSON.parse(localStorage.getItem(DECKS_KEY) || [])
+      const deck = decks.find(d => d.id === id)
+      if (deck) {
+        setTitle(deck.name)
+        setWhiteCards(deck.whiteCards)
+        setBlackCards(deck.blackCards)
+      }
+    }
+  }, [])
+
   function handleSubmit(ev) {
     ev.preventDefault()
+    let decks = JSON.parse(localStorage.getItem(DECKS_KEY) || '[]')
+    const currentDeck = {
+      id,
+      name: title,
+      whiteCards,
+      blackCards
+    }
+
+    if (id === 'new') {
+      currentDeck.id = createID()
+      decks.push(currentDeck)
+    } else {
+      decks = decks.map(d => (d.id === id ? currentDeck : d))
+    }
+
+    localStorage.setItem(DECKS_KEY, JSON.stringify(decks))
+    navigate('/decks')
   }
 
   return (
