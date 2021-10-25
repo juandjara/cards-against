@@ -211,7 +211,7 @@ function createID() {
     .substr(0, 8)
 }
 
-const DECKS_KEY = 'CCW_DECKS'
+export const DECKS_KEY = 'CCW_DECKS'
 
 export default function DeckEdit() {
   const navigate = useNavigate()
