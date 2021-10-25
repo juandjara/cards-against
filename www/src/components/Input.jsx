@@ -1,10 +1,19 @@
 import React from 'react'
 
-export default function Input({ id, label, value, onChange, corner, type = 'text', placeholder }) {
+export default function Input({
+  id,
+  label,
+  labelColor = 'text-gray-50',
+  value,
+  onChange,
+  corner,
+  type = 'text',
+  placeholder
+}) {
   return (
     <div>
       <div className="flex items-baseline justify-between">
-        <label htmlFor={id} className="block text-sm font-medium text-gray-50">
+        <label htmlFor={id} className={`${labelColor} block text-sm font-medium`}>
           {label}
         </label>
         {corner}

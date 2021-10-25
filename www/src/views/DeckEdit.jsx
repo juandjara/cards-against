@@ -6,7 +6,7 @@ import GameCard from '@/components/GameCard'
 import Input from '@/components/Input'
 import PrimaryButton from '@/components/PrimaryButton'
 import Modal from '@/components/Modal'
-import { ArrowLeftIcon, ChevronRightIcon, PencilAltIcon } from '@heroicons/react/solid'
+import { ArrowLeftIcon, ChevronRightIcon, PencilAltIcon, XIcon } from '@heroicons/react/solid'
 import { Plus, Stack, Trash } from 'phosphor-react'
 import deck from '@/assets/CAH-es-set.json'
 import { Disclosure } from '@headlessui/react'
@@ -26,7 +26,7 @@ function handleStopClick(fn) {
   }
 }
 
-function EditTools({ selection, onNew, onEdit, onDelete }) {
+function EditTools({ selection, onNew, onEdit, onDelete, onClear }) {
   if (selection.length === 0) {
     return (
       <Button type="button" onClick={handleStopClick(onNew)} className="flex items-center space-x-2 pl-2 pr-3 my-2">
@@ -38,6 +38,14 @@ function EditTools({ selection, onNew, onEdit, onDelete }) {
 
   return (
     <div className="flex space-x-2 items-center my-2">
+      <button
+        title="Eliminar selección"
+        aria-label="Eliminar selección"
+        className="p-1 rounded-xl hover:bg-white hover:bg-opacity-25"
+        onClick={handleStopClick(onClear)}
+      >
+        <XIcon className="w-4 h-4" />
+      </button>
       <p className="font-semibold">
         {selection.length} seleccionado{selection.length === 1 ? '' : 's'}
       </p>
@@ -92,7 +100,8 @@ function CardGroup({ type, deck }) {
   }
 
   function openEditForm(card) {
-    // TODO
+    const selectedNewCard = type === 'white' ? { pick: 1, text: card } : card || { pick: 1, text: '' }
+    setNewCard(selectedNewCard)
     setShowEditForm(true)
   }
 
@@ -107,21 +116,29 @@ function CardGroup({ type, deck }) {
   return (
     <>
       <Modal show={showEditForm} onClose={closeModal} title="Editar carta">
-        <div>
-          <Input
-            id="new-card-pick"
-            label="Pick"
-            type="number"
-            value={newCard.pick}
-            onChange={ev => update(ev, 'pick')}
-          />
-          <Input
-            id="new-card-text"
-            label="Texto"
-            type="text"
-            value={newCard.text}
-            onChange={ev => update(ev, 'text')}
-          />
+        <div className="space-y-6 mt-6">
+          {type === 'black' && (
+            <Input
+              id="new-card-pick"
+              label="Nº cartas de respuesta"
+              type="number"
+              labelColor="text-gray-500"
+              value={newCard.pick}
+              onChange={ev => update(ev, 'pick')}
+            />
+          )}
+          <div>
+            <label className="text-gray-500 mb-1 block text-sm font-medium" htmlFor="new-card-text">
+              Texto
+            </label>
+            <textarea
+              id="new-card-text"
+              rows="5"
+              value={newCard.text}
+              onChange={ev => update(ev, 'text')}
+              className="shadow-sm block w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-700 focus:border-blue-700"
+            />
+          </div>
         </div>
       </Modal>
       <Disclosure>
@@ -143,8 +160,9 @@ function CardGroup({ type, deck }) {
               <EditTools
                 selection={selection}
                 onNew={() => openEditForm(null)}
-                onEdit={card => openEditForm(card)}
-                onDelete={cards => deleteCards(cards)}
+                onEdit={() => openEditForm(selection[0])}
+                onDelete={() => deleteCards(selection)}
+                onClear={() => setSelection([])}
               />
             </Disclosure.Button>
             <Disclosure.Panel>
@@ -153,7 +171,7 @@ function CardGroup({ type, deck }) {
                   <li key={i} onClick={() => selectCard(card)}>
                     <GameCard
                       className={getCardClass(card)}
-                      type="white"
+                      type={type}
                       text={decodeHtml(type === 'white' ? card : card.text)}
                     />
                   </li>

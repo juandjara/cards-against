@@ -14,7 +14,12 @@ export default function Modal({ show, title, children, onClose }) {
 
   return (
     <Transition appear show={show} as={Fragment}>
-      <Dialog as="div" initialFocus={closeRef} className="fixed inset-0 z-10 overflow-y-auto" onClose={onClose}>
+      <Dialog
+        as="div"
+        initialFocus={closeRef}
+        className="text-gray-900 fixed inset-0 z-10 overflow-y-auto"
+        onClose={onClose}
+      >
         <div className="min-h-screen px-4 text-center">
           <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100">
             <Dialog.Overlay className="fixed inset-0" />
