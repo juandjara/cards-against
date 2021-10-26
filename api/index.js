@@ -7,6 +7,7 @@ const helmet = require('helmet')
 const cors = require('cors')
 const pkg = require('./package.json')
 const { db } = require('./model/db')
+const decks = require('./model/decks')
 
 const app = express()
 const httpServer = http.createServer(app)
@@ -40,7 +41,7 @@ app.get('/games', (req, res) => {
   res.json(Object.values(db.games).map(g => ({ ...g, usedCards: [...g.usedCards] })))
 })
 
-app.get('/games/:id/', (req, res) => {
+app.get('/games/:id', (req, res) => {
   const id = req.params.id
   try {
     const game = db.getGame(id)

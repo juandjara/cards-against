@@ -1,3 +1,5 @@
+const decks = require('./model/decks')
+
 module.exports = function (socket, io, db) {
   function handleMessage (key, listener) {
     socket.on(key, (data) => {
@@ -84,5 +86,25 @@ module.exports = function (socket, io, db) {
     setTimeout(() => {
       io.to(room).emit('game:round-winner', game.getLastFinishedRound())
     }, 500)
+  })
+
+  handleMessage('deck:request', (id) => {
+    const deck = decks.get(id)
+    io.to(socket.id).emit('deck:response', deck && deck.data)
+  })
+
+  handleMessage('deck:saved', (id) => {
+    const deck = decks.get(id)
+    if (deck) {
+      io.to(deck.host).emit('deck:saved')
+    }
+  })
+
+  handleMessage('deck:share', (deck) => {
+    decks.set(deck.id, { host: socket.id, data: deck })
+  })
+
+  handleMessage('deck:unshare', (id) => {
+    decks.delete(id)
   })
 }

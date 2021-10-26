@@ -8,6 +8,7 @@ import Guide from '@/views/Guide'
 import PublicGames from '@/views/PublicGames'
 import DeckList from '@/views/DeckList'
 import DeckEdit from './views/DeckEdit'
+import ShareDeck from './views/ShareDeck'
 
 export default function Routes() {
   return (
@@ -20,6 +21,7 @@ export default function Routes() {
       <Route path="/guide" element={<Guide />} />
       <Route path="/decks" element={<DeckList />} />
       <Route path="/decks/:id" element={<DeckEdit />} />
+      <Route path="/decks/share/:id" element={<ShareDeck />} />
     </BrowserRoutes>
   )
 }
