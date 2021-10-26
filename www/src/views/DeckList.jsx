@@ -24,13 +24,11 @@ export default function DeckList() {
           <ArrowLeftIcon className="w-5 h-5" />
         </Button>
       </div>
-      <h3 className="mb-3 text-3xl font-medium">Mazos personalizados</h3>
-      <p>
-        {decks.length === 0 && 'No tienes guardado ningun mazo personalizado.'}
-        <Link className="text-blue-300 hover:text-blue-200 transition-colors" to="/decks/new">
-          Crear mazo
-        </Link>
-      </p>
+      <h3 className="mb-4 text-3xl font-medium">Mazos personalizados</h3>
+      {decks.length === 0 && <p className="mb-1">No tienes guardado ningun mazo personalizado.</p>}
+      <Link className="text-blue-300 hover:text-blue-200 transition-colors" to="/decks/new">
+        Crear mazo
+      </Link>
       <ul className="mt-6 space-y-6">
         {decks.map(d => (
           <li key={d.id}>
