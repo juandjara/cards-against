@@ -10,6 +10,7 @@ import { ArrowLeftIcon, ChevronRightIcon, PencilAltIcon, XIcon } from '@heroicon
 import { Plus, Stack, Trash } from 'phosphor-react'
 import { Disclosure } from '@headlessui/react'
 import classNames from 'classnames'
+import { nanoid } from 'nanoid'
 
 function decodeHtml(html) {
   var el = document.createElement('textarea')
@@ -203,14 +204,6 @@ function CardGroup({ type, cards, setCards }) {
   )
 }
 
-function createID() {
-  return Math.random()
-    .toString(36)
-    .toUpperCase()
-    .replace(/[^A-Z]+/g, '')
-    .substr(0, 8)
-}
-
 export const DECKS_KEY = 'CCW_DECKS'
 
 export default function DeckEdit() {
@@ -243,7 +236,7 @@ export default function DeckEdit() {
     }
 
     if (id === 'new') {
-      currentDeck.id = createID()
+      currentDeck.id = nanoid()
       decks.push(currentDeck)
     } else {
       decks = decks.map(d => (d.id === id ? currentDeck : d))
