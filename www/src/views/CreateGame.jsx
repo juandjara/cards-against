@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Button from '@/components/Button'
 import { ArrowLeftIcon } from '@heroicons/react/solid'
 import RadioGroup from '@/components/RadioGroup'
@@ -177,13 +177,21 @@ export default function CreateGame() {
               Si marcas esta opción la partida aparecerá en el menú <em>Unirse a una partida</em>
             </p>
           </div>
-          <CheckboxGroup
-            label="Mazos de cartas"
-            className="w-52"
-            options={deckOptions}
-            selected={deckSelection}
-            onChange={setDeckSelection}
-          />
+          <div className="relative">
+            <Link
+              className="absolute top-0 right-1 text-sm text-blue-300 hover:text-blue-200 transition-colors"
+              to="/decks/new"
+            >
+              Crear mazo
+            </Link>
+            <CheckboxGroup
+              label="Mazos de cartas"
+              className="w-52"
+              options={deckOptions}
+              selected={deckSelection}
+              onChange={setDeckSelection}
+            />
+          </div>
           <div className="flex items-center space-x-3">
             <PrimaryButton className="flex-shrink-0" disabled={loading || !cardsNumOk} type="submit">
               Crear partida
