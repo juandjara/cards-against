@@ -7,7 +7,7 @@ const helmet = require('helmet')
 const cors = require('cors')
 const pkg = require('./package.json')
 const { db } = require('./model/db')
-const decks = require('./model/decks')
+// const decks = require('./model/decks')
 
 const app = express()
 const httpServer = http.createServer(app)
@@ -29,13 +29,13 @@ app.get('/', (req, res) => {
   })
 })
 
-app.get('/rooms', (req, res) => {
-  const rooms = [...io.sockets.adapter.rooms.entries()].map(entry => ({
-    key: entry[0],
-    value: [...entry[1]]
-  }))
-  res.json(rooms)
-})
+// app.get('/rooms', (req, res) => {
+//   const rooms = [...io.sockets.adapter.rooms.entries()].map(entry => ({
+//     key: entry[0],
+//     value: [...entry[1]]
+//   }))
+//   res.json(rooms)
+// })
 
 app.get('/games', (req, res) => {
   res.json(Object.values(db.games).map(g => ({ ...g, usedCards: [...g.usedCards] })))
