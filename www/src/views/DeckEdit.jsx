@@ -186,6 +186,7 @@ function CardGroup({ type, cards, setCards }) {
             <Disclosure.Panel>
               <ul className="my-6 grid gap-5 grid-cols-fill-52 place-content-center">
                 {cards.map((card, i) => (
+                  // eslint-disable-next-line
                   <li key={i} onClick={() => selectCard(card)}>
                     <GameCard
                       className={getCardClass(card)}
