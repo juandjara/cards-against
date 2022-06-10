@@ -31,15 +31,16 @@ module.exports = function (socket, io, db) {
     io.to(room).emit('game:edit', game)
   })
 
-  handleMessage('game:leave', ({ gameId, playerId, removedByHost }) => {
+  handleMessage('game:kick', ({ gameId, playerId }) => {
+    const room = `game-${gameId}`
+    socket.to(room).emit('game:kick', playerId)
+  })
+
+  handleMessage('game:leave', ({ gameId, playerId }) => {
     const room = `game-${gameId}`
     socket.leave(room)
     const game = db.getGame(gameId).removePlayer(playerId)
-    if (removedByHost) {
-      io.to(room).emit('game:edit', game)
-    } else {
-      socket.to(room).emit('game:edit', game)
-    }
+    socket.to(room).emit('game:edit', game)
     if (game.players.length === 0) {
       db.removeGame(game)
     }
