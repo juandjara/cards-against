@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeftIcon } from '@heroicons/react/solid'
-import { Copy, CrownSimple, Stack, User } from 'phosphor-react'
+import { Copy, CrownSimple, User } from 'phosphor-react'
 import Button from '@/components/Button'
 import PrimaryButton from '@/components/PrimaryButton'
 import Container from '@/components/Container'
-import { editGame, joinGame } from '@/lib/gameUtils'
+import { editGame, joinGame, leaveGame } from '@/lib/gameUtils'
 import { useQueryClient } from 'react-query'
 import usePlayerId from '@/lib/usePlayerId'
 import withGame from '@/lib/withGame'
+import { X as XIcon } from 'phosphor-react'
 
 const MIN_PLAYERS = 2
 
@@ -27,6 +28,13 @@ function JoinGameUI({ socket, game }) {
       }
     })
 
+    socket.on('game:kick', kickedPlayerId => {
+      if (kickedPlayerId === playerId) {
+        leaveGame({ socket, game, playerId })
+        navigate('/')
+      }
+    })
+
     // TODO:
     // 1. save name in local storage and use as second argument for prompt in other plays
     // 2. replace window.prompt with custom modal
@@ -35,6 +43,7 @@ function JoinGameUI({ socket, game }) {
     return () => {
       if (socket) {
         socket.off('game:edit')
+        socket.off('game:kick')
       }
     }
   }, [])
@@ -48,6 +57,10 @@ function JoinGameUI({ socket, game }) {
   function startGame() {
     setLoading(true)
     socket.emit('game:start', game.id)
+  }
+
+  function removePlayer(playerId) {
+    socket.emit('game:kick', { playerId, gameId: game.id })
   }
 
   return (
@@ -82,7 +95,7 @@ function JoinGameUI({ socket, game }) {
             </Button>
           </div>
         </div>
-        <Players game={game} />
+        <Players game={game} playerIsHost={playerIsHost} onRemovePlayer={removePlayer} />
         {playerIsHost ? (
           <div className="flex items-center space-x-3">
             <PrimaryButton
@@ -104,7 +117,7 @@ function JoinGameUI({ socket, game }) {
   )
 }
 
-function Players({ game }) {
+function Players({ game, playerIsHost, onRemovePlayer }) {
   if (!game) {
     return (
       <div>
@@ -126,6 +139,16 @@ function Players({ game }) {
             )}
             <span>{p.name}</span>
             {i === 0 && <small>- Anfitrión</small>}
+            {i > 0 && playerIsHost && (
+              <button
+                title="Eliminar selección"
+                aria-label="Eliminar selección"
+                className="p-1 rounded-xl hover:bg-white hover:bg-opacity-25"
+                onClick={() => onRemovePlayer(p.id)}
+              >
+                <XIcon className="w-4 h-4" />
+              </button>
+            )}
           </li>
         ))}
       </ul>

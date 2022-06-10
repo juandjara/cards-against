@@ -10,6 +10,7 @@ import Button from '@/components/Button'
 import usePlayerId from '@/lib/usePlayerId'
 import { Check, Clock, CrownSimple } from 'phosphor-react'
 import Modal from '@/components/Modal'
+import { XIcon } from '@heroicons/react/solid'
 
 function getLastFinishedRound(game) {
   const round = game.finishedRounds[game.finishedRounds.length - 1]
@@ -51,6 +52,12 @@ function PlayGameUI({ socket, game }) {
     socket.on('game:round-winner', () => {
       setShowRoundModal(true)
     })
+    socket.on('game:kick', kickedPlayerId => {
+      if (kickedPlayerId === playerId) {
+        leaveGame({ socket, game, playerId })
+        navigate('/')
+      }
+    })
 
     // TODO: 1. save name in local storage and use as second argument for prompt in other plays
     //       2. replace window.prompt with custom modal
@@ -59,6 +66,7 @@ function PlayGameUI({ socket, game }) {
     return () => {
       if (socket) {
         socket.off('game:edit')
+        socket.off('game:kick')
       }
     }
   }, [])
@@ -111,9 +119,13 @@ function PlayGameUI({ socket, game }) {
     navigate('/')
   }
 
+  function removePlayer(playerId) {
+    socket.emit('game:kick', { playerId, gameId: game.id })
+  }
+
   return (
     <main className="h-full px-4 flex flex-col items-stretch justify-start" style={{ minHeight: 'calc(100vh - 54px)' }}>
-      <PlayersInfo game={game} />
+      <PlayersInfo playerId={playerId} onRemovePlayer={removePlayer} game={game} />
       <GameOverModal closeModal={closeGameOverModal} game={game} />
       <RoundModal closeModal={closeModal} show={showRoundModal && !game.finished} game={game} />
       <Round
@@ -205,7 +217,7 @@ function getPlayerState(game, player) {
   }
 }
 
-function PlayersInfo({ game }) {
+function PlayersInfo({ playerId, game, onRemovePlayer }) {
   const host = game.round.host
   const roundNum = game.finishedRounds.length + 1
   return (
@@ -216,6 +228,16 @@ function PlayersInfo({ game }) {
             {getPlayerState(game, p)}
             <span className="font-medium font-mono bg-gray-900 px-2 py-1 rounded-lg">{p.points}</span>
             <span className={`${p.id === host ? 'font-bold' : 'font-medium'} text-lg`}>{p.name} </span>
+            {playerId === host && p.id !== host && (
+              <button
+                title="Eliminar selección"
+                aria-label="Eliminar selección"
+                className="p-1 rounded-xl hover:bg-white hover:bg-opacity-25"
+                onClick={() => onRemovePlayer(p.id)}
+              >
+                <XIcon className="w-4 h-4" />
+              </button>
+            )}
           </li>
         ))}
       </ul>
