@@ -230,8 +230,8 @@ function PlayersInfo({ playerId, game, onRemovePlayer }) {
             <span className={`${p.id === host ? 'font-bold' : 'font-medium'} text-lg`}>{p.name} </span>
             {playerId === host && p.id !== host && (
               <button
-                title="Eliminar selección"
-                aria-label="Eliminar selección"
+                title="Eliminar jugador"
+                aria-label="Eliminar jugador"
                 className="p-1 rounded-xl hover:bg-white hover:bg-opacity-25"
                 onClick={() => onRemovePlayer(p.id)}
               >
