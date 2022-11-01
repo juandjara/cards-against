@@ -24,7 +24,7 @@ export default function GameCard({
   const color = colormap[type]
   return (
     <Base
-      style={{ backgroundColor: bg, ...style, touchAction: 'pan-x' }}
+      style={{ backgroundColor: bg, ...style }}
       className={`${className} relative hover:shadow-lg flex justify-start items-start ${br} w-52 h-52 p-3`}
       {...props}
     >

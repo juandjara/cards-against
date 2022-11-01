@@ -124,7 +124,10 @@ function PlayGameUI({ socket, game }) {
   }
 
   return (
-    <main className="h-full px-4 flex flex-col items-stretch justify-start" style={{ minHeight: 'calc(100vh - 54px)' }}>
+    <main
+      className="h-full px-2 md:px-4 flex flex-col items-stretch justify-start"
+      style={{ minHeight: 'calc(100vh - 54px)' }}
+    >
       <PlayersInfo playerId={playerId} onRemovePlayer={removePlayer} game={game} />
       <GameOverModal closeModal={closeGameOverModal} game={game} />
       <RoundModal closeModal={closeModal} show={showRoundModal && !game.finished} game={game} />
@@ -148,10 +151,10 @@ function PlayGameUI({ socket, game }) {
           onDiscard={discardWhiteCards}
         />
       ) : (
-        <p className="text-center flex-grow">
+        <p className="text-center flex-grow pb-8">
           {allCardsSent
-            ? '... Esperando a que el juez elija la carta ganadora'
-            : '... Esperando a que los jugadores envíen sus cartas'}
+            ? 'Esperando a que el juez elija la carta ganadora...'
+            : 'Esperando a que los jugadores envíen sus cartas...'}
         </p>
       )}
     </main>
@@ -221,13 +224,13 @@ function PlayersInfo({ playerId, game, onRemovePlayer }) {
   const host = game.round.host
   const roundNum = game.finishedRounds.length + 1
   return (
-    <div className="pt-2 flex items-start justify-between">
-      <ul className="space-y-3">
+    <div className="pt-2 flex items-start justify-between flex-wrap gap-4">
+      <ul className="space-y-3 overflow-hidden">
         {game.players.map(p => (
           <li key={p.id} className="flex space-x-3 items-center">
             {getPlayerState(game, p)}
             <span className="font-medium font-mono bg-gray-900 px-2 py-1 rounded-lg">{p.points}</span>
-            <span className={`${p.id === host ? 'font-bold' : 'font-medium'} text-lg`}>{p.name} </span>
+            <span className={`${p.id === host ? 'font-bold' : 'font-medium'} truncate text-lg`}>{p.name} </span>
             {playerId === host && p.id !== host && (
               <button
                 title="Eliminar jugador"
@@ -241,7 +244,7 @@ function PlayersInfo({ playerId, game, onRemovePlayer }) {
           </li>
         ))}
       </ul>
-      <p className="text-lg font-bold flex-shrink-0 pl-4">Ronda {roundNum}</p>
+      <p className="text-lg font-bold flex-shrink-0">Ronda {roundNum}</p>
     </div>
   )
 }
@@ -372,17 +375,17 @@ function CardPicker({ cardsToPick, cards = [], onCardsPicked, onDiscard }) {
   }
 
   return (
-    <div className="">
-      <div className="mx-auto px-1 md:px-8 max-w-6xl mb-1">
+    <div className="pb-2">
+      <div className="mx-auto md:px-7 max-w-6xl">
         {showSendButton || showDiscardButton ? (
-          <motion.div className="mb-2" animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
+          <motion.div className="mb-3" animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
             {showSendButton && (
               <PrimaryButton onClick={sendCards}>
                 {cardsToPick === 1 ? 'Elegir esta carta' : 'Elegir estas cartas'}
               </PrimaryButton>
             )}
             {showDiscardButton && (
-              <Button onClick={discard} className="ml-2">
+              <Button onClick={discard} className="ml-4">
                 Descartar
               </Button>
             )}
@@ -408,8 +411,8 @@ function CardPicker({ cardsToPick, cards = [], onCardsPicked, onDiscard }) {
               initial={{ y: 100, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -200, opacity: 0 }}
-              whileHover={{ y: -20 }}
               transition={{ duration: 0.3 }}
+              style={{ touchAction: 'pan-x' }}
             />
           ))}
         </AnimatePresence>

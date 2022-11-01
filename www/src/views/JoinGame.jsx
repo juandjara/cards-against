@@ -80,7 +80,7 @@ function JoinGameUI({ socket, game }) {
         <div>
           <p className="ml-1 mb-1 text-sm text-gray-200 font-medium">Enlace para compartir</p>
           <div className="flex">
-            <pre className="py-2 pl-3 px-5 -mr-2 bg-white text-gray-700 rounded-l-md">
+            <pre className="truncate py-2 pl-3 px-5 -mr-2 bg-white text-gray-700 rounded-l-md">
               <code>{window.location.href}</code>
             </pre>
             <Button
