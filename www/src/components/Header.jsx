@@ -12,7 +12,7 @@ export default function Header() {
   // const [selected, setSelected] = useState(OPTIONS[0])
 
   return (
-    <header className="flex p-2">
+    <header className="flex p-3">
       <Link to="/" className="flex items-center space-x-2">
         <img src={logo} width={36} height={36} alt="logo" />
         <h1 className="text-2xl">CCW</h1>

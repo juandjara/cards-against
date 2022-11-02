@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useRef } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import Button from '@/components/Button'
+import classNames from 'classnames'
 
 // partly taken from https://headlessui.dev/react/dialog
 export default function Modal({ show, title, children, onClose }) {
@@ -20,7 +21,7 @@ export default function Modal({ show, title, children, onClose }) {
         className="text-gray-900 fixed inset-0 z-10 overflow-y-auto"
         onClose={onClose}
       >
-        <div className="min-h-screen px-4 text-center">
+        <div className="min-h-screen text-center">
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -47,9 +48,13 @@ export default function Modal({ show, title, children, onClose }) {
           >
             <div
               style={{ minWidth: 300 }}
-              className="inline-block max-w-screen-xl p-4 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+              className={classNames(
+                'transition-all transform',
+                'inline-block max-w-lg p-4 my-8',
+                'overflow-hidden text-left align-middle bg-gray-100 shadow-xl md:rounded-xl'
+              )}
             >
-              <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
+              <Dialog.Title as="h3" className="text-xl font-semibold leading-6 text-gray-700">
                 {title}
               </Dialog.Title>
               {children}

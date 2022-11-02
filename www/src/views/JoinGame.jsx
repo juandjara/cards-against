@@ -5,7 +5,7 @@ import { Copy, CrownSimple, User } from 'phosphor-react'
 import Button from '@/components/Button'
 import PrimaryButton from '@/components/PrimaryButton'
 import Container from '@/components/Container'
-import { editGame, joinGame, leaveGame } from '@/lib/gameUtils'
+import { editGame, joinGame } from '@/lib/gameUtils'
 import { useQueryClient } from 'react-query'
 import usePlayerId from '@/lib/usePlayerId'
 import withGame from '@/lib/withGame'
@@ -30,7 +30,6 @@ function JoinGameUI({ socket, game }) {
 
     socket.on('game:kick', kickedPlayerId => {
       if (kickedPlayerId === playerId) {
-        leaveGame({ socket, game, playerId })
         navigate('/')
       }
     })
@@ -44,6 +43,7 @@ function JoinGameUI({ socket, game }) {
       if (socket) {
         socket.off('game:edit')
         socket.off('game:kick')
+        cache.removeQueries({ queryKey: ['game', game.id] })
       }
     }
   }, [])
@@ -60,7 +60,7 @@ function JoinGameUI({ socket, game }) {
   }
 
   function removePlayer(playerId) {
-    socket.emit('game:kick', { playerId, gameId: game.id })
+    socket.emit('game:leave', { playerId, gameId: game.id })
   }
 
   return (
@@ -110,7 +110,7 @@ function JoinGameUI({ socket, game }) {
             )}
           </div>
         ) : (
-          <p>Esperando a que el anfitrión empieze el juego ...</p>
+          <p>Esperando a que el anfitrión empieze el juego...</p>
         )}
       </div>
     </Container>

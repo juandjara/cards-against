@@ -17,7 +17,7 @@ function createID() {
     .toString(36)
     .toUpperCase()
     .replace(/[^A-Z]+/g, '')
-    .substr(0, 4);
+    .slice(0, 4);
 }
 
 class Round {
@@ -28,8 +28,8 @@ class Round {
     this.whiteCards = []
   }
 
-  addWhiteCard(card, player) {
-    this.whiteCards.push({ card, player, hidden: true })
+  addWhiteCard(card, playerId) {
+    this.whiteCards.push({ card, player: playerId, hidden: true })
   }
 
   revealWhiteCards(player) {
@@ -41,7 +41,7 @@ class Round {
   }
 
   removePlayedCards (player) {
-    this.whiteCards = this.whiteCards.filter(c => c.player !== player)
+    this.whiteCards = this.whiteCards.filter(c => c.player !== this.host && c.player !== player)
   }
 
   finish (winner) {
@@ -96,10 +96,13 @@ class Game {
 
   removePlayer(playerId) {
     this.players = this.players.filter(p => p.id !== playerId)
-    this.round.removePlayedCards(playerId)
+
     if (this.players.length && this.round.host === playerId) {
       this.round.host = this.players[0].id
     }
+
+    this.round.removePlayedCards(playerId)
+
     return this
   }
 

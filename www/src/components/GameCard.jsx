@@ -17,11 +17,13 @@ export default function GameCard({
   className = '',
   br = 'rounded-xl',
   style = {},
-  badge = 1,
+  badge,
   ...props
 }) {
   const bg = bgmap[type]
   const color = colormap[type]
+  const showBadge = type === 'black' ? badge > 1 : !!badge
+
   return (
     <Base
       style={{ backgroundColor: bg, ...style }}
@@ -31,7 +33,7 @@ export default function GameCard({
       <div style={{ color }} className="font-semibold">
         {text}
       </div>
-      {badge > 1 && (
+      {showBadge && (
         <span className="absolute bottom-2 right-2 block font-medium w-6 text-center rounded-full bg-white text-gray-900">
           {badge}
         </span>

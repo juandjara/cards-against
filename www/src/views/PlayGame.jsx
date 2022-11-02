@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { editGame, joinGame, leaveGame } from '@/lib/gameUtils'
+import { editGame, joinGame } from '@/lib/gameUtils'
 import { useQueryClient } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import withGame from '@/lib/withGame'
@@ -10,7 +10,8 @@ import Button from '@/components/Button'
 import usePlayerId from '@/lib/usePlayerId'
 import { Check, Clock, CrownSimple } from 'phosphor-react'
 import Modal from '@/components/Modal'
-import { XIcon } from '@heroicons/react/solid'
+import { UserIcon, XIcon } from '@heroicons/react/outline'
+import classNames from 'classnames'
 
 function getLastFinishedRound(game) {
   const round = game.finishedRounds[game.finishedRounds.length - 1]
@@ -29,12 +30,15 @@ function PlayGameUI({ socket, game }) {
   const playerData = game?.players.find(p => p.id === playerId)
   const cardsToPick = game?.round.blackCard?.pick || 1
   const playerIsHost = playerId === game?.round.host
+
   const roundPlayed = game?.round.whiteCards.some(c => c.player === playerId)
   const playersReady = game?.players.filter(p => game.round.whiteCards.some(c => c.player === p.id)).length
   const allCardsSent = playersReady === game?.players.length - 1
+
   const showHand = !playerIsHost && !roundPlayed
   const showCardCounter = !allCardsSent && (playerIsHost || roundPlayed)
   const cardCounterText = `${playersReady} / ${game?.players.length - 1}`
+
   const counterAnimation = useAnimation()
   const [winner, setWinner] = useState(null)
   const [showRoundModal, setShowRoundModal] = useState(false)
@@ -54,7 +58,6 @@ function PlayGameUI({ socket, game }) {
     })
     socket.on('game:kick', kickedPlayerId => {
       if (kickedPlayerId === playerId) {
-        leaveGame({ socket, game, playerId })
         navigate('/')
       }
     })
@@ -67,6 +70,7 @@ function PlayGameUI({ socket, game }) {
       if (socket) {
         socket.off('game:edit')
         socket.off('game:kick')
+        cache.removeQueries({ queryKey: ['game', game.id] })
       }
     }
   }, [])
@@ -115,19 +119,23 @@ function PlayGameUI({ socket, game }) {
   }
 
   function closeGameOverModal() {
-    leaveGame({ socket, game, playerId })
+    removePlayer(playerId)
     navigate('/')
   }
 
   function removePlayer(playerId) {
-    socket.emit('game:kick', { playerId, gameId: game.id })
+    socket.emit('game:leave', { playerId, gameId: game.id })
   }
 
   return (
     <main
-      className="h-full px-2 md:px-4 flex flex-col items-stretch justify-start"
+      className="h-full p-3 pb-0 flex flex-col items-stretch justify-start"
       style={{ minHeight: 'calc(100vh - 54px)' }}
     >
+      <div className="absolute top-0 right-0 flex items-center gap-2 p-2">
+        <p className="text-sm">{playerData.name}</p>
+        <UserIcon className="w-4 h-4" />
+      </div>
       <PlayersInfo playerId={playerId} onRemovePlayer={removePlayer} game={game} />
       <GameOverModal closeModal={closeGameOverModal} game={game} />
       <RoundModal closeModal={closeModal} show={showRoundModal && !game.finished} game={game} />
@@ -151,9 +159,11 @@ function PlayGameUI({ socket, game }) {
           onDiscard={discardWhiteCards}
         />
       ) : (
-        <p className="text-center flex-grow pb-8">
+        <p className="text-center pb-8">
           {allCardsSent
-            ? 'Esperando a que el juez elija la carta ganadora...'
+            ? playerIsHost
+              ? ''
+              : 'Esperando a que el juez elija la carta ganadora...'
             : 'Esperando a que los jugadores envíen sus cartas...'}
         </p>
       )}
@@ -179,15 +189,20 @@ function GameOverModal({ closeModal, game }) {
 
 function RoundModal({ closeModal, show, game }) {
   const round = getLastFinishedRound(game)
-  const title = `Ganador de la ronda: ${round?.winner?.name}`
+  const title = show && (
+    <p>
+      <span>{round?.winner.name}</span>
+      <small className="text-gray-600"> - Ganador de la ronda</small>
+    </p>
+  )
   const whiteCards = round ? round.whiteCards : []
   const blackCard = round ? round.blackCard : { text: '' }
   return (
     <Modal show={show} onClose={closeModal} title={title}>
-      <div className="py-6 flex flex-wrap items-center justify-center content-center">
-        <GameCard className="m-2 ml-0" type="black" text={decodeHtml(blackCard.text)} badge={blackCard.pick} />
+      <div className="pt-8 gap-4 flex flex-wrap items-center justify-center content-center">
+        <GameCard type="black" text={decodeHtml(blackCard.text)} badge={blackCard.pick} />
         {whiteCards.map(c => (
-          <GameCard className="shadow-lg m-2" text={decodeHtml(c.card)} type="white" key={c.card} />
+          <GameCard className="shadow-md" text={decodeHtml(c.card)} type="white" key={c.card} />
         ))}
       </div>
     </Modal>
@@ -221,17 +236,19 @@ function getPlayerState(game, player) {
 }
 
 function PlayersInfo({ playerId, game, onRemovePlayer }) {
+  const creator = game.players[0] && game.players[0].id
   const host = game.round.host
   const roundNum = game.finishedRounds.length + 1
   return (
-    <div className="pt-2 flex items-start justify-between flex-wrap gap-4">
-      <ul className="space-y-3 overflow-hidden">
+    <>
+      <p className="text-lg font-bold pb-3">Ronda {roundNum}</p>
+      <ul className="px-1 space-y-3 overflow-hidden">
         {game.players.map(p => (
           <li key={p.id} className="flex space-x-3 items-center">
             {getPlayerState(game, p)}
             <span className="font-medium font-mono bg-gray-900 px-2 py-1 rounded-lg">{p.points}</span>
             <span className={`${p.id === host ? 'font-bold' : 'font-medium'} truncate text-lg`}>{p.name} </span>
-            {playerId === host && p.id !== host && (
+            {playerId === creator && (
               <button
                 title="Eliminar jugador"
                 aria-label="Eliminar jugador"
@@ -244,8 +261,7 @@ function PlayersInfo({ playerId, game, onRemovePlayer }) {
           </li>
         ))}
       </ul>
-      <p className="text-lg font-bold flex-shrink-0">Ronda {roundNum}</p>
-    </div>
+    </>
   )
 }
 
@@ -275,11 +291,6 @@ function Round({
   onCardClick,
   onWinnerSelect
 }) {
-  function getGroupClassName(group) {
-    const selectedStyles = group.player === winner ? 'ring-4 ring-blue-500 ring-inset' : ''
-    return `${selectedStyles} bg-gray-900 bg-opacity-20 rounded-xl m-1 flex flex-wrap flex-shrink-0 text-left items-center justify-center`
-  }
-
   const cardCounter = showCardCounter && (
     <GameCard
       as={motion.div}
@@ -297,46 +308,62 @@ function Round({
 
   return (
     <div className="flex-grow py-6 flex flex-col items-center justify-center content-center">
-      {winner && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <PrimaryButton onClick={onWinnerSelect} className="my-2">
-            Marcar como ganador
-          </PrimaryButton>
-        </motion.div>
+      {allCardsSent && playerIsHost && (
+        <p className="pt-2 text-lg font-semibold">Elije la combinaci&oacute;n ganadora</p>
       )}
-      <div className="py-4 flex flex-wrap items-center justify-center">
+      <div className="py-4 flex flex-wrap items-start justify-center">
         {round.blackCard && (
           <GameCard className="m-2" type="black" text={decodeHtml(round.blackCard.text)} badge={round.blackCard.pick} />
         )}
         {cardCounter}
-        <ul className="flex flex-wrap justify-center">
-          {allCardsSent &&
-            groupCardsByPlayer(round.whiteCards).map(group => (
-              <div key={group.player} className={getGroupClassName(group)}>
-                {group.cards.map((c, i) =>
-                  playerIsHost ? (
-                    <GameCard
-                      text={c.hidden ? '¿?' : decodeHtml(c.card)}
-                      className="m-2 text-left focus:outline-none"
-                      type="white"
-                      key={i}
-                      as={motion.button}
-                      whileHover={{ scale: 1.05 }}
-                      onClick={() => onCardClick(c)}
-                    />
-                  ) : (
-                    <GameCard
-                      text={c.hidden ? '¿?' : decodeHtml(c.card)}
-                      className="m-2 text-left"
-                      type="white"
-                      key={i}
-                    />
-                  )
-                )}
-              </div>
-            ))}
-        </ul>
+        {allCardsSent &&
+          groupCardsByPlayer(round.whiteCards).map(group => (
+            <motion.div
+              initial={{ y: 0 }}
+              whileHover={{ y: playerIsHost ? -10 : 0 }}
+              key={group.player}
+              className={classNames(
+                { 'ring-inset ring-4 ring-blue-500': group.player === winner },
+                'flex-shrink-0',
+                'm-1 bg-gray-900 bg-opacity-20 rounded-2xl text-left'
+              )}
+            >
+              {group.cards.map((c, i) =>
+                playerIsHost ? (
+                  <GameCard
+                    text={c.hidden ? '¿?' : decodeHtml(c.card)}
+                    className={classNames(
+                      { '-mt-6': i !== 0 },
+                      'm-2 text-left border-t-2 border-gray-300 focus:outline-none'
+                    )}
+                    type="white"
+                    key={i}
+                    as="button"
+                    onClick={() => onCardClick(c)}
+                  />
+                ) : (
+                  <GameCard
+                    text={c.hidden ? '¿?' : decodeHtml(c.card)}
+                    className={classNames({ '-mt-6': i !== 0 }, 'm-2 text-left border-t-2 border-gray-300')}
+                    type="white"
+                    key={i}
+                  />
+                )
+              )}
+            </motion.div>
+          ))}
       </div>
+      {allCardsSent && playerIsHost ? (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <PrimaryButton
+            disabled={!winner}
+            onClick={onWinnerSelect}
+            className={classNames({ 'opacity-50 pointer-events-none': !winner })}
+          >
+            Confirmar
+          </PrimaryButton>
+        </motion.div>
+      ) : null}
     </div>
   )
 }
@@ -359,11 +386,6 @@ function CardPicker({ cardsToPick, cards = [], onCardsPicked, onDiscard }) {
     return selected.indexOf(card) !== -1
   }
 
-  function getCardClassName(card) {
-    const selectedStyles = cardIsSelected(card) ? 'ring-4 ring-blue-500 ring-inset' : ''
-    return `mt-2 flex-shrink-0 text-left focus:outline-none ${selectedStyles}`
-  }
-
   function sendCards() {
     onCardsPicked(selected)
     setSelected([])
@@ -375,47 +397,47 @@ function CardPicker({ cardsToPick, cards = [], onCardsPicked, onDiscard }) {
   }
 
   return (
-    <div className="pb-2">
-      <div className="mx-auto md:px-7 max-w-6xl">
-        {showSendButton || showDiscardButton ? (
-          <motion.div className="mb-3" animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
-            {showSendButton && (
-              <PrimaryButton onClick={sendCards}>
-                {cardsToPick === 1 ? 'Elegir esta carta' : 'Elegir estas cartas'}
-              </PrimaryButton>
-            )}
-            {showDiscardButton && (
-              <Button onClick={discard} className="ml-4">
-                Descartar
-              </Button>
-            )}
-          </motion.div>
-        ) : (
-          <div className="h-9 mb-2"></div>
-        )}
-        <p className="font-medium text-xl">
-          <span>Cartas en tu mano</span>
-          <small className="text-gray-100 text-base"> · {selectCardMessage}</small>
-        </p>
-      </div>
-      <div className="overflow-x-auto flex md:justify-center items-start space-x-4">
-        <AnimatePresence>
-          {cards.map(card => (
-            <GameCard
-              key={card}
-              type="white"
-              text={decodeHtml(card)}
-              className={getCardClassName(card)}
-              as={motion.button}
-              onClick={() => selectCard(card)}
-              initial={{ y: 100, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -200, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              style={{ touchAction: 'pan-x' }}
-            />
-          ))}
-        </AnimatePresence>
+    <div className="flex flex-col gap-2 items-start mx-auto max-w-full pb-1">
+      <p className="font-medium text-lg">{selectCardMessage}</p>
+      <motion.div className="flex items-center gap-3" animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
+        <PrimaryButton
+          disabled={!showSendButton}
+          onClick={sendCards}
+          className={classNames({ 'opacity-50 pointer-events-none': !showSendButton })}
+        >
+          {cardsToPick === 1 ? 'Elegir esta carta' : 'Elegir estas cartas'}
+        </PrimaryButton>
+        <Button
+          disabled={!showDiscardButton}
+          onClick={discard}
+          className={classNames({ 'opacity-50 pointer-events-none': !showDiscardButton })}
+        >
+          Descartar
+        </Button>
+      </motion.div>
+      <div className="overflow-x-auto max-w-full">
+        <div className="flex md:justify-center items-start gap-3 p-1 my-1">
+          <AnimatePresence>
+            {cards.map(card => (
+              <GameCard
+                key={card}
+                type="white"
+                text={decodeHtml(card)}
+                className={classNames('text-left flex-shrink-0 hover:bg-gray-50 focus:outline-none', {
+                  'ring-4 ring-blue-500': cardIsSelected(card)
+                })}
+                as={motion.button}
+                badge={cardsToPick > 1 ? selected.indexOf(card) + 1 : 0}
+                onClick={() => selectCard(card)}
+                initial={{ x: 200, opacity: 0, width: 0 }}
+                animate={{ x: 0, opacity: 1, width: '' }}
+                exit={{ x: -200, width: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                style={{ touchAction: 'pan-x' }}
+              />
+            ))}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   )

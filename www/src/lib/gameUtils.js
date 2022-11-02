@@ -58,34 +58,14 @@ export function editGame(cache, game) {
 export function joinGame({ socket, game, playerId }) {
   const playerHasJoined = game.players.some(p => p.id === playerId)
   let msg = 'Introduce un nombre de usuario'
-  let name = 'rejoining ...'
+  let name = `Player ${game.players.length + 1}`
 
   if (!playerHasJoined) {
-    name = window.prompt(msg)
-    if (!name) {
-      msg = msg + ' que no este vacío'
-      name = window.prompt(msg)
-    }
-    if (!name) {
-      msg = msg + ' por favor'
-      name = window.prompt(msg)
-    }
-    if (!name) {
-      msg = msg + '. En serio'
-      name = window.prompt(msg)
-    }
-    if (!name) {
-      msg = 'Introduce el nombre que te de la gana'
-      name = window.prompt(msg)
+    const res = window.prompt(msg)
+    if (res) {
+      name = res
     }
   }
 
   socket.emit('game:join', { gameId: game.id, name, playerId })
-}
-
-export function leaveGame({ socket, game, playerId }) {
-  socket.emit('game:leave', {
-    gameId: game.id,
-    playerId
-  })
 }
