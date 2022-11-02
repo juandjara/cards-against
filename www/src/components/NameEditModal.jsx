@@ -20,11 +20,12 @@ export default function NameEditModal({ game, socket }) {
     <Modal showCloseButton={false} onClose={() => {}} show={!player} title="Introduce un nombre de usuario">
       <form className="mt-6" onSubmit={handleSubmit}>
         <Input
-          labelColor="text-gray-600"
-          label="Nombre"
           type="text"
           value={name}
+          onFocus={ev => ev.target.select()}
           onChange={ev => setName(ev.target.value)}
+          label="Nombre"
+          labelColor="text-gray-600"
           required
         />
         {nameIsRepeated && (
