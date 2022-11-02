@@ -54,18 +54,3 @@ export function useGameList() {
 export function editGame(cache, game) {
   cache.setQueryData(['game', game.id], game)
 }
-
-export function joinGame({ socket, game, playerId }) {
-  const playerHasJoined = game.players.some(p => p.id === playerId)
-  let msg = 'Introduce un nombre de usuario'
-  let name = `Player ${game.players.length + 1}`
-
-  if (!playerHasJoined) {
-    const res = window.prompt(msg)
-    if (res) {
-      name = res
-    }
-  }
-
-  socket.emit('game:join', { gameId: game.id, name, playerId })
-}

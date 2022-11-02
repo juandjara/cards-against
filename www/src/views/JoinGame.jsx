@@ -5,11 +5,12 @@ import { Copy, CrownSimple, User } from 'phosphor-react'
 import Button from '@/components/Button'
 import PrimaryButton from '@/components/PrimaryButton'
 import Container from '@/components/Container'
-import { editGame, joinGame } from '@/lib/gameUtils'
+import { editGame } from '@/lib/gameUtils'
 import { useQueryClient } from 'react-query'
 import usePlayerId from '@/lib/usePlayerId'
 import withGame from '@/lib/withGame'
 import { X as XIcon } from 'phosphor-react'
+import NameEditModal from '@/components/NameEditModal'
 
 const MIN_PLAYERS = 2
 
@@ -21,6 +22,10 @@ function JoinGameUI({ socket, game }) {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
+    if (game.started) {
+      navigate(`/game/${game.id}`)
+    }
+
     socket.on('game:edit', game => {
       editGame(cache, game)
       if (game.started) {
@@ -34,11 +39,6 @@ function JoinGameUI({ socket, game }) {
       }
     })
 
-    // TODO:
-    // 1. save name in local storage and use as second argument for prompt in other plays
-    // 2. replace window.prompt with custom modal
-    joinGame({ socket, game, playerId })
-
     return () => {
       if (socket) {
         socket.off('game:edit')
@@ -50,7 +50,7 @@ function JoinGameUI({ socket, game }) {
 
   function copyLink() {
     navigator.clipboard.writeText(window.location.href).then(() => {
-      alert('Enlace copiado al portapapeles')
+      window.alert('Enlace copiado al portapapeles')
     })
   }
 
@@ -65,6 +65,7 @@ function JoinGameUI({ socket, game }) {
 
   return (
     <Container>
+      <NameEditModal game={game} socket={socket} />
       <Button
         padding="p-2"
         className="rounded-full hover:shadow-md"

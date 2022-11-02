@@ -4,7 +4,7 @@ import Button from '@/components/Button'
 import classNames from 'classnames'
 
 // partly taken from https://headlessui.dev/react/dialog
-export default function Modal({ show, title, children, onClose }) {
+export default function Modal({ show, title, children, onClose, showCloseButton = true }) {
   const closeRef = useRef()
 
   useEffect(() => {
@@ -58,9 +58,11 @@ export default function Modal({ show, title, children, onClose }) {
                 {title}
               </Dialog.Title>
               {children}
-              <Button ref={closeRef} onClick={onClose} className="mt-4 block ml-auto">
-                Cerrar
-              </Button>
+              {showCloseButton && (
+                <Button ref={closeRef} onClick={onClose} className="mt-4 block ml-auto">
+                  Cerrar
+                </Button>
+              )}
             </div>
           </Transition.Child>
         </div>

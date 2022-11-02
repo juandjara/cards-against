@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { editGame, joinGame } from '@/lib/gameUtils'
+import { editGame } from '@/lib/gameUtils'
 import { useQueryClient } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import withGame from '@/lib/withGame'
@@ -12,6 +12,7 @@ import { Check, Clock, CrownSimple } from 'phosphor-react'
 import Modal from '@/components/Modal'
 import { UserIcon, XIcon } from '@heroicons/react/outline'
 import classNames from 'classnames'
+import NameEditModal from '@/components/NameEditModal'
 
 function getLastFinishedRound(game) {
   const round = game.finishedRounds[game.finishedRounds.length - 1]
@@ -61,10 +62,6 @@ function PlayGameUI({ socket, game }) {
         navigate('/')
       }
     })
-
-    // TODO: 1. save name in local storage and use as second argument for prompt in other plays
-    //       2. replace window.prompt with custom modal
-    joinGame({ socket, game, playerId })
 
     return () => {
       if (socket) {
@@ -132,13 +129,14 @@ function PlayGameUI({ socket, game }) {
       className="h-full p-3 pb-0 flex flex-col items-stretch justify-start"
       style={{ minHeight: 'calc(100vh - 54px)' }}
     >
+      <NameEditModal game={game} socket={socket} />
+      <GameOverModal closeModal={closeGameOverModal} game={game} />
+      <RoundModal closeModal={closeModal} show={showRoundModal && !game.finished} game={game} />
       <div className="absolute top-0 right-0 flex items-center gap-2 p-2">
         <p className="text-sm">{playerData.name}</p>
         <UserIcon className="w-4 h-4" />
       </div>
       <PlayersInfo playerId={playerId} onRemovePlayer={removePlayer} game={game} />
-      <GameOverModal closeModal={closeGameOverModal} game={game} />
-      <RoundModal closeModal={closeModal} show={showRoundModal && !game.finished} game={game} />
       <Round
         playerIsHost={playerIsHost}
         cardCounterText={cardCounterText}
