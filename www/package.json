@@ -19,7 +19,7 @@
     "classnames": "^2.3.1",
     "framer-motion": "^4.1.17",
     "history": "^5.0.0",
-    "nanoid": "^3.1.25",
+    "nanoid": "^3.1.31",
     "phosphor-react": "^1.2.1",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
