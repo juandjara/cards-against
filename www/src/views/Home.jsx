@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { useGameList } from '@/lib/gameUtils'
 import usePlayerId from '@/lib/usePlayerId'
 import { useSocket } from '@/lib/SocketProvider'
+import { useAlert } from '@/components/Alert'
 
 export default function Home() {
   const socket = useSocket()
@@ -12,6 +13,7 @@ export default function Home() {
   const playerId = usePlayerId()
   const { games, refetch } = useGameList()
   const currentGame = games.find(g => g.players.find(p => p.id === playerId))
+  const alert = useAlert()
 
   function joinGame() {
     if (currentGame) {
@@ -23,9 +25,12 @@ export default function Home() {
 
   function createGame() {
     if (currentGame) {
-      // TODO: make a UI effect (animation or alert) to confirm that you have just left the game
       socket.emit('game:leave', { playerId, gameId: currentGame.id })
       refetch()
+      alert({
+        text: 'Has abandonado la partida',
+        type: 'info'
+      })
     } else {
       navigate('/newgame')
     }
