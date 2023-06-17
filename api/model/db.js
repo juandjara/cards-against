@@ -1,4 +1,7 @@
 const Game = require('./game')
+const { Redis } = require('ioredis')
+
+const redis = new Redis(process.env.REDIS_URL)
 
 class ApiError extends Error {
   constructor (status, msg) {
@@ -8,23 +11,31 @@ class ApiError extends Error {
 }
 
 const db = {
-  games: {},
-  hasGame (id) {
-    return !!this.games[id]
+  async getAll () {
+    const ids = await redis.smembers('games')
+    if (ids.length === 0) {
+      return []
+    }
+
+    const games = await redis.mget(...ids.map(id => `game:${id}`))
+    return games.filter(Boolean).map(g => JSON.parse(g))
   },
-  createGame (data) {
+  async createGame (data) {
     const game = new Game(data)
-    this.games[game.id] = game
+    await redis.set(`game:${game.id}`, JSON.stringify(game.toJSON()))
+    await redis.sadd('games', game.id)
     return game
   },
-  getGame (id) {
-    if (!this.hasGame(id)) {
+  async getGame (id) {
+    const game = await redis.get(`game:${id}`)
+    if (!game) {
       throw new ApiError(404, `Game with ID '${id}' not found`)
     }
-    return this.games[id]
+    return Game.fromJSON(JSON.parse(game))
   },
-  removeGame (game) {
-    delete this.games[game.id]
+  async removeGame (game) {
+    await redis.del(`game:${game.id}`)
+    await redis.srem('games', game.id)
   }
 }
 
