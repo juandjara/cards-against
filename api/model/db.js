@@ -1,7 +1,10 @@
 const Game = require('./game')
 const { Redis } = require('ioredis')
 
-const redis = new Redis(process.env.REDIS_URL)
+const redis = new Redis(
+  process.env.REDIS_URL,
+  { family: 6 }
+)
 
 class ApiError extends Error {
   constructor (status, msg) {
