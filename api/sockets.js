@@ -27,13 +27,17 @@ module.exports = function (socket, io, db) {
   handleMessage('game:join', async ({ gameId, name, playerId }) => {
     const room = `game-${gameId}`
     socket.join(room)
-    const game = (await db.getGame(gameId)).addPlayer({ id: playerId, name })
-    io.to(room).emit('game:edit', game)
+    const game = await db.getGame(gameId)
+    const newGame = game.addPlayer({ id: playerId, name })
+    await db.saveGame(newGame)
+    io.to(room).emit('game:edit', newGame)
   })
 
   handleMessage('game:leave', async ({ gameId, playerId }) => {
     const room = `game-${gameId}`
-    const game = (await db.getGame(gameId)).removePlayer(playerId)
+    const game = await db.getGame(gameId)
+    const newGame = game.removePlayer(playerId)
+    await db.saveGame(newGame)
     io.to(room).emit('game:edit', game)
     io.to(room).emit('game:kick', playerId)
     if (game.players.length === 0) {
@@ -43,7 +47,9 @@ module.exports = function (socket, io, db) {
 
   handleMessage('game:start', async (gameId) => {
     const room = `game-${gameId}`
-    const game = (await db.getGame(gameId)).start()
+    const game = await db.getGame(gameId)
+    const newGame = game.start()
+    await db.saveGame(newGame)
     io.to(room).emit('game:edit', game)
   })
 
@@ -56,22 +62,28 @@ module.exports = function (socket, io, db) {
 
   handleMessage('game:discard-white-card', async ({ gameId, cards, playerId }) => {
     const room = `game-${gameId}`
-    const game = (await db.getGame(gameId)).discardWhiteCard(cards, playerId)
+    const game = await db.getGame(gameId)
+    const newGame = game.discardWhiteCard(cards, playerId)
+    await db.saveGame(newGame)
     io.to(room).emit('game:edit', game)
   })
 
   handleMessage('game:reveal-card', async ({ gameId, playerId }) => {
     const room = `game-${gameId}`
-    const game = (await db.getGame(gameId)).revealCard(playerId)
+    const game = await db.getGame(gameId)
+    const newGame = game.revealCard(playerId)
+    await db.saveGame(newGame)
     io.to(room).emit('game:edit', game)
   })
 
   handleMessage('game:finish-round', async ({ gameId, winnerPlayerId }) => {
     const room = `game-${gameId}`
     const game = await db.getGame(gameId)
-    io.to(room).emit('game:edit', game.finishRound(winnerPlayerId))
+    const newGame = game.finishRound(winnerPlayerId)
+    await db.saveGame(newGame)
+    io.to(room).emit('game:edit', newGame)
     setTimeout(() => {
-      io.to(room).emit('game:round-winner', game.getLastFinishedRound())
+      io.to(room).emit('game:round-winner', newGame.getLastFinishedRound())
     }, 500)
   })
 

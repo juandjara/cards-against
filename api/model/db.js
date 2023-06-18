@@ -36,6 +36,9 @@ const db = {
     }
     return Game.fromJSON(JSON.parse(game))
   },
+  async saveGame (game) {
+    await redis.set(`game:${game.id}`, JSON.stringify(game.toJSON()))
+  },
   async removeGame (game) {
     await redis.del(`game:${game.id}`)
     await redis.srem('games', game.id)
