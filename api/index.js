@@ -56,6 +56,16 @@ app.get('/games/:id', async (req, res) => {
   }
 })
 
+app.delete('/games/:id', async (req, res) => {
+  const id = req.params.id
+  try {
+    await db.removeGame(id)
+    res.json({ message: `Game ${id} deleted` })
+  } catch (err) {
+    res.status(err.status || 500).json({ message: err.message })
+  }
+})
+
 // TODO: add global error handler and use this to wrap async functions
 function wrapAsync (fn) {
   return function (req, res, next) {
