@@ -22,6 +22,7 @@ function JoinGameUI({ socket, game }) {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
+    socket.emit('game:rejoin', { gameId: game.id })
     if (game.started) {
       navigate(`/game/${game.id}`)
     }
