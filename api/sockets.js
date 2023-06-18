@@ -27,17 +27,13 @@ module.exports = function (socket, io, db) {
   handleMessage('game:join', async ({ gameId, name, playerId }) => {
     const room = `game-${gameId}`
     socket.join(room)
-    const game = await db.getGame(gameId)
-    const newGame = game.addPlayer({ id: playerId, name })
-    await db.saveGame(newGame)
-    io.to(room).emit('game:edit', newGame)
+    const game = await db.updateGame(gameId, game => game.addPlayer({ id: playerId, name }))
+    io.to(room).emit('game:edit', game)
   })
 
   handleMessage('game:leave', async ({ gameId, playerId }) => {
     const room = `game-${gameId}`
-    const game = await db.getGame(gameId)
-    const newGame = game.removePlayer(playerId)
-    await db.saveGame(newGame)
+    const game = await db.updateGame(gameId, game => game.removePlayer(playerId))
     io.to(room).emit('game:edit', game)
     io.to(room).emit('game:kick', playerId)
     if (game.players.length === 0) {
@@ -47,46 +43,39 @@ module.exports = function (socket, io, db) {
 
   handleMessage('game:start', async (gameId) => {
     const room = `game-${gameId}`
-    const game = await db.getGame(gameId)
-    const newGame = game.start()
-    await db.saveGame(newGame)
+    const game = await db.updateGame(gameId, game => game.start())
     io.to(room).emit('game:edit', game)
   })
 
   handleMessage('game:play-white-cards', async ({ gameId, cards, playerId }) => {
     const room = `game-${gameId}`
-    const game = (await db.getGame(gameId)).playWhiteCards(cards, playerId)
+    const game = await db.updateGame(gameId, game => game.playWhiteCards(cards, playerId))
     io.to(room).emit('game:edit', game)
     io.to(room).emit('game:cards-played', cards)
   })
 
   handleMessage('game:discard-white-card', async ({ gameId, cards, playerId }) => {
     const room = `game-${gameId}`
-    const game = await db.getGame(gameId)
-    const newGame = game.discardWhiteCard(cards, playerId)
-    await db.saveGame(newGame)
+    const game = await db.updateGame(gameId, game => game.discardWhiteCard(cards, playerId))
     io.to(room).emit('game:edit', game)
   })
 
   handleMessage('game:reveal-card', async ({ gameId, playerId }) => {
     const room = `game-${gameId}`
-    const game = await db.getGame(gameId)
-    const newGame = game.revealCard(playerId)
-    await db.saveGame(newGame)
+    const game = await db.updateGame(gameId, game => game.revealCard(playerId))
     io.to(room).emit('game:edit', game)
   })
 
   handleMessage('game:finish-round', async ({ gameId, winnerPlayerId }) => {
     const room = `game-${gameId}`
-    const game = await db.getGame(gameId)
-    const newGame = game.finishRound(winnerPlayerId)
-    await db.saveGame(newGame)
-    io.to(room).emit('game:edit', newGame)
+    const game = await db.updateGame(gameId, game => game.finishRound(winnerPlayerId))
+    io.to(room).emit('game:edit', game)
     setTimeout(() => {
-      io.to(room).emit('game:round-winner', newGame.getLastFinishedRound())
+      io.to(room).emit('game:round-winner', game.getLastFinishedRound())
     }, 500)
   })
 
+  // TODO: refactor 'deck:*' handlers to use redis instead of in-memory objects
   handleMessage('deck:request', (id) => {
     const deck = decks.get(id)
     io.to(socket.id).emit('deck:response', deck && deck.data)
