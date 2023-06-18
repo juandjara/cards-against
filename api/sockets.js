@@ -31,6 +31,11 @@ module.exports = function (socket, io, db) {
     io.to(room).emit('game:edit', game)
   })
 
+  handleMessage('game:rejoin', ({ gameId }) => {
+    const room = `game-${gameId}`
+    socket.join(room)
+  })
+
   handleMessage('game:leave', async ({ gameId, playerId }) => {
     const room = `game-${gameId}`
     const game = await db.updateGame(gameId, game => game.removePlayer(playerId))
