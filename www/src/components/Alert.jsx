@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useSocket } from '@/lib/SocketProvider'
 
 const DEFAULT_DELAY = 5000
 
 function getAlertColor(type) {
-  if (type === 'error') {
-    return 'red'
+  if (type === 'info') {
+    return 'blue'
+  }
+  if (type === 'warning') {
+    return 'yellow'
   }
   if (type === 'success') {
     return 'green'
@@ -13,27 +16,43 @@ function getAlertColor(type) {
   return 'red'
 }
 
-export default function Alert() {
-  const socket = useSocket()
+const AlertContext = createContext()
+
+export function useAlert() {
+  const setAlert = useContext(AlertContext)
+  return ({ text, type }) => setAlert({ text, type })
+}
+
+export default function AlertProvider({ children }) {
   const [alert, setAlert] = useState(null)
+  return (
+    <AlertContext.Provider value={setAlert}>
+      <Alert alert={alert} setAlert={setAlert} />
+      {children}
+    </AlertContext.Provider>
+  )
+}
+
+function Alert({ alert, setAlert }) {
+  const socket = useSocket()
 
   useEffect(() => {
     function onError(msg) {
       setAlert({
         text: `PUM! Algo se ha roto!! \n${msg}`,
-        color: 'red'
+        type: 'error'
       })
     }
     function onDisconnect() {
       setAlert({
         text: 'Se ha perdido la conexion con el servidor',
-        color: 'yellow'
+        type: 'warning'
       })
     }
     function onReconnect() {
       setAlert({
         text: 'Recuperada la conexion con el servidor',
-        color: 'green'
+        type: 'success'
       })
     }
 

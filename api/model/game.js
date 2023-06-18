@@ -51,6 +51,23 @@ class Round {
 }
 
 class Game {
+  static fromJSON({ usedCards, round, ...data}) {
+    const game = new Game({})
+    Object.assign(game, {
+      usedCards: new Set(usedCards),
+      round: Object.assign(new Round(), round),
+      ...data,
+    })
+    return game
+  }
+
+  toJSON() {
+    return {
+      ...this,
+      usedCards: [...this.usedCards],
+    }
+  }
+
   constructor({ deck, rotation, winCondition, maxPoints, maxRounds, isPublic }) {
     const id = createID()
     const data = {
@@ -69,11 +86,6 @@ class Game {
       finishedRounds: [],
       round: new Round()
     }
-    Object.assign(this, data)
-    return this
-  }
-
-  edit(data) {
     Object.assign(this, data)
     return this
   }

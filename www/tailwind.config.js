@@ -3,7 +3,7 @@ module.exports = {
     content: ['./index.html', './src/**/*.{js,jsx}'],
     options: {
       // avoid purging classnames built dynamically
-      safelist: ['blue', 'red', 'gray', 'green']
+      safelist: ['blue', 'red', 'gray', 'green', 'yellow']
         .map((color) => [
           `text-${color}-500`,
           `text-${color}-700`,

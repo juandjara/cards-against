@@ -37,21 +37,31 @@ app.get('/', (req, res) => {
 //   res.json(rooms)
 // })
 
-app.get('/games', (req, res) => {
-  res.json(Object.values(db.games).map(g => ({ ...g, usedCards: [...g.usedCards] })))
+app.get('/games', async (req, res) => {
+  try {
+    const games = await db.getAll()
+    res.json(games)
+  } catch (err) {
+    res.status(err.status || 500).json({ message: err.message })
+  }
 })
 
-app.get('/games/:id', (req, res) => {
+app.get('/games/:id', async (req, res) => {
   const id = req.params.id
   try {
-    const game = db.getGame(id)
+    const game = await db.getGame(id)
     res.json(game)
   } catch (err) {
     res.status(err.status || 500).json({ message: err.message })
   }
 })
 
-// TODO: add global error handler
+// TODO: add global error handler and use this to wrap async functions
+function wrapAsync (fn) {
+  return function (req, res, next) {
+    fn(req, res, next).catch(next)
+  }
+}
 
 httpServer.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`)

@@ -45,6 +45,7 @@ function PlayGameUI({ socket, game }) {
   const [showRoundModal, setShowRoundModal] = useState(false)
 
   useEffect(() => {
+    socket.emit('game:rejoin', { gameId: game.id })
     socket.on('game:edit', game => {
       editGame(cache, game)
       if (game.finished) {
