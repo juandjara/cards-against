@@ -45,6 +45,16 @@ const db = {
   async removeGame (game) {
     await redis.del(`game:${game.id}`)
     await redis.srem('games', game.id)
+  },
+  async getDeck (id) {
+    const deck = await redis.get(`deck:${id}`)
+    return JSON.parse(deck)
+  },
+  async createDeck ({ id, host, data }) {
+    await redis.set(`deck:${id}`, JSON.stringify({ host, data }))
+  },
+  async removeDeck (id) {
+    await redis.del(`deck:${id}`)
   }
 }
 

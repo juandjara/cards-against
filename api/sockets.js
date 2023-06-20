@@ -1,5 +1,3 @@
-const decks = require('./model/decks')
-
 module.exports = function (socket, io, db) {
   function handleMessage (key, listener) {
     socket.on(key, async (data) => {
@@ -81,23 +79,27 @@ module.exports = function (socket, io, db) {
   })
 
   // TODO: refactor 'deck:*' handlers to use redis instead of in-memory objects
-  handleMessage('deck:request', (id) => {
-    const deck = decks.get(id)
+  handleMessage('deck:request', async (id) => {
+    const deck = await db.getDeck(id)
     io.to(socket.id).emit('deck:response', deck && deck.data)
   })
 
-  handleMessage('deck:saved', (id) => {
-    const deck = decks.get(id)
+  handleMessage('deck:saved', async (id) => {
+    const deck = await db.getDeck(id)
     if (deck) {
       io.to(deck.host).emit('deck:saved')
     }
   })
 
-  handleMessage('deck:share', (deck) => {
-    decks.set(deck.id, { host: socket.id, data: deck })
+  handleMessage('deck:share', async (deck) => {
+    await db.createDeck({
+      id: deck.id,
+      host: socket.id,
+      data: deck
+    })
   })
 
-  handleMessage('deck:unshare', (id) => {
-    decks.delete(id)
+  handleMessage('deck:unshare', async (id) => {
+    await db.removeDeck(id)
   })
 }
