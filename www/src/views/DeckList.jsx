@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router'
-import { ArrowLeftIcon, PencilIcon, ShareIcon } from '@heroicons/react/solid'
+import { ArrowLeftIcon, ShareIcon } from '@heroicons/react/solid'
 import Button from '@/components/Button'
 import Container from '@/components/Container'
 import { Link } from 'react-router-dom'
@@ -32,32 +32,31 @@ export default function DeckList() {
       <ul className="mt-6 space-y-6">
         {decks.map(d => (
           <li key={d.id}>
-            <div className="flex flex-wrap items-center bg-gray-500 border border-white py-3 px-4 rounded-lg hover:shadow-lg">
-              <div>
-                <p className="text-xl font-medium capitalize">{d.name}</p>
-                <div className="flex items-center space-x-4 mt-4 mb-1">
-                  <div className="flex items-center space-x-2">
+            <div className="bg-gray-500 border border-white py-3 px-4 rounded-lg hover:shadow-lg">
+              <p className="hover:underline text-xl font-medium capitalize pt-2 pb-4">
+                <Link className="block" to={`/decks/${d.id}`}>
+                  {d.name}
+                </Link>
+              </p>
+              <div className="flex flex-wrap justify-between items-center gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1">
                     <Stack className="w-6 h-6 text-white" />
                     <p className="font-bold">{d.whiteCards.length}</p>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center gap-1">
                     <Stack className="w-6 h-6 text-gray-900" />
                     <p className="font-bold">{d.blackCards.length}</p>
                   </div>
                 </div>
+                <Link
+                  to={`/decks/share/${d.id}?role=host`}
+                  className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-600 bg-opacity-75"
+                >
+                  <ShareIcon className="h-6 w-6" />
+                  <p className="font-medium">Compartir</p>
+                </Link>
               </div>
-              <div className="flex-grow"></div>
-              <Link to={`/decks/${d.id}`} className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-500">
-                <PencilIcon className="h-6 w-6" />
-                <p className="font-medium">Editar</p>
-              </Link>
-              <Link
-                to={`/decks/share/${d.id}?role=host`}
-                className="flex items-center space-x-2 p-2 ml-2 rounded-lg hover:bg-gray-500"
-              >
-                <ShareIcon className="h-6 w-6" />
-                <p className="font-medium">Compartir</p>
-              </Link>
             </div>
           </li>
         ))}
