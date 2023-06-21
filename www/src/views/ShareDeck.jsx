@@ -5,8 +5,9 @@ import { ArrowLeftIcon } from '@heroicons/react/solid'
 import { useNavigate, useParams, useLocation } from 'react-router'
 import useLocalStorage from '@/lib/useLocalStorage'
 import { DECKS_KEY } from './DeckEdit'
-import { Copy, Stack } from 'phosphor-react'
+import { Stack } from 'phosphor-react'
 import { useSocket } from '@/lib/SocketProvider'
+import CopyLink from '@/components/CopyLink'
 
 export default function ShareDeck() {
   const navigate = useNavigate()
@@ -66,11 +67,10 @@ function SharedDeckHost() {
 
   return (
     <div>
-      <CopyLinkUI className="my-6" link={shareLink} />
-
-      <div className="flex flex-col items-center justify-center text-center px-3 py-6 mt-4 border border-white rounded-xl">
-        <p className="text-xl font-medium mb-4">{localDeck.name}</p>
-        <div className="flex items-center gap-6 mb-8">
+      <CopyLink label="Enlace para compartir" link={shareLink} />
+      <div className="flex flex-col space-y-6 items-center justify-center text-center px-3 py-6 mt-4 border border-white rounded-xl">
+        <p className="text-xl font-medium">{localDeck.name}</p>
+        <div className="flex items-center gap-6">
           <div className="flex items-center gap-1">
             <Stack className="w-8 h-8 text-white" />
             <p className="text-lg font-medium">{localDeck.whiteCards.length} blancas</p>
@@ -130,18 +130,16 @@ function SharedDeckGuest() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center h-96 mt-4 border border-white rounded-xl">
-      <p className="text-xl">
-        Mazo compartido <strong>{remoteDeck.name}</strong>
-      </p>
-      <div className="flex items-center space-x-6 mt-4">
-        <div className="flex items-center space-x-2">
+    <div className="flex flex-col space-y-6 items-center justify-center text-center px-3 py-6 mt-4 border border-white rounded-xl">
+      <p className="text-xl font-medium">{remoteDeck.name}</p>
+      <div className="flex items-center gap-6">
+        <div className="flex items-center gap-1">
           <Stack className="w-8 h-8 text-white" />
-          <p className="text-xl font-bold">{remoteDeck.whiteCards.length}</p>
+          <p className="text-lg font-medium">{remoteDeck.whiteCards.length} blancas</p>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-1">
           <Stack className="w-8 h-8 text-gray-900" />
-          <p className="text-xl font-bold">{remoteDeck.blackCards.length}</p>
+          <p className="text-lg font-medium">{remoteDeck.blackCards.length} negras</p>
         </div>
       </div>
       {saved ? (
@@ -151,35 +149,6 @@ function SharedDeckGuest() {
           Guardar mazo
         </Button>
       )}
-    </div>
-  )
-}
-
-function CopyLinkUI({ link, ...props }) {
-  function copyLink() {
-    navigator.clipboard.writeText(link).then(() => {
-      alert('Enlace copiado al portapapeles')
-    })
-  }
-
-  return (
-    <div {...props}>
-      <p className="mb-1 text-sm text-gray-200 font-medium">Enlace para compartir</p>
-      <div className="flex">
-        <pre className="py-2 pl-3 px-5 -mr-2 bg-white text-gray-700 rounded-l-md">
-          <code>{link}</code>
-        </pre>
-        <Button
-          title="Copiar enlace"
-          className="rounded-r-md"
-          backgroundColor="bg-white"
-          textColor="text-gray-500 hover:text-blue-500"
-          padding="p-2"
-          onClick={copyLink}
-        >
-          <Copy width={24} height={24} />
-        </Button>
-      </div>
     </div>
   )
 }
