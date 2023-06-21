@@ -32,7 +32,7 @@ export default function DeckList() {
       <ul className="mt-6 space-y-6">
         {decks.map(d => (
           <li key={d.id}>
-            <div className="flex flex-wrap items-center border border-white py-3 px-4 rounded-lg hover:shadow-lg">
+            <div className="flex flex-wrap items-center bg-gray-500 border border-white py-3 px-4 rounded-lg hover:shadow-lg">
               <div>
                 <p className="text-xl font-medium capitalize">{d.name}</p>
                 <div className="flex items-center space-x-4 mt-4 mb-1">
