@@ -161,7 +161,7 @@ function CardGroup({ type, cards, setCards }) {
           </div>
         </div>
       </Modal>
-      <header className="flex flex-wrap items-center gap-2 pt-6 px-2">
+      <header className="flex flex-wrap items-center gap-2 pt-6 md:px-2">
         <Stack
           weight="fill"
           className={classNames('w-7 h-7', {
@@ -274,10 +274,11 @@ export default function DeckEdit() {
 
   return (
     <Container maxw="container">
-      <form className="py-6" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <header className="flex items-center gap-3">
           <div>
             <Button
+              type="button"
               padding="p-2"
               className="rounded-full hover:shadow-md"
               backgroundColor="bg-white hover:bg-blue-50"
@@ -293,7 +294,7 @@ export default function DeckEdit() {
         </header>
         <div className="flex justify-end gap-3 mt-3 mb-6">
           {id !== 'new' && (
-            <Button color="red" onClick={deleteDeck}>
+            <Button type="button" color="red" onClick={deleteDeck}>
               Eliminar
             </Button>
           )}
