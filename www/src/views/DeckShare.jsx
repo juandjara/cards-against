@@ -9,7 +9,7 @@ import { Stack } from 'phosphor-react'
 import { useSocket } from '@/lib/SocketProvider'
 import CopyLink from '@/components/CopyLink'
 
-export default function ShareDeck() {
+export default function DeckShare() {
   const navigate = useNavigate()
   const loc = useLocation()
   const searchParams = new URLSearchParams(loc.search)
