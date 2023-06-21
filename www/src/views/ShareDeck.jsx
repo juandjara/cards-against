@@ -26,7 +26,7 @@ export default function ShareDeck() {
           <ArrowLeftIcon className="w-5 h-5" />
         </Button>
       </div>
-      <h3 className="mb-4 text-3xl font-medium">Compartir mazo</h3>
+      <h3 className="mb-4 text-3xl font-medium">Compartiendo mazo</h3>
       {isHost ? <SharedDeckHost /> : <SharedDeckGuest />}
     </Container>
   )
@@ -68,27 +68,23 @@ function SharedDeckHost() {
     <div>
       <CopyLinkUI className="my-6" link={shareLink} />
 
-      <div className="flex flex-col items-center justify-center h-96 mt-4 border border-white rounded-xl">
-        <p className="text-xl">
-          Compartiendo mazo <strong>{localDeck.name}</strong>
-        </p>
-        <div className="flex items-center space-x-6 mt-4 mb-4">
-          <div className="flex items-center space-x-2">
+      <div className="flex flex-col items-center justify-center text-center px-3 py-6 mt-4 border border-white rounded-xl">
+        <p className="text-xl font-medium mb-4">{localDeck.name}</p>
+        <div className="flex items-center gap-6 mb-8">
+          <div className="flex items-center gap-1">
             <Stack className="w-8 h-8 text-white" />
-            <p className="text-xl font-bold">{localDeck.whiteCards.length}</p>
+            <p className="text-lg font-medium">{localDeck.whiteCards.length} blancas</p>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-1">
             <Stack className="w-8 h-8 text-gray-900" />
-            <p className="text-xl font-bold">{localDeck.blackCards.length}</p>
+            <p className="text-lg font-medium">{localDeck.blackCards.length} negras</p>
           </div>
         </div>
-        <p className="mt-6 text-lg">
-          Guardado {saveCount} {saveCount === 1 ? 'vez' : 'veces'}
-        </p>
-        <p className="mt-8">
-          Mantén esta página abierta para compartir el mazo <strong>{localDeck.name}</strong>
+        <p className="text-lg">
+          Guardado por {saveCount} {saveCount === 1 ? 'usuario' : 'usuarios'}
         </p>
       </div>
+      <p className="mt-4">Mantén esta página abierta para compartir el mazo</p>
     </div>
   )
 }
