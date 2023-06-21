@@ -5,7 +5,7 @@ export default function PrimaryButton({ className = '', ...props }) {
   return (
     <Button
       backgroundColor="bg-blue-500 hover:bg-blue-600"
-      textColor="white"
+      textColor="text-white"
       className={`${className} font-semibold hover:shadow-sm`}
       {...props}
     />
