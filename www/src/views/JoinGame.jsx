@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeftIcon } from '@heroicons/react/solid'
-import { Copy, CrownSimple, User } from 'phosphor-react'
+import { CrownSimple, User } from 'phosphor-react'
 import Button from '@/components/Button'
 import PrimaryButton from '@/components/PrimaryButton'
 import Container from '@/components/Container'
@@ -11,6 +11,7 @@ import usePlayerId from '@/lib/usePlayerId'
 import withGame from '@/lib/withGame'
 import { X as XIcon } from 'phosphor-react'
 import NameEditModal from '@/components/NameEditModal'
+import CopyLink from '@/components/CopyLink'
 
 const MIN_PLAYERS = 2
 
@@ -49,12 +50,6 @@ function JoinGameUI({ socket, game }) {
     }
   }, [])
 
-  function copyLink() {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-      window.alert('Enlace copiado al portapapeles')
-    })
-  }
-
   function startGame() {
     setLoading(true)
     socket.emit('game:start', game.id)
@@ -79,24 +74,7 @@ function JoinGameUI({ socket, game }) {
       <p className="mb-8 text-2xl text-gray-300 uppercase">ID {game.id}</p>
 
       <div className="space-y-8">
-        <div>
-          <p className="ml-1 mb-1 text-sm text-gray-200 font-medium">Enlace para compartir</p>
-          <div className="flex">
-            <pre className="truncate py-2 pl-3 px-5 -mr-2 bg-white text-gray-700 rounded-l-md">
-              <code>{window.location.href}</code>
-            </pre>
-            <Button
-              title="Copiar enlace"
-              className="rounded-r-md"
-              backgroundColor="bg-white"
-              textColor="text-gray-500 hover:text-blue-500"
-              padding="p-2"
-              onClick={copyLink}
-            >
-              <Copy width={24} height={24} />
-            </Button>
-          </div>
-        </div>
+        <CopyLink label="Enlace para compartir" link={window.location.href} />
         <Players game={game} playerIsHost={playerIsHost} onRemovePlayer={removePlayer} />
         {playerIsHost ? (
           <div className="flex items-center space-x-3">
