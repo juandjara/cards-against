@@ -6,7 +6,9 @@ export default function GameMessage({ loading, error }) {
   const { id } = useParams()
 
   if (error) {
-    return <ErrorMessage status={error.status} id={id} />
+    const msg =
+      error.status === 404 ? `No se ha encontrado ningún juego para el ID ${id}` : `Error cargando el juego ${id}`
+    return <ErrorMessage message={msg} />
   }
 
   if (loading) {
@@ -16,11 +18,10 @@ export default function GameMessage({ loading, error }) {
   return null
 }
 
-function ErrorMessage({ id, status }) {
-  const msg = status === 404 ? `No se ha encontrado ningún juego para el ID ${id}` : `Error cargando el juego ${id}`
+export function ErrorMessage({ message }) {
   return (
     <Container style={{ minHeight: 'calc(100vh - 52px)' }} className="flex flex-col justify-center items-center">
-      <p className="text-gray-100 text-center text-lg font-semibold">{msg}</p>
+      <p className="text-gray-100 text-center text-lg font-semibold">{message}</p>
       <Link to="/" className="text-blue-300 font-semibold hover:underline mt-2 p-2">
         Volver
       </Link>

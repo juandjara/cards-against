@@ -13,6 +13,7 @@ import Modal from '@/components/Modal'
 import { UserIcon, XIcon } from '@heroicons/react/outline'
 import classNames from 'classnames'
 import NameEditModal from '@/components/NameEditModal'
+import { ErrorMessage } from '@/components/GameMessage'
 
 function getLastFinishedRound(game) {
   const round = game.finishedRounds[game.finishedRounds.length - 1]
@@ -125,6 +126,10 @@ function PlayGameUI({ socket, game }) {
     socket.emit('game:leave', { playerId, gameId: game.id })
   }
 
+  if (playerData && game.players.length < 2) {
+    return <ErrorMessage message="No hay nadie mas en este juego" />
+  }
+
   return (
     <main
       className="h-full p-3 pb-0 flex flex-col items-stretch justify-start"
@@ -134,7 +139,7 @@ function PlayGameUI({ socket, game }) {
       <GameOverModal closeModal={closeGameOverModal} game={game} />
       <RoundModal closeModal={closeModal} show={showRoundModal && !game.finished} game={game} />
       <div className="absolute top-0 right-0 flex items-center gap-2 p-2">
-        <p className="text-sm">{playerData.name}</p>
+        <p className="text-sm">{playerData?.name}</p>
         <UserIcon className="w-4 h-4" />
       </div>
       <PlayersInfo playerId={playerId} onRemovePlayer={removePlayer} game={game} />
