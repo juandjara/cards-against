@@ -13,6 +13,8 @@ class ApiError extends Error {
   }
 }
 
+const EXPIRATION_TIME = 60 * 60 * 24 * 7 // 1 week
+
 const db = {
   async getAll () {
     const ids = await redis.smembers('games')
@@ -25,7 +27,7 @@ const db = {
   },
   async createGame (data) {
     const game = new Game(data)
-    await redis.set(`game:${game.id}`, JSON.stringify(game.toJSON()))
+    await redis.setex(`game:${game.id}`, EXPIRATION_TIME, JSON.stringify(game.toJSON()))
     await redis.sadd('games', game.id)
     return game
   },
@@ -39,7 +41,7 @@ const db = {
   async updateGame (id, updateFn) {
     const game = await db.getGame(id)
     const newGame = updateFn(game)
-    await redis.set(`game:${game.id}`, JSON.stringify(newGame.toJSON()))
+    await redis.setex(`game:${game.id}`, EXPIRATION_TIME, JSON.stringify(newGame.toJSON()))
     return newGame
   },
   async removeGame (game) {
@@ -51,7 +53,7 @@ const db = {
     return JSON.parse(deck)
   },
   async createDeck ({ id, host, data }) {
-    await redis.set(`deck:${id}`, JSON.stringify({ host, data }))
+    await redis.setex(`deck:${id}`, EXPIRATION_TIME, JSON.stringify({ host, data }))
   },
   async removeDeck (id) {
     await redis.del(`deck:${id}`)
