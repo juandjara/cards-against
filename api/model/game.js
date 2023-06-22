@@ -177,7 +177,7 @@ class Game {
 
   checkWinCondition() {
     if (this.winCondition === WIN_ALL_CARDS) {
-      if (this.deck.blackCards.every(c => this.usedCards.has(c))) {
+      if (this.deck.blackCards.every(c => this.isBlackCardUsed(c))) {
         this.gameOver()
       }
     }
@@ -199,9 +199,17 @@ class Game {
     return this
   }
 
+  isBlackCardUsed(card) {
+    return this.usedCards.has(JSON.stringify(card))
+  }
+
+  useBlackCard(card) {
+    this.usedCards.add(JSON.stringify(card))
+  }
+
   drawBlackCard() {
-    const card = this.deck.blackCards.find(c => !this.usedCards.has(c))
-    this.usedCards.add(card)
+    const card = this.deck.blackCards.find(c => !this.isBlackCardUsed(c))
+    this.useBlackCard(card)
     this.round.blackCard = card
     return this
   }
