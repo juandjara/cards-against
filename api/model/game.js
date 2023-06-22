@@ -241,12 +241,15 @@ class Game {
   }
 
   playWhiteCards(cards, playerId) {
-    for (const card of cards) {
-      this.round.addWhiteCard(card, playerId)
+    const playerHasPlayed = this.round.whiteCards.some(c => c.playerId === playerId)
+    if (!playerHasPlayed) {
+      for (const card of cards) {
+        this.round.addWhiteCard(card, playerId)
+      }
+      const player = this.players.find(p => p.id === playerId)
+      player.cards = player.cards.filter(c => cards.indexOf(c) === -1)
+      this.drawWhiteCards(playerId)
     }
-    const player = this.players.find(p => p.id === playerId)
-    player.cards = player.cards.filter(c => cards.indexOf(c) === -1)
-    this.drawWhiteCards(playerId)
     return this
   }
 
