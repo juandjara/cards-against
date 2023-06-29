@@ -6,7 +6,7 @@ const { Server: SocketServer } = require("socket.io")
 const helmet = require('helmet')
 const cors = require('cors')
 const pkg = require('./package.json')
-const { db } = require('./model/db')
+const { db, redis } = require('./model/db')
 // const decks = require('./model/decks')
 
 const app = express()
@@ -75,4 +75,14 @@ function wrapAsync (fn) {
 
 httpServer.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`)
+})
+
+httpServer.on('close', () => {
+  redis.quit()
+})
+
+httpServer.on('error', err => {
+  console.error(err)
+  redis.quit()
+  process.exit(1)
 })

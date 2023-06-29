@@ -13,6 +13,10 @@ class ApiError extends Error {
   }
 }
 
+redis.on('error', err => {
+  console.error('Redis error:', err)
+})
+
 const EXPIRATION_TIME = 60 * 60 * 24 * 7 // 1 week
 
 const db = {
@@ -60,4 +64,4 @@ const db = {
   }
 }
 
-module.exports = { db, ApiError }
+module.exports = { db, ApiError, redis }
