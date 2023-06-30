@@ -3,8 +3,14 @@ const { Redis } = require('ioredis')
 
 const redis = new Redis(
   process.env.REDIS_URL,
-  { family: 6 }
+  { family: 6, reconnectOnError: 2 }
 )
+
+setInterval(() => {
+  redis.ping().catch(err => {
+    console.error('Redis ping failed:', err)
+  })
+}, 1000 * 60 * 5)
 
 class ApiError extends Error {
   constructor (status, msg) {
