@@ -16,7 +16,11 @@ async function fetchGame({ queryKey }) {
 }
 
 async function fetchAllGames() {
-  const res = await fetch(`${config.api}/games`)
+  const res = await fetch(`${config.api}/games`, {
+    headers: {
+      'Cache-Control': 'max-age=0, no-store'
+    }
+  })
   if (!res.ok) {
     const text = await res.text()
     const error = new Error(`Request failed with status code ${res.status}: \n${text}`)
