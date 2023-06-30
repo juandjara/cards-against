@@ -28,6 +28,12 @@ async function useRedis(fn) {
   return result
 }
 
+function assertDelete(n, message = 'Resouce was not deleted correctly') {
+  if (n !== 1) {
+    throw new ApiError(404, message)
+  }
+}
+
 const db = {
   async getAll () {
     const games = await useRedis(async r => {
@@ -69,8 +75,8 @@ const db = {
   },
   async removeGame (game) {
     await useRedis(async r => {
-      await r.del(`game:${game.id}`)
-      await r.srem('games', game.id)
+      assertDelete(await r.del(`game:${game.id}`), `del failed for game '${game.id}'`)
+      assertDelete(await r.srem('games', game.id), `srem failed for game '${game.id}'`)
     })
   },
   async getDeck (id) {
@@ -81,7 +87,9 @@ const db = {
     await useRedis(r => r.setex(`deck:${id}`, EXPIRATION_TIME, JSON.stringify({ host, data })))
   },
   async removeDeck (id) {
-    await useRedis(r => r.del(`deck:${id}`))
+    await useRedis(async r => {
+      assertDelete(await r.del(`deck:${id}`), `del failed for deck '${id}'`)
+    })
   }
 }
 
