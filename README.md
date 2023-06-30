@@ -3,7 +3,7 @@ Juego de cartas multijugador online inspirado en "Cartas contra la humanidad"
  
 front-end desplegado en https://cards-against.netlify.app
 
-back-end desplegado en https://cards-against-api-socket.herokuapp.com
+back-end desplegado en https://cards-against.fly.dev
 
 ### como montar el proyecto
 tenemos dos componentes:
