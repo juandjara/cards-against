@@ -8,8 +8,10 @@ body {
     'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(180deg, #616161 75%, #454a4a);
   background-color: #616161;
   color: white;
+  min-height: 100vh;
 }
 
 code {
