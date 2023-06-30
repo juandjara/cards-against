@@ -6,8 +6,7 @@ const { Server: SocketServer } = require("socket.io")
 const helmet = require('helmet')
 const cors = require('cors')
 const pkg = require('./package.json')
-const { db, redis } = require('./model/db')
-// const decks = require('./model/decks')
+const { db } = require('./model/db')
 
 const app = express()
 const httpServer = http.createServer(app)
@@ -77,12 +76,24 @@ httpServer.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`)
 })
 
-httpServer.on('close', () => {
-  redis.quit()
+function closeServer() {
+  httpServer.closeAllConnections()
+  httpServer.close((err) => {
+    if (err) {
+      console.error(err)
+      process.exit(1)
+    } else {
+      process.exit(0)
+    }
+  })
+}
+
+process.on('SIGINT', () => {
+  console.log('SIGINT received, closing all connections and shutting down...')
+  closeServer()
 })
 
-httpServer.on('error', err => {
-  console.error(err)
-  redis.quit()
-  process.exit(1)
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, closing all connections and shutting down...')
+  closeServer()
 })
