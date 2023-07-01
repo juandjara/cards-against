@@ -6,6 +6,7 @@ import { useGameList } from '@/lib/gameUtils'
 import usePlayerId from '@/lib/usePlayerId'
 import { useSocket } from '@/lib/SocketProvider'
 import { useAlert } from '@/components/Alert'
+import { PencilIcon, QuestionMarkCircleIcon } from '@heroicons/react/outline'
 
 export default function Home() {
   const socket = useSocket()
@@ -58,11 +59,13 @@ export default function Home() {
         />
       </div>
       <div className="space-y-4">
-        <Link to="/decks" className="block text-center font-medium hover:underline">
-          Mazos personalizados
+        <Link to="/decks" className="text-center font-medium hover:underline flex items-center gap-3">
+          <PencilIcon className="w-6 h-6" />
+          <p>Editor de mazos</p>
         </Link>
-        <Link to="/guide" className="block text-center font-medium hover:underline">
-          ¿Como se juega?
+        <Link to="/guide" className="text-center font-medium hover:underline flex items-center gap-3">
+          <QuestionMarkCircleIcon className="w-6 h-6" />
+          <p>¿Como se juega?</p>
         </Link>
       </div>
     </div>
