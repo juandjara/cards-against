@@ -10,18 +10,23 @@ export default function Input({
   type = 'text',
   placeholder,
   required,
+  as: asProp,
+  className = '',
   ...props
 }) {
+  const Component = asProp === 'textarea' ? 'textarea' : 'input'
   return (
-    <div>
+    <div className={className}>
       <div className="flex items-baseline justify-between">
-        <label htmlFor={id} className={`${labelColor} block text-sm font-medium`}>
-          {label}
-        </label>
+        {label && (
+          <label htmlFor={id} className={`${labelColor} block text-sm font-medium`}>
+            {label}
+          </label>
+        )}
         {corner}
       </div>
-      <div className="mt-1 relative rounded-md shadow-sm">
-        <input
+      <div className={['relative rounded-md shadow-sm', label ? 'mt-1' : ''].join(' ')}>
+        <Component
           type={type}
           name={id}
           id={id}

@@ -1,16 +1,27 @@
 import React from 'react'
 import { useNavigate } from 'react-router'
-import { ArrowLeftIcon, ShareIcon } from '@heroicons/react/solid'
+import { ArrowLeftIcon, ShareIcon, TrashIcon } from '@heroicons/react/solid'
 import Button from '@/components/Button'
 import Container from '@/components/Container'
 import { Link } from 'react-router-dom'
 import useLocalStorage from '@/lib/useLocalStorage'
 import { DECKS_KEY } from '@/views/DeckEdit'
 import { Stack } from 'phosphor-react'
+import { useAlert } from '@/components/Alert'
 
 export default function DeckList() {
   const navigate = useNavigate()
-  const [decks] = useLocalStorage(DECKS_KEY, [])
+  const [decks, setDecks] = useLocalStorage(DECKS_KEY, [])
+  const showAlert = useAlert()
+
+  function deleteDeck(deck) {
+    const confirm = window.confirm(`¿Estas seguro de eliminar el mazo ${deck.name}?`)
+    if (confirm) {
+      const newDecks = decks.filter(d => d.id !== deck.id)
+      setDecks(newDecks)
+      showAlert({ type: 'success', text: 'Mazo eliminado correctamente' })
+    }
+  }
 
   return (
     <Container>
@@ -39,7 +50,7 @@ export default function DeckList() {
                 </Link>
               </p>
               <div className="flex flex-wrap justify-between items-center gap-3">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-grow">
                   <div className="flex items-center gap-1">
                     <Stack className="w-6 h-6 text-white" />
                     <p className="font-bold">{d.whiteCards.length}</p>
@@ -54,8 +65,15 @@ export default function DeckList() {
                   className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-600 bg-opacity-75"
                 >
                   <ShareIcon className="h-6 w-6" />
-                  <p className="font-medium">Compartir</p>
                 </Link>
+                <Button
+                  onClick={() => deleteDeck(d)}
+                  padding="p-2"
+                  textColor="white"
+                  backgroundColor="hover:bg-red-600"
+                >
+                  <TrashIcon className="w-6 h-6" />
+                </Button>
               </div>
             </div>
           </li>
