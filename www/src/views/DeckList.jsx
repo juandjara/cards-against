@@ -8,6 +8,8 @@ import useLocalStorage from '@/lib/useLocalStorage'
 import { DECKS_KEY } from '@/views/DeckEdit'
 import { Stack } from 'phosphor-react'
 import { useAlert } from '@/components/Alert'
+import PrimaryButton from '@/components/PrimaryButton'
+import DeckImport from '@/components/DeckImport'
 
 export default function DeckList() {
   const navigate = useNavigate()
@@ -35,11 +37,14 @@ export default function DeckList() {
           <ArrowLeftIcon className="w-5 h-5" />
         </Button>
       </div>
-      <h3 className="mb-4 text-3xl font-medium">Mazos personalizados</h3>
+      <h3 className="mb-2 text-3xl font-medium">Mazos personalizados</h3>
       {decks.length === 0 && <p className="mb-1">No tienes guardado ningun mazo personalizado.</p>}
-      <Link className="text-blue-300 hover:text-blue-200 transition-colors" to="/decks/new">
-        Crear mazo
-      </Link>
+      <div className="flex items-center gap-3 mt-6">
+        <Link to="/decks/new">
+          <PrimaryButton>Crear mazo</PrimaryButton>
+        </Link>
+        <DeckImport onImport={deck => setDecks(decks.concat(deck))} />
+      </div>
       <ul className="mt-6 space-y-6">
         {decks.map(d => (
           <li key={d.id}>
