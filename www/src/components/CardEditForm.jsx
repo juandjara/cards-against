@@ -33,7 +33,7 @@ export default function CardEditForm({ type, card, onEdit, onClose }) {
     <motion.form
       initial={{ y: 100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      exit={{ opacity: 0 }}
+      exit={{ y: 100, opacity: 0 }}
       onSubmit={handleSubmit}
       className="bg-gray-200 bg-opacity-50 p-3 rounded-t-md fixed bottom-0 inset-x-0 max-w-screen-md mx-auto"
     >
