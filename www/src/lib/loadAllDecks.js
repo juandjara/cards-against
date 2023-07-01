@@ -3,7 +3,7 @@ import { DECKS_KEY } from '@/views/DeckEdit'
 const context = import.meta.glob('../assets/*.json')
 
 function clearDeck(deck) {
-  const { whiteCards, blackCards, disabledWhites, disabledBlacks } = deck
+  const { whiteCards, blackCards, disabledWhites = [], disabledBlacks = [] } = deck
   const filteredWhite = whiteCards.filter((card, idx) => !disabledWhites.includes(idx))
   const filteredBlack = blackCards.filter((card, idx) => !disabledBlacks.includes(idx))
   return {
