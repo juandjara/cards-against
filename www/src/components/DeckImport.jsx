@@ -30,6 +30,9 @@ export default function DeckImport({ onImport }) {
     let deck
     try {
       deck = JSON.parse(deckFileText)
+      if (Array.isArray(deck)) {
+        deck = deck[0]
+      }
       if (!deck) {
         return {
           error: 'El archivo esta vacio'
