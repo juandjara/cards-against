@@ -11,7 +11,7 @@ function handleStopClick(fn) {
   }
 }
 
-export default function EditTools({ type, selection, onNew, onEdit, onDelete, onClear }) {
+export default function EditTools({ type, selection, onNew, onEdit, onDelete, onClear, onDisable }) {
   if (selection.length === 0) {
     return (
       <Button
@@ -32,12 +32,12 @@ export default function EditTools({ type, selection, onNew, onEdit, onDelete, on
       <button
         title="Eliminar selección"
         aria-label="Eliminar selección"
-        className="p-1 rounded-xl hover:bg-white hover:bg-opacity-25"
+        className="p-1 rounded-xl hover:bg-white hover:bg-opacity-25 hidden md:block"
         onClick={handleStopClick(onClear)}
       >
         <XIcon className="w-4 h-4" />
       </button>
-      <p className="font-semibold">
+      <p className="font-semibold hidden md:block">
         {selection.length} seleccionado{selection.length === 1 ? '' : 's'}
       </p>
       <Button
@@ -48,6 +48,15 @@ export default function EditTools({ type, selection, onNew, onEdit, onDelete, on
       >
         <PencilAltIcon weight="fill" className="w-4 h-4" />
         <p>Editar</p>
+      </Button>
+      <Button
+        type="button"
+        color="gray"
+        onClick={handleStopClick(onDisable)}
+        className="flex items-center space-x-2 pl-2 pr-3"
+      >
+        <XIcon weight="fill" className="w-4 h-4" />
+        <p>Desactivar</p>
       </Button>
       <Button
         type="button"

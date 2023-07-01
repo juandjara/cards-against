@@ -11,7 +11,7 @@ function decodeHtml(html) {
   return el.value
 }
 
-export default function CardEditGroup({ type, cards, setCards, onEdit }) {
+export default function CardEditGroup({ type, disabledCards = [], setDisabledCards, cards = [], setCards, onEdit }) {
   const label = type === 'white' ? 'Blancas' : 'Negras'
   const [selection, setSelection] = useState([])
 
@@ -31,6 +31,15 @@ export default function CardEditGroup({ type, cards, setCards, onEdit }) {
 
   function handleEdit(card) {
     onEdit(card)
+    setSelection([])
+  }
+
+  function handleDisable() {
+    const selectionIndexes = selection.map(c => cards.indexOf(c))
+    const oldDisabled = disabledCards.filter(c => selectionIndexes.indexOf(c) === -1)
+    const newDisabled = selectionIndexes.filter(c => disabledCards.indexOf(c) === -1)
+    const indexes = [...oldDisabled, ...newDisabled]
+    setDisabledCards(indexes)
     setSelection([])
   }
 
@@ -54,13 +63,14 @@ export default function CardEditGroup({ type, cards, setCards, onEdit }) {
           onEdit={() => handleEdit(selection[0])}
           onDelete={() => deleteCards(selection)}
           onClear={() => setSelection([])}
+          onDisable={handleDisable}
         />
       </header>
       <div style={{ height: cards.length ? 222 : undefined }} className="overflow-hidden">
         <div className="overflow-x-auto max-w-full">
           <div className="flex items-start gap-3 p-1 my-1">
             <AnimatePresence>
-              {cards.map(card => (
+              {cards.map((card, index) => (
                 <GameCard
                   key={type === 'white' ? card : card.text}
                   type={type}
@@ -72,7 +82,7 @@ export default function CardEditGroup({ type, cards, setCards, onEdit }) {
                   badge={type === 'white' ? null : card.pick}
                   onClick={() => selectCard(card)}
                   initial={{ x: 200, opacity: 0, width: 0 }}
-                  animate={{ x: 0, opacity: 1, width: '' }}
+                  animate={{ x: 0, opacity: disabledCards.includes(index) ? 0.5 : 1, width: '' }}
                   exit={{ x: -200, width: 0, opacity: 0 }}
                   transition={{ duration: 0.3 }}
                   style={{ touchAction: 'pan-x' }}
