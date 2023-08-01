@@ -243,7 +243,8 @@ class Game {
   playWhiteCards(cards, playerId) {
     const playerHasPlayed = this.round.whiteCards.some(c => c.playerId === playerId)
     if (!playerHasPlayed) {
-      for (const card of cards) {
+      const pick = this.round.blackCard.pick || 1
+      for (const card of cards.slice(0, pick)) {
         this.round.addWhiteCard(card, playerId)
       }
       const player = this.players.find(p => p.id === playerId)
