@@ -24,7 +24,7 @@ export default function DeckShare() {
           backgroundColor="bg-white hover:bg-blue-50"
           onClick={() => navigate(-1)}
         >
-          <ArrowLeftIcon className="w-5 h-5" />
+          <ArrowLeftIcon aria-hidden="true" className="w-5 h-5" />Atrás
         </Button>
       </div>
       <h3 className="mb-4 text-3xl font-medium">Compartiendo mazo</h3>

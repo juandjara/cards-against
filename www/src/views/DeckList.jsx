@@ -34,11 +34,14 @@ export default function DeckList() {
           backgroundColor="bg-white hover:bg-blue-50"
           onClick={() => navigate(-1)}
         >
-          <ArrowLeftIcon className="w-5 h-5" />
+          <ArrowLeftIcon aria-hidden="true" className="w-5 h-5" />
+          Atrás
         </Button>
       </div>
-      <h3 className="mb-2 text-3xl font-medium">Mazos personalizados</h3>
-      {decks.length === 0 && <p className="mb-1">No tienes guardado ningun mazo personalizado.</p>}
+      <h3 role="alert" className="mb-2 text-3xl font-medium">
+        Mazos personalizados
+      </h3>
+      {decks.length === 0 && <p className="mb-1">No tienes guardado ningún mazo personalizado.</p>}
       <div className="flex items-center gap-3 mt-6">
         <Link to="/decks/new">
           <PrimaryButton>Crear mazo</PrimaryButton>

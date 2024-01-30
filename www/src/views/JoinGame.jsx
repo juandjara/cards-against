@@ -68,7 +68,8 @@ function JoinGameUI({ socket, game }) {
         backgroundColor="bg-white hover:bg-blue-50"
         onClick={() => navigate(-1)}
       >
-        <ArrowLeftIcon className="w-5 h-5" />
+        <ArrowLeftIcon aria-hidden="true" className="w-5 h-5" />
+        Atrás
       </Button>
       <h2 className="mt-4 text-3xl font-semibold">Unirse a partida</h2>
       <p className="mb-8 text-2xl text-gray-300 uppercase">ID {game.id}</p>

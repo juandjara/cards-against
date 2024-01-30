@@ -9,7 +9,8 @@ export function SocketProvider({ children }) {
 
   useEffect(() => {
     if (!socket) {
-      const socket = io(config.api)
+      console.log('creating socket')
+      const socket = io(config.socketServer)
       setSocket(socket)
     }
 

@@ -39,7 +39,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col justify-center items-center py-4 px-2">
-      <h1 className="my-8 font-bold text-center text-4xl">Cartas contra la web</h1>
+      <h1 className="my-8 font-bold text-center text-4xl">Cartas contra la humanidad</h1>
       <div className="md:flex flex-row justify-center items-center mt-8 mb-12 space-y-6 md:space-y-0 md:space-x-6">
         <ButtonCard
           as={motion.button}
@@ -65,7 +65,7 @@ export default function Home() {
         </Link>
         <Link to="/guide" className="text-center font-medium hover:underline flex items-center gap-3">
           <QuestionMarkCircleIcon className="w-6 h-6" />
-          <p>¿Como se juega?</p>
+          <p>¿Cómo se juega?</p>
         </Link>
       </div>
     </div>
