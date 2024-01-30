@@ -94,13 +94,13 @@ export default function PublicGames() {
           backgroundColor="bg-white hover:bg-blue-50"
           onClick={() => navigate(-1)}
         >
-          <ArrowLeftIcon className="w-5 h-5" />
+          <ArrowLeftIcon aria-hidden="true" className="w-5 h-5" />Atrás
         </Button>
       </div>
       <h3 className="mb-3 text-3xl font-medium">Partidas públicas</h3>
       {publicGames.length === 0 && (
-        <p>
-          No hay ninguna partida púublica disponible.{' '}
+        <p role="alert">
+          No hay ninguna partida pública disponible.{' '}
           <Link className="text-blue-300 hover:text-blue-200 transition-colors" to="/newgame">
             Crear partida
           </Link>

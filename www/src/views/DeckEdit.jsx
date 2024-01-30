@@ -124,7 +124,7 @@ export default function DeckEdit() {
             backgroundColor="bg-white hover:bg-blue-50"
             onClick={() => navigate(-1)}
           >
-            <ArrowLeftIcon className="w-5 h-5" />
+            <ArrowLeftIcon aria-hidden="true" className="w-5 h-5" />Atrás
           </Button>
         </div>
         <h3 className="flex-grow text-3xl font-medium">Editando mazo</h3>

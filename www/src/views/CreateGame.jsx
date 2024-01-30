@@ -28,11 +28,11 @@ function CheckboxLabel({ label, numblack = 5, numwhite = 24 }) {
       <p className="mr-6">{label}</p>
       <div className="mr-4 inline-flex space-x-2">
         <Stack weight="fill" className="text-gray-900" width={24} height={24} />
-        <span>{numblack}</span>
+        <span aria-label={`${numblack} negras, `}>{numblack}</span>
       </div>
       <div className="mr-4 inline-flex space-x-2">
         <Stack weight="fill" className="text-white" width={24} height={24} />
-        <span>{numwhite}</span>
+        <span aria-label={`${numwhite} blancas`}>{numwhite}</span>
       </div>
     </div>
   )
@@ -107,14 +107,16 @@ export default function CreateGame() {
       value: WIN_N_ROUNDS,
       label: (
         <>
-          <span>Cuando se acaben</span>
+          <label htmlFor="rounds-input">Cuando se acaben</label>
           <input
+          id="rounds-input"
             type="number"
+            aria-describedby="rounds-text"
             className="w-20 mx-2 rounded-md text-gray-700"
             value={nRounds}
             onChange={ev => setNRounds(ev.target.value)}
           />
-          <span>rondas</span>
+          <span id="rounds-text">rondas</span>
         </>
       )
     },
@@ -122,14 +124,16 @@ export default function CreateGame() {
       value: WIN_N_POINTS,
       label: (
         <>
-          <span>Cuando un jugador gane</span>
+          <label htmlFor="points-to-win">Cuando un jugador gane</label>
           <input
+          id="points-to-win"
+          aria-describedby="points-to-win-text"
             type="number"
             value={nPoints}
             className="w-20 mx-2 rounded-md text-gray-700"
             onChange={ev => setNPoints(ev.target.value)}
           />
-          <span>puntos</span>
+          <span id="points-to-win-text">puntos</span>
         </>
       )
     }
@@ -144,19 +148,19 @@ export default function CreateGame() {
           backgroundColor="bg-white hover:bg-blue-50"
           onClick={() => navigate(-1)}
         >
-          <ArrowLeftIcon className="w-5 h-5" />
+          <ArrowLeftIcon aria-hidden="true" className="w-5 h-5" />Atrás
         </Button>
         <h2 className="mt-4 mb-8 text-3xl font-semibold">Nueva partida</h2>
         <form onSubmit={handleSubmit} className="space-y-8">
           <RadioGroup
-            label="¿Como se elige al juez de las cartas?"
+            label="¿Cómo se elige al juez de las cartas?"
             name="rotation"
             selected={rotation}
             options={ROTATION_OPTIONS}
             onChange={setRotation}
           />
           <RadioGroup
-            label="¿Cuando se acaba el juego?"
+            label="¿Cuándo se acaba el juego?"
             name="win-condition"
             options={winConditionOptions}
             selected={winCondition}
@@ -170,10 +174,11 @@ export default function CreateGame() {
                 checked={isPublic}
                 onChange={ev => setIsPublic(ev.target.checked)}
                 className="h-5 w-5 text-blue-500 rounded-sm"
+                aria-describedby="public-game-warning"
               />
-              <span className="ml-3 text-white font-medium">Pública</span>
+              <span className="ml-3 text-white font-medium">Esta Partida es Pública</span>
             </label>
-            <p className="block ml-1 mb-2 text-sm text-gray-200 font-medium">
+            <p id="public-game-warning" className="block ml-1 mb-2 text-sm text-gray-200 font-medium">
               Si marcas esta opción la partida aparecerá en el menú <em>Unirse a una partida</em>
             </p>
           </div>
@@ -184,6 +189,8 @@ export default function CreateGame() {
             >
               Crear mazo
             </Link>
+            <fieldset>
+              <legend>Selecciona los mazos: </legend>
             <CheckboxGroup
               label="Mazos de cartas"
               className="w-52"
@@ -191,6 +198,7 @@ export default function CreateGame() {
               selected={deckSelection}
               onChange={setDeckSelection}
             />
+            </fieldset>
           </div>
           <div className="flex items-center space-x-3">
             <PrimaryButton className="flex-shrink-0" disabled={loading || !cardsNumOk} type="submit">

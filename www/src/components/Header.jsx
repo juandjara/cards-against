@@ -14,7 +14,7 @@ export default function Header() {
   return (
     <header className="flex p-3">
       <Link to="/" className="flex items-center space-x-2">
-        <img src={logo} width={36} height={36} alt="logo" />
+        <img src={logo} width={36} height={36} alt="Logo de Cartas contra la Web" />
         <h1 className="text-2xl">CCW</h1>
       </Link>
       <div className="flex-grow"></div>
